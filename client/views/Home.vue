@@ -41,6 +41,70 @@
             </p>           
         </div>
     </div>
+    <div class="col-xs-3">
+        <div class="card">
+            <div class="card-header">
+                <strong>1. Upload assembly</strong>
+            </div>
+            <div class="card-block">
+                <form name="assembly-form" method="post"
+                      enctype="multipart/form-data" data-bind="submit: uploadAssembly">
+                    <div class="form-group">
+                        <label for="name">Assembly name</label>
+                        <input type="text" class="form-control form-control-sm" name="name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contigs">Assembly file (fasta)</label>
+                        <input type="file" name="contigs" class="form-control-file form-control-sm">
+                    </div>
+                    
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" name="fourmers"> 
+                            Calculate tetranucleotide frequencies
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fasta">Coverage table</label>
+                        <input type="file" name="coverage" class="form-controle-file form-control-sm">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm">
+                        <!--<span class="fa fa-refresh fa-spin"></span>-->
+                        Save Assembly
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <strong>2. Upload binning results</strong>
+            </div>
+            <div class="card-block">
+                <form name="bin-set-form" method="post"
+                      enctype="multipart/form-data">
+                    
+                    <div class="form-group">
+                        <label for="name">Bin-set name</label>
+                        <input type="text" class="form-control form-control-sm" name="name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bins">Bin-set file</label>
+                        <input type="file" class="form-control-file form-control-sm" name="bins">
+                    </div>
+                
+                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm">
+                        <!--<span class="fa fa-refresh fa-spin"></span>-->
+                        Save bin-set
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 

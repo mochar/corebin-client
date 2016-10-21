@@ -108,6 +108,30 @@ body {
     border-radius: 0 !important;
 }
 
+input[type="file"] {
+    width: 100%;
+}
+
+.card-header {
+    padding: .5em;
+    padding-left: 1em;
+    color: white;
+    background-color: #3b668b;
+}
+
+.form-group > label {
+    font-weight: bold;
+    margin-bottom: .25rem;
+}
+
+.btn-sm {
+    padding: .3rem .5rem;
+}
+
+.form-control-sm {
+    font-size: .75em;
+}
+
 #app {
     margin-top: .5em;
     padding: 0;
