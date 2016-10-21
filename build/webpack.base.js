@@ -56,6 +56,13 @@ module.exports = {
       title: config.title,
       template: __dirname + '/index.html',
       filename: _.outputIndexPath
+    }),
+    new webpack.ProvidePlugin({   
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      'Tether': 'tether',
+      'window.Tether': 'tether'
     })
   ],
   target: _.target

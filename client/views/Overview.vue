@@ -1,7 +1,12 @@
 <template>
-    <div>
-        <p>Top overview</p>
+<div class="row">
+    <div class="col-xs-4">
     </div>
+    <div class="col-xs-4">
+    </div>
+    <div class="col-xs-4">
+    </div>
+</div>
 </template>
 
 <script>
