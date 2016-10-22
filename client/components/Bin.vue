@@ -33,17 +33,27 @@
                 <hr style="margin-top: 0">
             </div>
         </div>
-        <div class="col-xs-7">
+        <div class="col-xs-7" style="padding-left: 0">
+            <histogram :plotData="gcData"></histogram>
+            <histogram :plotData="lengthData" :format="true"></histogram>
         </div>
     </div>
 </div>
 </template>
 
 <script>
+import Histogram from '../charts/Histogram'
+
 export default {
     data() {
         return {
+            gcData: {bins: [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], hist: [0, 0, 0, 21, 908, 520, 1982, 66, 0, 0]},
+            lengthData: {bins: [1005.0, 2463.923076923077, 3922.846153846154, 5381.7692307692305, 6840.692307692308, 8299.615384615385, 9758.538461538461, 11217.461538461539, 12676.384615384615, 14135.307692307691, 15594.23076923077, 17053.153846153844, 18512.076923076922, 19971.0], hist: [139, 26, 10, 5, 6, 8, 3074, 37, 36, 43, 43, 33, 37]}
         }
+    },
+    
+    components: {
+        Histogram
     },
     
     computed: {
@@ -52,9 +62,9 @@ export default {
         },
         bin() {
             return this.$store.state.bin
-        },
+        }
     },
-
+    
     methods: {
     }
 }

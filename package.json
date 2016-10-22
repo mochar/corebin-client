@@ -39,6 +39,7 @@
     "webpack-dev-middleware": "^1.8.1",
     "webpack-hot-middleware": "^2.12.2",
     "bootstrap": "^4.0.0-alpha.5",
-    "font-awesome": "^4.6.3"
+    "font-awesome": "^4.6.3",
+    "d3": "latest"
   }
 }

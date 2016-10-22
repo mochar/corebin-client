@@ -1,6 +1,6 @@
 <template>
 <div class="row">
-    <div class="col-xs-5">
+    <div class="col-xs-4" style="padding-right: .5rem;">
         <!--<div class="card card-block card-outline-secondary info-card" id="assembly-card">
             <span class="name">{{ assembly.name }}</span>
             <button type="button" class="btn btn-link float-xs-right">
@@ -13,7 +13,7 @@
         <hr>-->
         <bin-set></bin-set>
     </div>
-    <div class="col-xs-7" style="padding-left: 0;">
+    <div class="col-xs-8" style="padding-left: 0;">
         <bin></bin>
     </div>
 </div>
