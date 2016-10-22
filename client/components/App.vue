@@ -70,12 +70,14 @@ export default {
             show: true
         }
     },  
+    
     methods: {
         ...mapMutations({
             selectAssembly: 'SELECT_ASSEMBLY',
             selectBinSet: 'SELECT_BIN_SET'
         })
     },
+    
     computed: {
         assembly() {
             return this.$store.state.assembly
@@ -130,6 +132,10 @@ input[type="file"] {
 
 .form-control-sm {
     font-size: .75em;
+}
+
+.text-primary {
+    color: #31708f !important;
 }
 
 #app {

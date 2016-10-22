@@ -1,58 +1,37 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { ASSEMBLIES, BIN_SETS, BINS } from './mock'
 
 Vue.use(Vuex)
-
-const ASSEMBLIES = [
-    {
-        name: 'Synthetic',
-        id: 1
-    },
-    {
-        name: 'Bioreactor',
-        id: 2
-    }
-]
-
-const BIN_SETS = [
-    {
-        assembly: 1,
-        color: '#a00342',
-        id: 1,
-        name: 'Metabat'
-    },
-    {
-        assembly: 1,
-        color: '#2d0682',
-        id: 2,
-        name: 'CONCOCT'
-    }
-]
 
 const state = {
     assemblies: ASSEMBLIES,
     assembly: ASSEMBLIES[0],
     binSets: BIN_SETS,
-    binSet: BIN_SETS[0]
+    binSet: BIN_SETS[0],
+    bins: BINS,
+    bin: BINS[0]
 }
 
 const mutations = {
-    ADD_ASSEMBLY(state, { name }) { // TODO: async, move to actions
-        state.assemblies.push({name, cute: true})
-    },
-    SELECT_ASSEMBLY(state, { assembly }) {
-        console.log(state);
-        console.log(assembly);
+    SELECT_ASSEMBLY(state, assembly) {
         state.assembly = assembly;
     },
-    SELECT_BIN_SET(state, { binSet }) {
-        console.log(state);
-        console.log(binSet);
+    SELECT_BIN_SET(state, binSet) {
         state.binSet = binSet;
+    },
+    SELECT_BIN(state, bin) {
+        state.bin = bin;
     }
 }
 
 const actions = {
+    ADD_ASSEMBLY(state, { name }) {
+        state.assemblies.push({name, cute: true})
+    },
+    RENAME_BIN(state, name) {
+        
+    }
 }
 
 const store = new Vuex.Store({
