@@ -27,33 +27,35 @@
             </router-link>
         </li>
         
-        <li class="nav-item dropdown" v-if="binSet" style="float: right">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                <strong>Bin set </strong>
-                <span>{{ binSet.name }}</span>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <router-link v-for="bs in binSets" :class="{ disabled: bs.id === binSet.id }" 
-                             class="dropdown-item" to="/overview" @click="selectBinSet(bs)">
-                    {{ bs.name }}
-                </router-link>
-            </ul>
-        </li>
-        
-        <li class="nav-item dropdown" v-if="assembly" style="float: right">
-            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                <strong>Assembly </strong>
-                <span>{{ assembly.name }}</span>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <router-link v-for="a in assemblies" :class="{ disabled: a.id === assembly.id }" 
-                             class="dropdown-item" to="/overview" @click="selectAssembly(a)">
-                    {{ a.name }}
-                </router-link>
-            </ul>
-        </li>
+        <div class="float-xs-right">
+            <li class="nav-item dropdown" v-if="assembly">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                    <strong>Assembly </strong>
+                    <span>{{ assembly.name }}</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <router-link v-for="a in assemblies" :class="{ disabled: a.id === assembly.id }" 
+                                class="dropdown-item" to="/overview" @click.native="selectAssembly(a)">
+                        {{ a.name }}
+                    </router-link>
+                </ul>
+            </li>
+            
+            <li class="nav-item dropdown" v-if="binSet">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                    <strong>Bin set </strong>
+                    <span>{{ binSet.name }}</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <router-link v-for="bs in binSets" :class="{ disabled: bs.id === binSet.id }" 
+                                class="dropdown-item" to="/overview" @click.native="selectBinSet(bs)">
+                        {{ bs.name }}
+                    </router-link>
+                </ul>
+            </li>
+        </div>
     </ul>
     
     <router-view></router-view>
@@ -150,7 +152,7 @@ input[type="file"] {
     border: 1px solid #3b668b;
 }
 
-.nav > li > a {
+.nav li > a {
   color: white;
 }
 
