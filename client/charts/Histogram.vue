@@ -28,15 +28,13 @@ export default {
     
     methods: {
         updatePlot: function() {
-            console.log('update')
             let width = parseInt(d3.select(this.$el).style('width'), 10)
             width = width - this.margin.left - this.margin.right
-            let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
+            let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.6
             height = height - this.margin.top - this.margin.bottom
                 
             let bins = this.plotData.bins
             let data = this.plotData.hist
-            //tickFormat = allBindings.get('tickFormat');
             
             // Thousands formatter: 23123 -> 23k
             let format = this.format ? d3.formatPrefix(',.0', 1e3) : d3.format('')
@@ -70,7 +68,7 @@ export default {
     mounted: function() {
         let width = parseInt(d3.select(this.$el).style('width'), 10)
         width = width - this.margin.left - this.margin.right
-        let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
+        let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.6
         height = height - this.margin.top - this.margin.bottom
         this.svg = d3.select(this.$el).append('svg')
                 .attr('width', width + this.margin.left + this.margin.right)

@@ -1,7 +1,7 @@
 <template>
-<div class="card info-card" id="bin-card" :style="{ 'border-color': bin.color }">
+<div class="card info-card" id="bin-card" :style="{ 'border-left-color': bin.color }">
     <div class="row">
-        <div class="col-xs-5">
+        <div class="col-xs-5" style="padding-right: 0">
             <div class="card-block name-block">
                 <span class="name" id="bin-name">{{ bin.name }}</span>
                 <div class="action-buttons float-xs-right">
@@ -33,8 +33,11 @@
                 <hr style="margin-top: 0">
             </div>
         </div>
-        <div class="col-xs-7" style="padding-left: 0">
+        <div class="col-xs-7" id="plots">
+            <h6>Contig GC%</h6>
             <histogram :plotData="gcData"></histogram>
+            <hr>
+            <h6>Contig length</h6>
             <histogram :plotData="lengthData" :format="true"></histogram>
         </div>
     </div>
@@ -66,6 +69,10 @@ export default {
     },
     
     methods: {
+    },
+
+    created: function() {
+        setTimeout(() => this.gcData.hist[0] = 1000, 3000)
     }
 }
 </script>
@@ -76,10 +83,19 @@ export default {
 
 #content-card {
     padding: 1.5rem .75rem;
-    border-right: 1px solid #eee;
 }
 
 #bin-name::before {
     content: "Bin ";
+}
+
+#plots {
+    padding-top: .5rem;
+    padding-left: 0;
+    border-left: 1px solid #eee;
+}
+
+#plots > h6 {
+    padding-left: 1rem;
 }
 </style>

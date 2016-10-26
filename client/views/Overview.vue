@@ -1,7 +1,7 @@
 <template>
 <div class="row">
     <div class="col-xs-4" style="padding-right: .5rem;">
-        <!--<div class="card card-block card-outline-secondary info-card" id="assembly-card">
+        <!--<div class="card card-block card-inverse card-primary info-card" id="assembly-card">
             <span class="name">{{ assembly.name }}</span>
             <button type="button" class="btn btn-link float-xs-right">
                 <span class="fa fa-trash text-danger"></span>

@@ -1,5 +1,5 @@
 <template>
-<div class="card info-card" id="bin-set-card" :style="{ 'border-color': binSet.color }">
+<div class="card info-card" id="bin-set-card" :style="{ 'border-left-color': binSet.color }">
     <div class="card-block name-block">
         <span class="name" id="bin-set-name">{{ binSet.name }}</span>
         <div class="action-buttons float-xs-right">
@@ -93,6 +93,6 @@ export default {
 }
 
 .name-block {
-    padding: .25rem 0 .5rem .5rem;
+    padding: .25rem 0 .25rem .5rem;
 }
 </style>
