@@ -52,7 +52,8 @@ let chord = function(bins1, bins2, matrix) {
             // start and end angle of source bin
             let source = {
                 startAngle: sourceScale(d3.sum(bin.slice(0, j))),
-                endAngle: sourceScale(d3.sum(bin.slice(0, j+1)))
+                endAngle: sourceScale(d3.sum(bin.slice(0, j+1))),
+                index: i
             }
             
             // start and end angle of target bin
@@ -60,7 +61,8 @@ let chord = function(bins1, bins2, matrix) {
             let targetScale = scales[j]
             let target = {
                 startAngle: targetScale(d3.sum(targetBin.slice(0, i))),
-                endAngle: targetScale(d3.sum(targetBin.slice(0, i+1)))
+                endAngle: targetScale(d3.sum(targetBin.slice(0, i+1))),
+                index: j
             }
             
             ribs.push({source, target})
@@ -76,7 +78,8 @@ export default {
     data() {
         return {
             svg: null,
-            g: null
+            g: null,
+            selected: null
         }
     },
     
@@ -86,30 +89,77 @@ export default {
             default: function () {
                 return { bins1: [], bins2: [], matrix: [] }
             }
+        },
+        name: {
+            type: String
+        },
+        otherName: {
+            type: String
         }
     },
     
     methods: {
-        updatePlot: function() {
+        fade(opacity, g) {
+            this.g.selectAll('.ribbons path')
+                .attr('opacity', 1)
+              .filter(d => d.source.index != g.index && d.target.index != g.index)
+              .transition()
+                .attr('opacity', opacity)
+        },
+        updatePlot() {
             let width = parseInt(d3.select(this.$el).style('width'), 10)
-            let height = width
+            let height = width * .9
             let outerRadius = Math.min(width, height) * 0.5 - 40
             let innerRadius = outerRadius - 30
             let groupG = this.g.select('g.groups')
             let ribbonG = this.g.select('g.ribbons')
+            let fade = this.fade
             
             let arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
             let ribbon = d3.ribbon().radius(innerRadius-5)
             
             //--------------------------
             let chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
+            let selected = this.selected
+                
+            this.svg.select('rect#binSet1Rect')
+                .attr('fill', '#a00342')
+                .attr('stroke', d3.rgb('#a00342').darker())
+                
+            this.svg.select('rect#binSet2Rect')
+                .attr('fill', '#2d0682')
+                .attr('stroke', d3.rgb('#2d0682').darker())
             
             let groupPaths = groupG.selectAll('path').data(chordData.groups, d => d.index)
             groupPaths.enter().append('path')
-                //.style('fill', d => indexToBin(d.index).color)
                 .style('fill', (d, i) => d3.scaleLinear().domain([0, chordData.groups.length]).range(['brown', 'steelblue'])(i))
                 .style("stroke", '#000000')
-                .attr('d', arc);
+                .attr('d', arc)
+                .on('click', (d, i) => {
+                    this.g.selectAll('.groups path')
+                      .filter(g => g === selected)
+                      .transition()
+                        .attr('d', arc.innerRadius(innerRadius).outerRadius(outerRadius)) 
+                    this.g.selectAll('.groups path')
+                      .filter(g => g !== d)
+                      .transition()
+                        .attr('d', arc
+                            .innerRadius(d === selected ? innerRadius : innerRadius * 1.02)
+                            .outerRadius(d === selected ? outerRadius : outerRadius * .98)) 
+                    selected = selected === d ? null : d
+                })
+                .on('mouseover', function(d, i) { 
+                    if (selected !== d) {
+                        d3.select(this).transition().attr('d', arc.innerRadius(innerRadius * .99).outerRadius(outerRadius * 1.01)) 
+                        fade(.1, d)
+                    }
+                })
+                .on('mouseout', function(d, i) { 
+                    if (selected !== d) {
+                        d3.select(this).transition().attr('d', arc.innerRadius(innerRadius).outerRadius(outerRadius)) 
+                        selected ? fade(.1, selected) : fade(1, d)
+                    }
+                })
                 
             let ribbonPaths = ribbonG.selectAll('path').data(chordData.ribbons)
             let colorScale = d3.scaleLinear().domain([0, chordData.groups.length]).range(['steelblue', 'brown'])
@@ -117,20 +167,47 @@ export default {
                 .style('fill', (d, i) => colorScale(i))
                 .style('stroke', (d, i) => d3.rgb(colorScale(i)).darker())
                 .attr('d', ribbon)
+                
+            //this.svg.select('defs').select('path')
+            //    .attr('d', arc.innerRadius(outerRadius * 1.02).outerRadius(outerRadius * 1.03).startAngle(toRad(40)).endAngle(50))
+
+            this.svg.select('text#name').text(this.name)
+            this.svg.select('text#other-name').text(this.otherName)
         }
     },
     
     mounted: function() {
         let width = parseInt(d3.select(this.$el).style('width'), 10)
-        let height = width
-        let outerRadius = Math.min(width, height) * 0.5 - 40
-        let innerRadius = outerRadius - 30
+        let height = width * .9
         this.svg = d3.select(this.$el).append('svg').attr('width', width).attr('height', height)
         this.g = this.svg.append('g')
             .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
             
         this.g.append('g').attr('class', 'groups')
         this.g.append('g').attr('class', 'ribbons')
+        
+        this.svg.append('defs').append('path').attr('id', 'curve')
+            
+        this.svg.selectAll('text').data(['name', 'other-name'])
+          .enter().append('text')
+            .attr('id', d => d)
+          .append('textPath')
+            .attr('xlink:href', '#curve')
+            .attr('text-anchor', 'middle')
+            .text(d => d)
+        
+        this.svg.append('rect').attr('id', 'binSet1Rect')
+            .attr('x', 0)
+            .attr('y', 0)
+            .attr('width', (width / 2) * .999)
+            .attr('height', height)
+            .attr('fill-opacity', .1)
+        this.svg.append('rect').attr('id', 'binSet2Rect')
+            .attr('x', width / 2)
+            .attr('y', 0)
+            .attr('width', (width / 2) * .999)
+            .attr('height', height)
+            .attr('fill-opacity', .1)
             
         this.updatePlot()
     },
@@ -145,5 +222,18 @@ export default {
 <style>
 .ribbons {
   fill-opacity: 0.67;
+}
+
+.groups > path {
+    cursor: pointer;
+}
+
+svg > rect {
+    visibility: hidden;
+}
+
+svg > rect:not(:hover) {
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
 }
 </style>
