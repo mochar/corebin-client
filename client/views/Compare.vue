@@ -41,7 +41,7 @@
 
 <script>
 import Chord from '../charts/Chord'
-import OTHER_BINS from '../store/mock'
+import { OTHER_BINS } from '../store/mock'
 
 export default {
     data() {
