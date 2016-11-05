@@ -21,15 +21,30 @@ export default new Router({
 		},
 		{
 			path: '/overview',
-			component: Overview
+			component: Overview,
+			beforeEnter: (to, from, next) => {
+				const fromHasInstance = from.matched.length > 0
+				if (fromHasInstance && from.matched[0].instances.default.$store.state.binSet) next()
+				else next(fromHasInstance ? false : next('/home'))
+			}
 		},
 		{
 			path: '/compare',
-			component: Compare
+			component: Compare,
+			beforeEnter: (to, from, next) => {
+				const fromHasInstance = from.matched.length > 0
+				if (fromHasInstance && from.matched[0].instances.default.$store.state.binSet) next()
+				else next(fromHasInstance ? false : next('/home'))
+			}
 		},
 		{
 			path: '/refine',
-			component: Refine
+			component: Refine,
+			beforeEnter: (to, from, next) => {
+				const fromHasInstance = from.matched.length > 0
+				if (fromHasInstance && from.matched[0].instances.default.$store.state.binSet) next()
+				else next(fromHasInstance ? false : next('/home'))
+			}
 		},
 		{
 			path: '/help',
