@@ -25,7 +25,7 @@
         </div>
         <div class="col-xs-4">
             <div class="card-block row">
-                <div class="col-xs-9">
+                <div class="col-xs-5" style="padding: 0;">
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-block dropdown-toggle" data-toggle="dropdown">
                             <span v-if="otherPotentialBinSet">{{ otherPotentialBinSet.name }}</span>
@@ -37,8 +37,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xs-4" style="padding-right: 0; padding-left: 5px;">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary btn-block dropdown-toggle" data-toggle="dropdown">
+                            <span>{{ byName }}</span>
+                            <span class="fa fa-caret-down float-xs-right"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#" @click.prevent="potentialBy = 'count'" selected># shared contigs</a>
+                            <a class="dropdown-item" href="#" @click.prevent="potentialBy = 'bp'"># bp</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-xs-3">
-                    <button class="btn" @click="plot" :disabled="!otherPotentialBinSet || otherBinSet === otherPotentialBinSet">Plot</button>
+                    <button class="btn" @click="plot" :disabled="plotButtonDisabled">Plot</button>
                 </div>
             </div>
             <div class="card-block">
@@ -58,7 +70,7 @@
 import Chord from '../charts/Chord'
 
 /* "otherPotentialBinSet" is the selected bin set. "otherBinSet" is set to 
- * "otherPotentialBinSet" when the plot botton is clicked.
+ * "otherPotentialBinSet" when the plot botton is clicked. Same for potentialBy.
  */
 export default {
     data() {
@@ -67,7 +79,8 @@ export default {
             otherBinSet: null,
             otherPotentialBinSet: null,
             otherBins: [],
-            by: 'count'
+            by: null,
+            potentialBy: 'count'
         }
     },
     
@@ -78,6 +91,7 @@ export default {
     methods: {
         plot() {
             this.otherBinSet = this.otherPotentialBinSet
+            this.by = this.potentialBy
             const params = { binset1: this.binSet.id, binset2: this.otherBinSet.id, by: this.by }
             const assemblyId = this.$store.state.assembly.id
             $.when(
@@ -106,6 +120,14 @@ export default {
         },
         otherName() {
             return this.otherBinSet ? this.otherBinSet.name : ''
+        },
+        byName() {
+            return this.potentialBy === 'count' ? '# contigs' : '# bp'
+        },
+        plotButtonDisabled() {
+            return !this.otherPotentialBinSet || 
+                   (this.otherBinSet === this.otherPotentialBinSet &&
+                   this.by === this.potentialBy)
         }
     }
 }
@@ -130,7 +152,7 @@ export default {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 5%;
+    height: 10%;
     width: 50%;
     margin: auto;
     position: absolute;
