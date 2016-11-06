@@ -42,13 +42,18 @@
         </div>
     </div>
     <div class="col-xs-3">
+        <div class="alert alert-warning" v-show="loading">
+            <strong>Fetching data...</strong>
+            <span class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
+        </div>
+
         <div class="card">
             <div class="card-header">
                 <strong>1. Upload assembly</strong>
             </div>
             <div class="card-block">
                 <form name="assembly-form" method="post"
-                      enctype="multipart/form-data" data-bind="submit: uploadAssembly">
+                      enctype="multipart/form-data" @submit.prevent="submitAssembly">
                     <div class="form-group">
                         <label for="name">Assembly name</label>
                         <input type="text" class="form-control form-control-sm" name="name">
@@ -71,8 +76,8 @@
                         <input type="file" name="coverage" class="form-controle-file form-control-sm">
                     </div>
                     
-                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm">
-                        <!--<span class="fa fa-refresh fa-spin"></span>-->
+                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm" :disabled="assemblyLoading">
+                        <span class="fa fa-refresh fa-spin" v-show="assemblyLoading"></span>
                         Save Assembly
                     </button>
                 </form>
@@ -97,8 +102,8 @@
                         <input type="file" class="form-control-file form-control-sm" name="bins">
                     </div>
                 
-                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm">
-                        <!--<span class="fa fa-refresh fa-spin"></span>-->
+                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm" :disabled="binSetLoading">
+                        <span class="fa fa-refresh fa-spin" v-show="binSetLoading"></span>
                         Save bin-set
                     </button>
                 </form>
@@ -110,5 +115,41 @@
 
 <script>
 export default {
+    data() {
+        return {
+            loading: true,
+            assemblyLoading: false,
+            binSetLoading: false
+        }
+    },
+
+    methods: {
+        submitAssembly(event) {
+            const formData = new FormData(event.srcElement)
+            this.$store.dispatch('SUBMIT_ASSEMBLY', { formData })
+        }
+    },
+    
+    beforeMount() {
+        // Fetch data from server
+        this.$store.dispatch('GET_ASSEMBLIES').then(() => {
+            if (this.$store.state.assembly) {
+                this.$store.dispatch('GET_BIN_SETS').then(() => {
+                    if (this.$store.state.binSet) {
+                        this.$store.dispatch('GET_BINS').then(() => {
+                            this.loading = false
+                        })
+                    } else {
+                        this.loading = false
+                    }
+                })
+            } else {
+                this.loading = false
+            }
+        })
+    }
 }
 </script>
+
+<style>
+</style>

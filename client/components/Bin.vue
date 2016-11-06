@@ -1,5 +1,5 @@
 <template>
-<div class="card info-card" id="bin-card" :style="{ 'border-left-color': bin.color }">
+<div class="card info-card" id="bin-card" v-if="bin" :style="{ 'border-left-color': bin.color }">
     <div class="row">
         <div class="col-xs-5" style="padding-right: 0">
             <div class="card-block name-block">

@@ -32,7 +32,8 @@ let chord = function(bins1, bins2, matrix) {
             startAngle += (0.01 / 2)
             endAngle -= (0.01 / 2)
         }
-        return {startAngle, endAngle, data: bin, index: i}
+        let data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
+        return { startAngle, endAngle, data, index: i }
     })
     
     // Create scales for each bin: value -> angle
@@ -53,7 +54,8 @@ let chord = function(bins1, bins2, matrix) {
             let source = {
                 startAngle: sourceScale(d3.sum(bin.slice(0, j))),
                 endAngle: sourceScale(d3.sum(bin.slice(0, j+1))),
-                index: i
+                index: i,
+                data: i < bins1.length ? bins1[i] : bins2[i - bins1.length]
             }
             
             // start and end angle of target bin
@@ -62,10 +64,11 @@ let chord = function(bins1, bins2, matrix) {
             let target = {
                 startAngle: targetScale(d3.sum(targetBin.slice(0, i))),
                 endAngle: targetScale(d3.sum(targetBin.slice(0, i+1))),
-                index: j
+                index: j,
+                data: j < bins1.length ? bins1[j] : bins2[j - bins1.length]
             }
             
-            ribs.push({source, target})
+            ribs.push({ source, target })
             return ribs
         }, [])
         ribbons.push(...ribs)
@@ -83,20 +86,7 @@ export default {
         }
     },
     
-    props: {
-        plotData: {
-            type: Object,
-            default: function () {
-                return { bins1: [], bins2: [], matrix: [] }
-            }
-        },
-        name: {
-            type: String
-        },
-        otherName: {
-            type: String
-        }
-    },
+    props: ['plotData', 'name', 'otherName', 'bins', 'otherBins'],
     
     methods: {
         fade(opacity, g) {
@@ -130,11 +120,11 @@ export default {
                 .attr('fill', '#2d0682')
                 .attr('stroke', d3.rgb('#2d0682').darker())
             
-            let groupPaths = groupG.selectAll('path').data(chordData.groups, d => d.index)
+            // Update groups
+            let groupPaths = groupG.selectAll('path')
+                .data(chordData.groups, d => d.index)
+            groupPaths.exit().transition().remove()
             groupPaths.enter().append('path')
-                .style('fill', (d, i) => d3.scaleLinear().domain([0, chordData.groups.length]).range(['brown', 'steelblue'])(i))
-                .style("stroke", '#000000')
-                .attr('d', arc)
                 .on('click', (d, i) => {
                     this.g.selectAll('.groups path')
                       .filter(g => g === selected)
@@ -160,13 +150,24 @@ export default {
                         selected ? fade(.1, selected) : fade(1, d)
                     }
                 })
+                .style("stroke", '#000000')
+              .merge(groupPaths)
+                .style('fill', (d, i) => this.binsMap.get(d.data).color)
+              .transition()
+                .attr('d', arc)
                 
-            let ribbonPaths = ribbonG.selectAll('path').data(chordData.ribbons)
+            // Update ribbons
             let colorScale = d3.scaleLinear().domain([0, chordData.groups.length]).range(['steelblue', 'brown'])
+            let ribbonPaths = ribbonG.selectAll('path')
+                .data(chordData.ribbons)
+            ribbonPaths.exit().transition().remove()
             ribbonPaths.enter().append('path')
-                .style('fill', (d, i) => colorScale(i))
-                .style('stroke', (d, i) => d3.rgb(colorScale(i)).darker())
+              .merge(ribbonPaths)
+                .style('fill', (d, i) => this.binsMap.get(d.target.data).color)
+                .style('stroke', (d, i) => d3.rgb(this.binsMap.get(d.target.data).color).darker())
+              .transition()
                 .attr('d', ribbon)
+                
                 
             //this.svg.select('defs').select('path')
             //    .attr('d', arc.innerRadius(outerRadius * 1.02).outerRadius(outerRadius * 1.03).startAngle(toRad(40)).endAngle(50))
@@ -176,7 +177,19 @@ export default {
         }
     },
     
-    mounted: function() {
+    computed: {
+        binsMap() {
+            return d3.map([...this.bins, ...this.otherBins], bin => bin.id)
+        }
+    },
+
+    watch: {
+        plotData() {
+            this.updatePlot()
+        }
+    },
+    
+    mounted() {
         let width = parseInt(d3.select(this.$el).style('width'), 10)
         let height = width * .9
         this.svg = d3.select(this.$el).append('svg').attr('width', width).attr('height', height)
@@ -209,11 +222,6 @@ export default {
             .attr('height', height)
             .attr('fill-opacity', .1)
             
-        this.updatePlot()
-    },
-
-    updated: function() {
-        console.log('update')
         this.updatePlot()
     }
 }

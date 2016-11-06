@@ -58,7 +58,9 @@
         </div>
     </ul>
     
-    <router-view></router-view>
+    <keep-alive>
+        <router-view></router-view>
+    </keep-alive>
 </div>
 </template>
 
@@ -114,6 +116,8 @@ body {
 
 input[type="file"] {
     width: 100%;
+    padding: .1rem 0;
+    font-size: .9em;
 }
 
 .card-header {
@@ -129,11 +133,7 @@ input[type="file"] {
 }
 
 .btn-sm {
-    padding: .3rem .5rem;
-}
-
-.form-control-sm {
-    font-size: .75em;
+    padding: .5rem;
 }
 
 .text-primary {

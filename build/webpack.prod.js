@@ -27,7 +27,8 @@ base.plugins.push(
   new ProgressBarPlugin(),
   new ExtractTextPlugin('styles.[contenthash:8].css'),
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': JSON.stringify('production')
+    'process.env.NODE_ENV': JSON.stringify('production'),
+    'ROOTURL': JSON.stringify('')
   }),
   new webpack.LoaderOptionsPlugin({
     minimize: true

@@ -1,5 +1,5 @@
 <template>
-<div class="card info-card" id="bin-set-card" :style="{ 'border-left-color': binSet.color }">
+<div class="card info-card" id="bin-set-card" v-if="binSet" :style="{ 'border-left-color': binSet.color }">
     <div class="card-block name-block">
         <span class="name" id="bin-set-name">{{ binSet.name }}</span>
         <div class="action-buttons float-xs-right">
@@ -14,12 +14,12 @@
             </button>
         </div>
     </div>
-    <table class="table table-striped" id="bin-table">
+    <table class="table table-striped table-sm" id="bin-table">
         <thead>
             <tr>
                 <th width="5%"></th>
                 <th width="25%">Bin</th>
-                <th width="10%">Size</th>
+                <th width="15%">Size</th>
                 <th width="10%">GC</th>
                 <th width="15%">N50</th>
                 <th width="15%">Cont.</th>
@@ -32,7 +32,7 @@
                     <span :style="{ color: b.color }" class="fa" :class="bin.id === b.id ? 'fa-circle' : 'fa-circle-o'"></span>
                 </td>
                 <td width="25%">{{ b.name }}</td>
-                <td width="10%">{{ b.size }}</td>
+                <td width="15%">{{ b.size }}</td>
                 <td width="10%">{{ b.gc }}</td>
                 <td width="15%">{{ b.n50 }}</td>
                 <td width="15%">{{ b.contamination }}</td>
