@@ -64,7 +64,7 @@ export default {
 }
 
 .action-buttons {
-    opacity: .2;
+    opacity: .1;
     transition: opacity .15s ease-in-out;
 }
 

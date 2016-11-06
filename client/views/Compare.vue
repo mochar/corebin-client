@@ -23,9 +23,9 @@
                 Select a bin set and click on the Plot button.
             </span>
         </div>
-        <div class="col-xs-4">
+        <div class="col-xs-4" style="padding-left: 0;">
             <div class="card-block row">
-                <div class="col-xs-5" style="padding: 0;">
+                <div class="col-xs-5" style="padding-right: 0;">
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-block dropdown-toggle" data-toggle="dropdown">
                             <span v-if="otherPotentialBinSet">{{ otherPotentialBinSet.name }}</span>
@@ -50,7 +50,10 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <button class="btn" @click="plot" :disabled="plotButtonDisabled">Plot</button>
+                    <button class="btn" @click="plot" :disabled="plotButtonDisabled">
+                        <span v-show="!loading">Plot</span>
+                        <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
+                    </button>
                 </div>
             </div>
             <div class="card-block">
@@ -80,7 +83,8 @@ export default {
             otherPotentialBinSet: null,
             otherBins: [],
             by: null,
-            potentialBy: 'count'
+            potentialBy: 'count',
+            loading: false
         }
     },
     
@@ -90,6 +94,7 @@ export default {
 
     methods: {
         plot() {
+            this.loading = true
             this.otherBinSet = this.otherPotentialBinSet
             this.by = this.potentialBy
             const params = { binset1: this.binSet.id, binset2: this.otherBinSet.id, by: this.by }
@@ -100,6 +105,7 @@ export default {
             ).then((respMatrix, respBins) => {
                     this.otherBins = respBins[0].bins
                     this.plotData = respMatrix[0]
+                    this.loading = false
                 }
             )
         }
