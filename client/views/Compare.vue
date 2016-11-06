@@ -28,17 +28,17 @@
                 <div class="col-xs-9">
                     <div class="dropdown">
                         <button class="btn btn-secondary btn-block dropdown-toggle" data-toggle="dropdown">
-                            <span v-if="otherBinSet">{{ otherBinSet.name }}</span>
-                            <span v-if="!otherBinSet" class="text-muted">Bin set</span>
+                            <span v-if="otherPotentialBinSet">{{ otherPotentialBinSet.name }}</span>
+                            <span v-if="!otherPotentialBinSet" class="text-muted">Bin set</span>
                             <span class="fa fa-caret-down float-xs-right"></span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" href="#" @click.prevent="otherBinSet = bs" v-for="bs in binSets">{{ bs.name }}</a>
+                            <a class="dropdown-item" href="#" @click.prevent="otherPotentialBinSet = bs" v-for="bs in binSets">{{ bs.name }}</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <button class="btn" @click="plot" :disabled="!otherBinSet">Plot</button>
+                    <button class="btn" @click="plot" :disabled="!otherPotentialBinSet || otherBinSet === otherPotentialBinSet">Plot</button>
                 </div>
             </div>
             <div class="card-block">
@@ -57,11 +57,15 @@
 <script>
 import Chord from '../charts/Chord'
 
+/* "otherPotentialBinSet" is the selected bin set. "otherBinSet" is set to 
+ * "otherPotentialBinSet" when the plot botton is clicked.
+ */
 export default {
     data() {
         return {
             plotData: { bins1: [], bins2: [], matrix: [] },
             otherBinSet: null,
+            otherPotentialBinSet: null,
             otherBins: [],
             by: 'count'
         }
@@ -73,6 +77,7 @@ export default {
 
     methods: {
         plot() {
+            this.otherBinSet = this.otherPotentialBinSet
             const params = { binset1: this.binSet.id, binset2: this.otherBinSet.id, by: this.by }
             const assemblyId = this.$store.state.assembly.id
             $.when(
