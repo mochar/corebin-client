@@ -27,6 +27,13 @@
             </router-link>
         </li>
         
+        <!--<li class="nav-item bg-warning text-white" id="message">
+            <strong class="nav-link">
+                Processing... 
+                <span class="fa fa-refresh fa-spin fa-lg"></span>
+            </strong>
+        </li>-->
+        
         <div class="float-xs-right">
             <li class="nav-item dropdown" v-if="assembly">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
@@ -136,6 +143,10 @@ input[type="file"] {
     padding: .5rem;
 }
 
+.rounded {
+    border-radius: .25rem !important;
+}
+
 .text-primary {
     color: #31708f !important;
 }
@@ -175,5 +186,10 @@ input[type="file"] {
 
 .nav-item.open .nav-link {
     background-color: steelblue !important;
+}
+
+#message {
+    position: absolute;
+    left: 50%;
 }
 </style>
