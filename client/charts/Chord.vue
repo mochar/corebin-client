@@ -97,19 +97,24 @@ export default {
                 .attr('opacity', opacity)
         },
         updatePlot() {
-            let width = parseInt(d3.select(this.$el).style('width'), 10)
-            let height = width * .9
-            let outerRadius = Math.min(width, height) * 0.5 - 40
-            let innerRadius = outerRadius - 30
-            let groupG = this.g.select('g.groups')
-            let ribbonG = this.g.select('g.ribbons')
-            let fade = this.fade
+            const width = parseInt(d3.select(this.$el).style('width'), 10)
+            const height = width * .9
+            const outerRadius = Math.min(width, height) * 0.5 - 40
+            const outerRadiusLg = outerRadius * 1.01
+            const outerRadiusSm = outerRadius * .98
+            const innerRadius = outerRadius - 30
+            const innerRadiusLg = innerRadius * .99
+            const innerRadiusSm = innerRadius * 1.02
             
-            let arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
-            let ribbon = d3.ribbon().radius(innerRadius-5)
+            const groupG = this.g.select('g.groups')
+            const ribbonG = this.g.select('g.ribbons')
+            const fade = this.fade
+            
+            const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
+            const ribbon = d3.ribbon().radius(innerRadius-5)
             
             //--------------------------
-            let chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
+            const chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
             let selected = this.selected
                 
             this.svg.select('rect#binSet1Rect')
@@ -134,19 +139,21 @@ export default {
                       .filter(g => g !== d)
                       .transition()
                         .attr('d', arc
-                            .innerRadius(d === selected ? innerRadius : innerRadius * 1.02)
-                            .outerRadius(d === selected ? outerRadius : outerRadius * .98)) 
+                            .innerRadius(d === selected ? innerRadius : innerRadiusSm)
+                            .outerRadius(d === selected ? outerRadius : outerRadiusSm)) 
                     selected = selected === d ? null : d
+                    this.$emit('binSelected', selected ? this.binsMap.get(selected.data) : null)
                 })
                 .on('mouseover', function(d, i) { 
                     if (selected !== d) {
-                        d3.select(this).transition().attr('d', arc.innerRadius(innerRadius * .99).outerRadius(outerRadius * 1.01)) 
+                        d3.select(this).transition().attr('d', arc.innerRadius(innerRadiusLg).outerRadius(outerRadiusLg)) 
                         fade(.1, d)
                     }
                 })
                 .on('mouseout', function(d, i) { 
                     if (selected !== d) {
-                        d3.select(this).transition().attr('d', arc.innerRadius(innerRadius).outerRadius(outerRadius)) 
+                        if (selected) d3.select(this).transition().attr('d', arc.innerRadius(innerRadiusSm).outerRadius(outerRadiusSm)) 
+                        else d3.select(this).transition().attr('d', arc.innerRadius(innerRadius).outerRadius(outerRadius)) 
                         selected ? fade(.1, selected) : fade(1, d)
                     }
                 })

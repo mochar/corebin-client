@@ -15,22 +15,15 @@
             </div>
             
             <div class="card-block" id="content-card">
-                <h6><span class="fa fa-cog fa-lg fa-pull-right"></span> Actions</h6>
-                <hr style="margin-top: 0">
-                <ul>
-                    <li>
-                        <a href="#" @click.prevent="">Assess quality</a>
-                    </li>
-                    <li>
-                        <a href="#refine" @click="">Refine</a>
-                    </li>
-                    <li>
-                        <a href="#compare" @click="">Compare</a>
-                    </li>
-                </ul>
+                <h6><span class="fa fa-check fa-lg fa-fw fa-pull-right"></span> Assess quality</h6>
+                <hr>
 
-                <h6 style="margin-top: 23px"><span class="fa fa-tasks fa-lg fa-pull-right"></span> Contigs</h6>
-                <hr style="margin-top: 0">
+                <h6 style="margin-top: 23px"><span class="fa fa-cog fa-lg fa-fw fa-pull-right"></span> Refine</h6>
+                <hr>
+                
+
+                <h6 style="margin-top: 23px"><span class="fa fa-balance-scale fa-lg fa-fw fa-pull-right"></span> Compare</h6>
+                <hr>
             </div>
         </div>
         <div class="col-xs-7" id="plots">
@@ -97,5 +90,15 @@ export default {
 
 #plots > h6 {
     padding-left: 1rem;
+}
+</style>
+
+<style scoped>
+.fa {
+    color: #55595c;
+}
+
+hr {
+    margin-top: 0;
 }
 </style>

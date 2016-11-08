@@ -1,6 +1,6 @@
 <template>
 <div class="card" v-if="binSet">
-    <div class="row">
+    <div class="row" style="display: flex;">
         <div class="col-xs-8" id="compare-left">
             <div id="chord-set-settings">
                 <label class="form-check-label">
@@ -18,8 +18,9 @@
                 :otherName="otherName"
                 :bins="bins"
                 :otherBins="otherBins"
+                @binSelected="selectBin"
             ></chord>
-            <span v-show="otherBins.length === 0" id="message" class="text-muted">
+            <span v-show="otherBins.length === 0" class="message text-muted">
                 Select a bin set and click on the Plot button.
             </span>
         </div>
@@ -56,13 +57,21 @@
                     </button>
                 </div>
             </div>
-            <div class="card-block">
-                <ul class="list-group">
-                    <li v-for="bin in otherBins" class="list-group-item">
-                        {{ bin.name }}
-                        <button class="btn btn-link float-xs-right">Refine</button>
-                    </li>
-                </ul>
+            <div class="card-block" style="padding-top: 0">
+                <span class="message text-muted" v-show="otherBins.length > 0 && !selectedBin">
+                    Select a bin by left-clicking.
+                </span>
+                <div class="card rounded" v-if="selectedBin">
+                    <div class="card-block" style="background-color: rgba(0,0,0,.125);">
+                        <h4>{{ selectedBin.name }}</h4>
+                        <button class="btn btn-secondary btn-sm float-xs-right">Hide</button>
+                    </div>
+                    <ul class="list-group" v-for="">
+                        <li class="list-group-item">A</li>
+                        <li class="list-group-item">B</li>
+                        <li class="list-group-item">C</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -84,7 +93,8 @@ export default {
             otherBins: [],
             by: null,
             potentialBy: 'count',
-            loading: false
+            loading: false,
+            selectedBin: null
         }
     },
     
@@ -108,6 +118,9 @@ export default {
                     this.loading = false
                 }
             )
+        },
+        selectBin(bin) {
+            this.selectedBin = bin
         }
     },
 
@@ -153,7 +166,7 @@ export default {
     right: 1em;
 }
 
-#message {
+.message {
     top: 0;
     bottom: 0;
     left: 0;
