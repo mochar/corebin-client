@@ -125,6 +125,9 @@ export default {
     },
 
     computed: {
+        assembly() {
+            return this.$store.state.assembly
+        },
         binSet() {
             return this.$store.state.binSet
         },
@@ -147,6 +150,16 @@ export default {
             return !this.otherPotentialBinSet || 
                    (this.otherBinSet === this.otherPotentialBinSet &&
                    this.by === this.potentialBy)
+        }
+    },
+
+    watch: {
+        assembly() {
+            this.plotData = { bins1: [], bins2: [], matrix: [] }
+            this.otherBinSet = null
+            this.otherPotentialBinSet = null
+            this.otherBins = []
+            this.selectedBin = null
         }
     }
 }
