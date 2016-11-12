@@ -202,7 +202,12 @@
             </p>           
         </div>
     </div>
-    <div class="col-xs-2"></div>
+    <div class="col-xs-2">
+        <a href="#home" class="btn btn-primary btn-block">
+            <span class="fa fa-arrow-left"></span>
+            Return to Home
+        </a>
+    </div>
 </div>
 </template>
 

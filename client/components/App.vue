@@ -7,7 +7,7 @@
         </strong>
     </div>
         
-    <ul class="nav nav-pills">
+    <ul class="nav nav-pills" style="display: none">
         <li class="nav-item">
             <router-link to="/home" active-class="active" class="nav-link">
                 <span class="fa fa-lg fa-home"></span>

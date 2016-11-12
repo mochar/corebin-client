@@ -42,73 +42,64 @@
         </div>
     </div>
     <div class="col-xs-3">
-        <div class="card">
-            <div class="card-header">
-                <strong>1. Upload assembly</strong>
-            </div>
-            <div class="card-block">
-                <form name="assembly-form" method="post"
-                      enctype="multipart/form-data" @submit.prevent="submitAssembly">
-                    <div class="form-group">
-                        <label for="name">Assembly name</label>
-                        <input type="text" class="form-control form-control-sm" name="name">
+        <div class="card info-card">
+            <ul class="list-group">
+                <li class="list-group-item" v-for="a in assemblies" :class="{ unselected: a !== assembly }"
+                    @click="selectAssembly(a)">
+                    <div class="card-block name-block">
+                        <span class="name" id="assembly-name">{{ a.name }}</span>
+
+                        <div class="dropdown float-xs-right" v-show="a === assembly">
+                            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="open-menu">
+                                <span class="fa fa-ellipsis-v"></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#">
+                                    <span class="fa fa-pencil text-primary"></span> Rename
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <span class="fa fa-trash text-danger"></span> Delete
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="contigs">Assembly file (fasta)</label>
-                        <input type="file" name="contigs" class="form-control-file form-control-sm">
+                    <div class="card-block" style="padding: .5rem 1rem;" v-if="a === assembly">
+                        <div class="bin-set-list">
+                            <div v-for="bs in binSets" class="list-item">
+                                {{ bs.name }}
+                                <a href="#" class="float-xs-right" @click.prevent="">Overview</a>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm btn-block">Add bin set</button>
+                        </div>
+                        <button class="btn btn-sm btn-primary btn-block" id="add-bs-btn" v-show="binSets.length">
+                            <span class="fa fa-balance-scale"></span> Compare bin sets
+                        </button>
+                        <p class="card-text" style="margin-top: .5rem">
+                            <small class="text-muted">Added one day ago</small>
+                        </p>
                     </div>
-                    
-                    <div class="form-check">
-                        <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" name="fourmers"> 
-                            Calculate tetranucleotide frequencies
-                        </label>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="fasta">Coverage table</label>
-                        <input type="file" name="coverage" class="form-controle-file form-control-sm">
-                    </div>
-                    
-                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm" :disabled="assemblyLoading">
-                        <span class="fa fa-refresh fa-spin" v-show="assemblyLoading"></span>
-                        Save Assembly
-                    </button>
-                </form>
+                </li>
+            </ul>
+            <div class="card-footer text-muted" style="padding: 0">
+                <button class="btn btn-outline-secondary btn-block" id="add-btn" style="color: #666" data-toggle="tooltip"
+                    data-placement="bottom" title="Click me to begin">
+                    <span class="fa fa-plus"></span> Assembly
+                </button>
             </div>
         </div>
         
-        <div class="card">
-            <div class="card-header">
-                <strong>2. Upload binning results</strong>
-            </div>
-            <div class="card-block">
-                <form name="bin-set-form" method="post"
-                      enctype="multipart/form-data">
-                    
-                    <div class="form-group">
-                        <label for="name">Bin-set name</label>
-                        <input type="text" class="form-control form-control-sm" name="name">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="bins">Bin-set file</label>
-                        <input type="file" class="form-control-file form-control-sm" name="bins">
-                    </div>
-                
-                    <button type="submit" class="btn btn-secondary float-xs-right btn-sm" :disabled="binSetLoading">
-                        <span class="fa fa-refresh fa-spin" v-show="binSetLoading"></span>
-                        Save bin-set
-                    </button>
-                </form>
-            </div>
+        <div class="float-xs-right">
+            <small><a href="#help">Stuck or need more info?</a></small> <br>
+            <small class="text-muted">Made by Mohammed Charrout</small> <br>
+            <small class="text-muted">Supervised by Lex Overmars</small>
         </div>
     </div>
 </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     data() {
         return {
@@ -121,17 +112,90 @@ export default {
         submitAssembly(event) {
             const formData = new FormData(event.srcElement)
             this.$store.dispatch('SUBMIT_ASSEMBLY', { formData })
-        }
+        },
+        selectAssembly(assembly) {
+            this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
+            })
+        },
+    },
+    
+    computed: {
+        ...mapState([
+            'assemblies',
+            'assembly',
+            'binSets'
+        ])
     },
     
     beforeMount() {
         // Fetch data from server
         this.$store.dispatch('GET_ASSEMBLIES').then(() => {
             this.loading = false
+            if (!this.assembly) $('[data-toggle="tooltip"]').tooltip('show')
         })
     }
 }
 </script>
 
 <style>
+#assembly-name::before {
+    content: "Assembly ";
+}
+
+.bin-set-list {
+    padding-left: 1rem;
+    border-left: 1px solid #ccc;
+}
+
+.list-item {
+    margin: .5rem 0; 
+}
+
+#add-bs-btn {
+    margin-top: 1rem;
+}
+
+#add-btn {
+    border: 0;
+}
+
+.unselected {
+    opacity: .3;
+}
+
+.unselected span {
+    font-size: large;
+}
+
+.unselected:hover {
+    opacity: .9;
+    transition: opacity .15s ease-in-out;
+    cursor: pointer;
+}
+
+#open-menu {
+    border: 0;
+}
+</style>
+
+<style scoped>
+.info-card {
+    border-left-width: 1px;
+}
+
+.btn-sm {
+    padding: .25rem .5rem; 
+}
+
+.list-group-item {
+    padding: 0;
+}
+
+button.dropdown-toggle::after {
+    display: none;
+}
+
+button.dropdown-toggle {
+    padding: .5rem;
+}
 </style>
