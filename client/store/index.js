@@ -15,22 +15,24 @@ const state = {
     // Jobs
     assemblyJob: null,
     binSetJob: null,
-    hmmerJobs: []
+    hmmerJobs: [],
+    
+    // Other
+    message: ''
 }
 
 const mutations = {
     SELECT_ASSEMBLY(state, assembly) {
-        state.assembly = assembly;
+        state.assembly = assembly
     },
     SELECT_BIN_SET(state, binSet) {
-        state.binSet = binSet;
+        state.binSet = binSet
     },
     SELECT_BIN(state, bin) {
-        state.bin = bin;
+        state.bin = bin
     },
     SET_ASSEMBLIES(state, assemblies) {
         state.assemblies = assemblies
-        if (assemblies.length) state.assembly = assemblies[0]
     },
     SET_BIN_SETS(state, binSets) {
         state.binSets = binSets
@@ -38,7 +40,6 @@ const mutations = {
     },
     SET_BINS(state, bins) {
         state.bins = bins
-        if (bins.length) state.bin = bins[0]
     },
     SET_JOBS(state, jobs) {
         jobs.forEach(job => {
@@ -49,10 +50,25 @@ const mutations = {
             }
         })
         state.hmmerJobs = [...state.hmmerJobs, ...jobs.filter(job => job.meta.type == 'C')]
+    },
+    SET_MESSAGE(state, message) {
+        state.message = message
     }
 }
 
 const actions = {
+    SELECT_ASSEMBLY({ commit, dispatch, state }, assembly) {
+        commit('SET_MESSAGE', 'Fetching data...')
+        commit('SELECT_ASSEMBLY', assembly)
+        return dispatch('GET_BIN_SETS').then(() => {
+            if (state.binSet) dispatch('GET_BINS')
+        })
+    },
+    SELECT_BIN_SET({ commit, dispatch }, binSet) {
+        commit('SET_MESSAGE', 'Fetching data...')
+        commit('SELECT_BIN_SET', binSet)
+        return dispatch('GET_BINS')
+    },
     SUBMIT_ASSEMBLY({ commit }, { formData }) {
         $.post({
             url: `${ROOTURL}/a`,
@@ -66,13 +82,16 @@ const actions = {
             commit('SET_JOBS', [job])
         })
     },
-    GET_ASSEMBLIES({ commit }) {
+    GET_ASSEMBLIES({ commit, dispatch }) {
+        commit('SET_MESSAGE', 'Fetching data...')
         return $.when(
             $.getJSON(`${ROOTURL}/jobs`),
             $.getJSON(`${ROOTURL}/a`)
         ).then((respJobs, respAssemblies) => {
             commit('SET_JOBS', respJobs[0].jobs)
             commit('SET_ASSEMBLIES', respAssemblies[0].assemblies)
+            if (!respAssemblies[0].assemblies.length) return
+            dispatch('SELECT_ASSEMBLY', respAssemblies[0].assemblies[0])
         })
     },
     GET_BIN_SETS({ commit, state }) {
@@ -83,6 +102,8 @@ const actions = {
     GET_BINS({ commit, state }) {
         return $.getJSON(`${ROOTURL}/a/${state.assembly.id}/bs/${state.binSet.id}/b`).then(data => {
             commit('SET_BINS', data.bins)
+            commit('SELECT_BIN', null)
+            commit('SET_MESSAGE', '')
         })
     }
 }

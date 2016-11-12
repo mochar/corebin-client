@@ -14,7 +14,11 @@
         <bin-set></bin-set>
     </div>
     <div class="col-xs-8" style="padding-left: 0;">
-        <bin></bin>
+        <bin v-if="bin"></bin>
+        <div class="text-xs-center" id="select-message" v-show="!bin">
+            <span class="fa fa-inbox fa-4x text-muted"></span>
+            <span class="text-muted lead">Select a bin on the left<span>
+        </div>
     </div>
 </div>
 </template>
@@ -33,6 +37,9 @@ export default {
         assembly() {
             return this.$store.state.assembly
         },
+        bin() {
+            return this.$store.state.bin
+        }
     }
 }
 </script>
@@ -74,5 +81,13 @@ export default {
 
 .info-card:hover .action-buttons {
     opacity: 1;
+}
+
+#select-message {
+    margin-top: 6em;
+}
+
+#select-message > span {
+    display: block;
 }
 </style>

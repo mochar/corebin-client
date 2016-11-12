@@ -42,11 +42,6 @@
         </div>
     </div>
     <div class="col-xs-3">
-        <div class="alert alert-warning" v-show="loading">
-            <strong>Fetching data...</strong>
-            <span class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
-        </div>
-
         <div class="card">
             <div class="card-header">
                 <strong>1. Upload assembly</strong>
@@ -117,7 +112,6 @@
 export default {
     data() {
         return {
-            loading: true,
             assemblyLoading: false,
             binSetLoading: false
         }
@@ -133,19 +127,7 @@ export default {
     beforeMount() {
         // Fetch data from server
         this.$store.dispatch('GET_ASSEMBLIES').then(() => {
-            if (this.$store.state.assembly) {
-                this.$store.dispatch('GET_BIN_SETS').then(() => {
-                    if (this.$store.state.binSet) {
-                        this.$store.dispatch('GET_BINS').then(() => {
-                            this.loading = false
-                        })
-                    } else {
-                        this.loading = false
-                    }
-                })
-            } else {
-                this.loading = false
-            }
+            this.loading = false
         })
     }
 }

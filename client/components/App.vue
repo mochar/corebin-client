@@ -1,5 +1,12 @@
 <template>
 <div class="container" id="app">
+    <div class="alert-warning" id="message" v-if="message">
+        <strong>
+            {{ message }}
+            <span class="fa fa-refresh fa-spin fa-lg"></span>
+        </strong>
+    </div>
+        
     <ul class="nav nav-pills">
         <li class="nav-item">
             <router-link to="/home" active-class="active" class="nav-link">
@@ -12,12 +19,14 @@
             </router-link>
         </li>
         <li class="nav-item">
-            <router-link to="/compare" active-class="active" class="nav-link">
+            <router-link to="/compare" active-class="active" class="nav-link"
+                :class="{ disabled: compareDisabled }">
                 <span class="fa fa-balance-scale"></span> Compare
             </router-link>
         </li>
         <li class="nav-item">
-            <router-link to="/refine" active-class="active" class="nav-link">
+            <router-link to="/refine" active-class="active" class="nav-link"
+                :class="{ disabled: refineDisabled }">
                 <span class="fa fa-cog"></span> Refine
             </router-link>
         </li>
@@ -26,13 +35,6 @@
                 <span class="fa fa-question-circle"></span> Help
             </router-link>
         </li>
-        
-        <!--<li class="nav-item bg-warning text-white" id="message">
-            <strong class="nav-link">
-                Processing... 
-                <span class="fa fa-refresh fa-spin fa-lg"></span>
-            </strong>
-        </li>-->
         
         <div class="float-xs-right">
             <li class="nav-item dropdown" v-if="assembly">
@@ -72,24 +74,38 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 import 'bootstrap'
 
 export default {
     data() {
         return {
-            show: true
+            show: true,
+            allDisabled: false
         }
     },  
     
     methods: {
-        ...mapMutations({
-            selectAssembly: 'SELECT_ASSEMBLY',
-            selectBinSet: 'SELECT_BIN_SET'
-        })
+        selectAssembly(assembly) {
+            this.allDisabled = true
+            this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
+                this.allDisabled = false
+            })
+        },
+        selectBinSet(binSet) {
+            this.allDisabled = true
+            this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
+                this.allDisabled = false
+            })
+        }
     },
     
     computed: {
+        compareDisabled() {
+            return this.allDisabled || !this.$store.state.binSet
+        },
+        refineDisabled() {
+            return this.allDisabled || !this.$store.state.bin
+        },
         assembly() {
             return this.$store.state.assembly
         },
@@ -101,6 +117,9 @@ export default {
         },
         binSets() {
             return this.$store.state.binSets
+        },
+        message() {
+            return this.$store.state.message
         }
     }
 }
@@ -191,5 +210,13 @@ input[type="file"] {
 #message {
     position: absolute;
     left: 50%;
+    border: 1px solid #8a6d3b;
+    font-size: .8rem;
+    top: 2em;
+    z-index: 999;
+    padding: .3rem .5rem;
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+       -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+            box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
 }
 </style>

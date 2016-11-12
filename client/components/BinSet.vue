@@ -29,7 +29,7 @@
         <tbody>
             <tr v-for="b in bins" @click="selectBin(b)">
                 <td width="5%">
-                    <span :style="{ color: b.color }" class="fa" :class="bin.id === b.id ? 'fa-circle' : 'fa-circle-o'"></span>
+                    <span :style="{ color: b.color }" class="fa" :class="bin && bin.id === b.id ? 'fa-circle' : 'fa-circle-o'"></span>
                 </td>
                 <td width="25%">{{ b.name }}</td>
                 <td width="15%">{{ b.size }}</td>

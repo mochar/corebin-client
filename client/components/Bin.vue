@@ -64,8 +64,8 @@ export default {
     methods: {
     },
 
-    created: function() {
-        setTimeout(() => this.gcData.hist[0] = 1000, 3000)
+    created() {
+        setTimeout(() => this.gcData.hist[0] = 1000, 1000)
     }
 }
 </script>
