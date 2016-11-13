@@ -1,16 +1,14 @@
 <template>
 <div class="row">
     <div class="col-xs-4" style="padding-right: .5rem;">
-        <!--<div class="card card-block card-inverse card-primary info-card" id="assembly-card">
-            <span class="name">{{ assembly.name }}</span>
-            <button type="button" class="btn btn-link float-xs-right">
-                <span class="fa fa-trash text-danger"></span>
-            </button>
-            <button type="button" class="btn btn-link float-xs-right">
-                <span class="fa fa-pencil text-primary"></span>
-            </button>
+        <div class="card card-outline-secondary">
+            <nav class="nav nav-pills nav-stacked back">
+                <router-link to="/home" class="nav-link">
+                    <span class="fa fa-arrow-left"></span>
+                    Return to Home
+                </router-link>
+            </nav>
         </div>
-        <hr>-->
         <bin-set></bin-set>
     </div>
     <div class="col-xs-8" style="padding-left: 0;">

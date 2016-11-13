@@ -1,6 +1,15 @@
 <template>
 <div class="row">
     <div class="col-xs-4">
+        <div class="card card-outline-secondary">
+            <nav class="nav nav-pills nav-stacked back">
+                <router-link to="/overview" class="nav-link">
+                    <span class="fa fa-arrow-left"></span>
+                    Return to Overview
+                </router-link>
+            </nav>
+        </div>
+        
         <div class="card">
             <div class="card-header">
                 <ul class="nav nav-tabs card-header-tabs float-xs-left">

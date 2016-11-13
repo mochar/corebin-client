@@ -60,9 +60,7 @@ const actions = {
     SELECT_ASSEMBLY({ commit, dispatch, state }, assembly) {
         commit('SET_MESSAGE', 'Fetching data...')
         commit('SELECT_ASSEMBLY', assembly)
-        return dispatch('GET_BIN_SETS').then(() => {
-            if (state.binSet) dispatch('GET_BINS')
-        })
+        return dispatch('GET_BIN_SETS')
     },
     SELECT_BIN_SET({ commit, dispatch }, binSet) {
         commit('SET_MESSAGE', 'Fetching data...')
@@ -97,6 +95,7 @@ const actions = {
     GET_BIN_SETS({ commit, state }) {
         return $.getJSON(`${ROOTURL}/a/${state.assembly.id}/bs`).then(data => {
             commit('SET_BIN_SETS', data.binSets)
+            commit('SET_MESSAGE', '')
         })
     },
     GET_BINS({ commit, state }) {

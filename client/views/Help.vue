@@ -203,10 +203,14 @@
         </div>
     </div>
     <div class="col-xs-2">
-        <a href="#home" class="btn btn-primary btn-block">
-            <span class="fa fa-arrow-left"></span>
-            Return to Home
-        </a>
+        <div class="card card-outline-secondary">
+            <nav class="nav nav-pills nav-stacked back">
+                <router-link to="/home" class="nav-link">
+                    <span class="fa fa-arrow-left"></span>
+                    Return to Home
+                </router-link>
+            </nav>
+        </div>
     </div>
 </div>
 </template>

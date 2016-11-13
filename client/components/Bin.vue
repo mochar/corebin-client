@@ -20,10 +20,13 @@
 
                 <h6 style="margin-top: 23px"><span class="fa fa-cog fa-lg fa-fw fa-pull-right"></span> Refine</h6>
                 <hr>
-                
-
-                <h6 style="margin-top: 23px"><span class="fa fa-balance-scale fa-lg fa-fw fa-pull-right"></span> Compare</h6>
-                <hr>
+                <label class="form-check-label">
+                    <input type="checkbox" class="form-check-input">
+                    Empty plot
+                </label>
+                <router-link to="/refine" class="btn btn-sm btn-outline-primary float-xs-right">
+                    Refine
+                </router-link>
             </div>
         </div>
         <div class="col-xs-7" id="plots">

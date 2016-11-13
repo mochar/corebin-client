@@ -55,10 +55,10 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <a class="dropdown-item" href="#">
-                                    <span class="fa fa-pencil text-primary"></span> Rename
+                                    <span class="fa fa-fw fa-pencil text-primary"></span> Rename
                                 </a>
                                 <a class="dropdown-item" href="#">
-                                    <span class="fa fa-trash text-danger"></span> Delete
+                                    <span class="fa fa-fw fa-trash text-danger"></span> Delete
                                 </a>
                             </div>
                         </div>
@@ -67,13 +67,15 @@
                         <div class="bin-set-list">
                             <div v-for="bs in binSets" class="list-item">
                                 {{ bs.name }}
-                                <a href="#" class="float-xs-right" @click.prevent="">Overview</a>
+                                <router-link to="/overview" class="float-xs-right" @click.native="selectBinSet(bs)">
+                                    Overview
+                                </router-link>
                             </div>
                             <button class="btn btn-outline-primary btn-sm btn-block">Add bin set</button>
                         </div>
-                        <button class="btn btn-sm btn-primary btn-block" id="add-bs-btn" v-show="binSets.length">
+                        <router-link to="/compare" class="btn btn-sm btn-primary btn-block" id="add-bs-btn" v-show="binSets.length">
                             <span class="fa fa-balance-scale"></span> Compare bin sets
-                        </button>
+                        </router-link>
                         <p class="card-text" style="margin-top: .5rem">
                             <small class="text-muted">Added one day ago</small>
                         </p>
@@ -89,7 +91,7 @@
         </div>
         
         <div class="float-xs-right">
-            <small><a href="#help">Stuck or need more info?</a></small> <br>
+            <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
             <small class="text-muted">Made by Mohammed Charrout</small> <br>
             <small class="text-muted">Supervised by Lex Overmars</small>
         </div>
@@ -117,6 +119,10 @@ export default {
             this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
             })
         },
+        selectBinSet(binSet) {
+            this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
+            })
+        }
     },
     
     computed: {
@@ -131,7 +137,8 @@ export default {
         // Fetch data from server
         this.$store.dispatch('GET_ASSEMBLIES').then(() => {
             this.loading = false
-            if (!this.assembly) $('[data-toggle="tooltip"]').tooltip('show')
+            if (!this.assembly) 
+                this.$nextTick(() => $('[data-toggle="tooltip"]').tooltip('show'))
         })
     }
 }
