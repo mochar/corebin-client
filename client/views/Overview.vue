@@ -1,6 +1,6 @@
 <template>
 <div class="row">
-    <div class="col-xs-4" style="padding-right: .5rem;">
+    <div class="col-xs-3">
         <div class="card card-outline-secondary">
             <nav class="nav nav-pills nav-stacked back">
                 <router-link to="/home" class="nav-link">
@@ -9,34 +9,38 @@
                 </router-link>
             </nav>
         </div>
-        <bin-set></bin-set>
     </div>
-    <div class="col-xs-8" style="padding-left: 0;">
-        <bin v-if="bin"></bin>
-        <div class="text-xs-center" id="select-message" v-show="!bin">
-            <span class="fa fa-inbox fa-4x text-muted"></span>
-            <span class="text-muted lead">Select a bin on the left<span>
-        </div>
+    <div class="col-xs-9" id="bins-section">
+        <bin 
+            v-for="bin in bins"
+            :bin="bin"
+            :maxSize="maxSize"
+            :minSize="minSize">
+        </bin>
     </div>
 </div>
 </template>
 
 <script>
-import BinSet from '../components/BinSet'
 import Bin from '../components/Bin'
 
 export default {
     components: {
-        BinSet,
         Bin
     },
     
     computed: {
-        assembly() {
-            return this.$store.state.assembly
+        binSet() {
+            return this.$store.state.binSet
         },
-        bin() {
-            return this.$store.state.bin
+        bins() {
+            return this.$store.state.bins
+        },
+        maxSize() {
+            return Math.max(...this.bins.map(bin => bin.size))
+        },
+        minSize() {
+            return Math.min(...this.bins.map(bin => bin.size))
         }
     }
 }
@@ -45,6 +49,7 @@ export default {
 <style>
 .name {
     font-size: 1.5rem;
+    margin-left: 1rem;
 }
 
 .name::before {
@@ -87,5 +92,11 @@ export default {
 
 #select-message > span {
     display: block;
+}
+
+#bins-section {
+    overflow-y: scroll;
+    padding-right: 2rem;
+    max-height: 95vh;
 }
 </style>

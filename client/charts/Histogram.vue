@@ -30,7 +30,7 @@ export default {
         updatePlot: function() {
             let width = parseInt(d3.select(this.$el).style('width'), 10)
             width = width - this.margin.left - this.margin.right
-            let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.6
+            let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
             height = height - this.margin.top - this.margin.bottom
                 
             let bins = this.plotData.bins
@@ -68,7 +68,7 @@ export default {
     mounted: function() {
         let width = parseInt(d3.select(this.$el).style('width'), 10)
         width = width - this.margin.left - this.margin.right
-        let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.6
+        let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
         height = height - this.margin.top - this.margin.bottom
         this.svg = d3.select(this.$el).append('svg')
                 .attr('width', width + this.margin.left + this.margin.right)

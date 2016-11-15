@@ -162,6 +162,10 @@ input[type="file"] {
     padding: .5rem;
 }
 
+.btn-xs {
+    padding: .3rem .5rem;
+}
+
 .rounded {
     border-radius: .25rem !important;
 }
