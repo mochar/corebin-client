@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             svg: null,
-            margin: {top: 5, right: 8, bottom: 18, left: 40}
+            margin: {top: 5, right: 8, bottom: 18, left: 5}
         }
     },
     
@@ -43,9 +43,7 @@ export default {
             let x = d3.scalePoint().range([0, width]).domain(bins)
             let y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data)])
             let xAxis = d3.axisBottom(x).tickFormat(format)
-            let yAxis = d3.axisLeft(y)
             this.svg.select('.x').call(xAxis)
-            this.svg.select('.y').call(yAxis)
             
             // Remove all bars
             this.svg.selectAll('.bar').remove()
@@ -53,15 +51,17 @@ export default {
             // Update with new bars
             let bar = this.svg.selectAll('.bar').data(data)
             
-            bar.enter().append('rect')
+            const rect = bar.enter().append('rect')
                 .attr('class', 'bar')
                 .attr('x', (d, i) => x(bins[i]))
                 .attr('y', height)
                 .attr('width', width / data.length -1)
                 .attr('height', 0)
-              .transition()
+            rect.transition()
                 .attr('height', d => height - y(d))
                 .attr('y', d => y(d))
+            rect.append('title')
+                .text(d => d)
         }
     },
     
@@ -79,9 +79,6 @@ export default {
         this.svg.append('g')
             .attr('class', 'x axis hist-axis')
             .attr('transform', 'translate(0,' + height + ')')
-        
-        this.svg.append('g')
-            .attr('class', 'y axis hist-axis')
             
         this.updatePlot()
     },
@@ -96,6 +93,7 @@ export default {
 <style>
 .bar {
   fill: steelblue;
+  shape-rendering: crispEdges;
 }
 
 .bar:hover {
