@@ -1,5 +1,5 @@
 <template>
-<div class="card row bin-container" :style="{ 'border-left-color': bin.color }">
+<div class="card row bin-container">
     <div class="col-xs-2 bin-name-container text-xs-center">
         <div class="row">
             <div class="col-xs-3 left-buttons">
@@ -22,19 +22,19 @@
     <div class="col-xs-8 bin-info">
         <div class="row">
             <div class="col-xs-2"><small class="text-muted">Size (bp)</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: sizeBarPercent + '%'}"></div></div>
+            <div class="col-xs-9"><div class="bar" :style="{ width: sizeBarPercent + '%', 'background-color': bin.color }"></div></div>
             <div class="col-xs-1"><small class="text-muted">{{ bin.size }}</small></div>
             <br>
             <div class="col-xs-2"><small class="text-muted">GC</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: gc + '%'}"></div></div>
+            <div class="col-xs-9"><div class="bar" :style="{ width: gc + '%', 'background-color': bin.color }"></div></div>
             <div class="col-xs-1"><small class="text-muted">{{ gc }}%</small></div>
             <br>
             <div class="col-xs-2"><small class="text-muted">contamination</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: contamination + '%'}"></div></div>
+            <div class="col-xs-9"><div class="bar" :style="{ width: contamination + '%', 'background-color': bin.color }"></div></div>
             <div class="col-xs-1"><small class="text-muted">{{ contamination }}%</small></div>
             <br>
             <div class="col-xs-2"><small class="text-muted">completeness</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: completeness + '%'}"></div></div>
+            <div class="col-xs-9"><div class="bar" :style="{ width: completeness + '%', 'background-color': bin.color }"></div></div>
             <div class="col-xs-1"><small class="text-muted">{{ completeness }}%</small></div>
         </div>
     </div>
@@ -135,6 +135,8 @@ export default {
 .bar {
     background-color: red;
     padding: 3px;
+    margin: .4rem 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .more-container {
