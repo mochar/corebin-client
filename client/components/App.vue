@@ -146,13 +146,6 @@ input[type="file"] {
     font-size: .9em;
 }
 
-.card-header {
-    padding: .5em;
-    padding-left: 1em;
-    color: white;
-    background-color: #3b668b;
-}
-
 .form-group > label {
     font-weight: bold;
     margin-bottom: .25rem;

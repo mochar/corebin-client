@@ -40,17 +40,6 @@
                     <dd class="col-xs-3">{{ bins.length }}</dd>
                 </dl>
                 
-                <!--<div class="row">
-                    <strong class="col-xs-4 text-xs-center align-middle">Sort by</strong>
-                    <div class="col-xs-8">
-                        <select class="custom-select btn-block btn-sm" v-model="sortBy">
-                            <option value="size">Size</option>
-                            <option value="gc">GC</option>
-                            <option value="contamination">Contamination</option>
-                            <option value="completeness">Completeness</option>
-                        </select>
-                    </div>
-                </div>-->
                 <div class="input-group ">
                     <input type="text" class="form-control form-control-sm" placeholder="New bin">
                     <span class="input-group-btn">
@@ -65,8 +54,22 @@
         </div>
     </div>
     
-    <div class="col-xs-9" id="bins-section">
-        <div>
+    <div class="col-xs-9 card" id="bins">
+        <div class="card-header" style="padding: 0;">
+            <div class="row float-xs-right" id="bins-header">
+                <strong class="col-xs-5 text-xs-center align-middle">Sort by</strong>
+                <div class="col-xs-7">
+                    <select class="custom-select btn-sm" v-model="sortBy">
+                        <option value="size">Size</option>
+                        <option value="gc">GC</option>
+                        <option value="contamination">Contamination</option>
+                        <option value="completeness">Completeness</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div id="bins-body">
             <bin 
                 v-for="bin in sortedBins"
                 :key="bin.id"
@@ -157,9 +160,17 @@ export default {
     display: block;
 }
 
-#bins-section {
-    overflow-y: scroll;
-    padding-right: 2rem;
+#bins {
+    padding: 0;
     max-height: 95vh;
+}
+
+#bins-header {
+}
+
+#bins-body {
+    overflow-y: scroll;
+    padding-right: 1rem;
+    max-height: 90vh;
 }
 </style>
