@@ -56,15 +56,17 @@
     
     <div class="col-xs-9 card" id="bins">
         <div class="card-header" style="padding: 0;">
-            <div class="row float-xs-right" id="bins-header">
-                <strong class="col-xs-5 text-xs-center align-middle">Sort by</strong>
-                <div class="col-xs-7">
-                    <select class="custom-select btn-sm" v-model="sortBy">
-                        <option value="size">Size</option>
-                        <option value="gc">GC</option>
-                        <option value="contamination">Contamination</option>
-                        <option value="completeness">Completeness</option>
-                    </select>
+            <div class="dropdown float-xs-right">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
+                        data-toggle="dropdown" id="sort-button">
+                    <strong>Sort by</strong>
+                    {{ sortBy }}
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'size'">Size</a>
+                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'gc'">GC</a>
+                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'contamination'">Contamination</a>
+                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'completeness'">Completeness</a>
                 </div>
             </div>
         </div>
@@ -110,7 +112,7 @@ export default {
             return Math.min(...this.bins.map(bin => bin.size))
         },
         sortedBins() {
-            return this.bins.sort((a, b) => a[this.sortBy] < b[this.sortBy])
+            return this.bins.sort((a, b) => a[this.sortBy] - b[this.sortBy])
         }
     }
 }
@@ -165,12 +167,13 @@ export default {
     max-height: 95vh;
 }
 
-#bins-header {
-}
-
 #bins-body {
     overflow-y: scroll;
     padding-right: 1rem;
     max-height: 90vh;
+}
+
+#sort-button {
+    color: inherit;
 }
 </style>
