@@ -50,7 +50,7 @@
                         <span class="name" id="assembly-name">{{ a.name }}</span>
 
                         <div class="dropdown float-xs-right" v-show="a === assembly">
-                            <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" id="open-menu">
+                            <button class="btn btn-secondary dropdown-toggle open-menu" data-toggle="dropdown">
                                 <span class="fa fa-ellipsis-v"></span>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right">
@@ -67,6 +67,7 @@
                         <div class="bin-set-list">
                             <div v-for="bs in binSets" class="list-item">
                                 {{ bs.name }}
+                                <!--<span class="tag tag-default">{{ bs.bins.length }}</span>-->
                                 <router-link to="/overview" class="float-xs-right" @click.native="selectBinSet(bs)">
                                     Overview
                                 </router-link>
@@ -129,7 +130,8 @@ export default {
         ...mapState([
             'assemblies',
             'assembly',
-            'binSets'
+            'binSets',
+            'binSet'
         ])
     },
     
@@ -180,8 +182,17 @@ export default {
     cursor: pointer;
 }
 
-#open-menu {
+.open-menu {
     border: 0;
+    padding: .5rem;
+}
+
+.open-menu::after {
+    display: none;
+}
+
+.btn-sm {
+    padding: .25rem .5rem; 
 }
 </style>
 
@@ -190,19 +201,7 @@ export default {
     border-left-width: 1px;
 }
 
-.btn-sm {
-    padding: .25rem .5rem; 
-}
-
 .list-group-item {
     padding: 0;
-}
-
-button.dropdown-toggle::after {
-    display: none;
-}
-
-button.dropdown-toggle {
-    padding: .5rem;
 }
 </style>

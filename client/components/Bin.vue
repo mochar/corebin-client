@@ -1,5 +1,5 @@
 <template>
-<div class="card row bin-container">
+<div class="card row bin-container" :class="{ more: more }">
     <div class="col-xs-2 bin-name-container text-xs-center">
         <div class="row">
             <div class="col-xs-3 left-buttons">
@@ -111,6 +111,11 @@ export default {
 .bin-container {
     border-left-width: 3px;
     transition: border-left-width .15s ease-in-out; 
+    margin-bottom: 0;
+}
+
+.bin-container:not(:last-child) {
+    border-bottom: 0;
 }
 
 .bin-container:hover {
@@ -150,7 +155,8 @@ export default {
     transition: opacity .15s ease-in-out; 
 }
 
-.bin-container:hover .left-buttons > button {
+.bin-container:hover .left-buttons > button,
+.more .left-buttons > button {
     opacity: 1;
 }
 </style>
