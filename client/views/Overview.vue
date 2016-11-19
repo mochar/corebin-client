@@ -55,7 +55,7 @@
     </div>
     
     <div class="col-xs-9 card" id="bins">
-        <div class="card-header" style="padding: 0;">
+        <div class="card-header">
             <div class="dropdown float-xs-right">
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
                         data-toggle="dropdown" id="sort-button">
@@ -167,6 +167,11 @@ export default {
     max-height: 95vh;
 }
 
+#bins > div.card-header {
+    background-color: white;
+    padding: .25rem 1rem;
+}
+
 #bins-body {
     overflow-y: scroll;
     padding-right: 1rem;
@@ -175,5 +180,6 @@ export default {
 
 #sort-button {
     color: inherit;
+    font-size: .8rem;
 }
 </style>
