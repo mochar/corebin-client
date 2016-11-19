@@ -88,8 +88,11 @@ const actions = {
         ).then((respJobs, respAssemblies) => {
             commit('SET_JOBS', respJobs[0].jobs)
             commit('SET_ASSEMBLIES', respAssemblies[0].assemblies)
-            if (!respAssemblies[0].assemblies.length) return
-            dispatch('SELECT_ASSEMBLY', respAssemblies[0].assemblies[0])
+            if (respAssemblies[0].assemblies.length) {
+                dispatch('SELECT_ASSEMBLY', respAssemblies[0].assemblies[0])
+            } else {
+                commit('SET_MESSAGE', '')
+            }
         })
     },
     GET_BIN_SETS({ commit, state }) {
