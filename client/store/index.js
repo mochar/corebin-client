@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import moment from 'moment'
 
 Vue.use(Vuex)
 
@@ -32,7 +33,13 @@ const mutations = {
         state.bin = bin
     },
     SET_ASSEMBLIES(state, assemblies) {
+        assemblies.forEach(a => a.submitDate = moment(a.submitDate).fromNow())
         state.assemblies = assemblies
+    },
+    APPEND_ASSEMBLIES(state, assembly) {
+        assembly.submitDate = moment(assembly.submitDate).fromNow()
+        state.assemblies.push(assembly)
+        if (state.assemblies.length === 1) state.assembly = assembly
     },
     SET_BIN_SETS(state, binSets) {
         state.binSets = binSets
@@ -40,6 +47,9 @@ const mutations = {
     },
     SET_BINS(state, bins) {
         state.bins = bins
+    },
+    SET_ASSEMBLY_JOB(state, job) {
+        state.assemblyJob = job
     },
     SET_JOBS(state, jobs) {
         jobs.forEach(job => {
@@ -53,7 +63,7 @@ const mutations = {
     },
     SET_MESSAGE(state, message) {
         state.message = message
-    }
+    },
 }
 
 const actions = {
@@ -68,16 +78,18 @@ const actions = {
         return dispatch('GET_BINS')
     },
     SUBMIT_ASSEMBLY({ commit }, { formData }) {
-        $.post({
+        return $.post({
             url: `${ROOTURL}/a`,
             data: formData,
             async: true,
             cache: false,
             contentType: false,
             processData: false
-        }).done((data, status, jqXHR) => {
-            const job = { location: jqXHR.getResponseHeader('Location'), meta: data }
+        }).then((data, status, xhr) => {
+            const job = { location: xhr.getResponseHeader('Location'), meta: data }
             commit('SET_JOBS', [job])
+        }, (xhr, textStatus, errorThrown) => {
+            console.log('failed')
         })
     },
     GET_ASSEMBLIES({ commit, dispatch }) {
@@ -107,6 +119,22 @@ const actions = {
             commit('SELECT_BIN', null)
             commit('SET_MESSAGE', '')
         })
+    },
+    CHECK_ASSEMBLY_JOB({ commit, state }) {
+        const job = state.assemblyJob
+        $.getJSON(job.location, (data, textStatus, jqXHR) => {
+            if (jqXHR.status == 201) {
+                commit('SET_ASSEMBLY_JOB', null)
+                const location = jqXHR.getResponseHeader('Location')
+                $.getJSON(location, assembly => commit('APPEND_ASSEMBLIES', assembly))
+            } 
+        })
+    },
+    CANCEL_ASSEMBLY_JOB({ commit, state }) {
+        return $.ajax({
+            type: 'DELETE',
+            url: state.assemblyJob.location
+        }).done(() => commit('SET_ASSEMBLY_JOB', null))
     }
 }
 

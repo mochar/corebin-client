@@ -78,16 +78,13 @@
                             <span class="fa fa-balance-scale"></span> Compare bin sets
                         </router-link>
                         <p class="card-text" style="margin-top: .5rem">
-                            <small class="text-muted">Added one day ago</small>
+                            <small class="text-muted">Added {{ a.submitDate }}</small>
                         </p>
                     </div>
                 </li>
             </ul>
             <div class="card-footer text-muted" style="padding: 0">
-                <button class="btn btn-outline-secondary btn-block" id="add-btn" style="color: #666" data-toggle="tooltip"
-                    data-placement="bottom" title="Click me to begin">
-                    <span class="fa fa-plus"></span> Assembly
-                </button>
+                <assembly-upload></assembly-upload>
             </div>
         </div>
         
@@ -102,6 +99,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import AssemblyUpload from '../components/AssemblyUpload'
 
 export default {
     data() {
@@ -110,12 +108,12 @@ export default {
             binSetLoading: false
         }
     },
+    
+    components: {
+        AssemblyUpload
+    },
 
     methods: {
-        submitAssembly(event) {
-            const formData = new FormData(event.srcElement)
-            this.$store.dispatch('SUBMIT_ASSEMBLY', { formData })
-        },
         selectAssembly(assembly) {
             this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
             })

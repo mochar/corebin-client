@@ -7,66 +7,6 @@
         </strong>
     </div>
         
-    <ul class="nav nav-pills" style="display: none">
-        <li class="nav-item">
-            <router-link to="/home" active-class="active" class="nav-link">
-                <span class="fa fa-lg fa-home"></span>
-            </router-link>
-        </li>
-        <li class="nav-item">
-            <router-link to="/overview" active-class="active" class="nav-link">
-                <span class="fa fa-eye"></span> Overview
-            </router-link>
-        </li>
-        <li class="nav-item">
-            <router-link to="/compare" active-class="active" class="nav-link"
-                :class="{ disabled: compareDisabled }">
-                <span class="fa fa-balance-scale"></span> Compare
-            </router-link>
-        </li>
-        <li class="nav-item">
-            <router-link to="/refine" active-class="active" class="nav-link"
-                :class="{ disabled: refineDisabled }">
-                <span class="fa fa-cog"></span> Refine
-            </router-link>
-        </li>
-        <li class="nav-item">
-            <router-link to="/help" active-class="active" class="nav-link">
-                <span class="fa fa-question-circle"></span> Help
-            </router-link>
-        </li>
-        
-        <div class="float-xs-right">
-            <li class="nav-item dropdown" v-if="assembly">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                    <strong>Assembly </strong>
-                    <span>{{ assembly.name }}</span>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <router-link v-for="a in assemblies" :class="{ disabled: a.id === assembly.id }" 
-                                class="dropdown-item" to="/overview" @click.native="selectAssembly(a)">
-                        {{ a.name }}
-                    </router-link>
-                </ul>
-            </li>
-            
-            <li class="nav-item dropdown" v-if="binSet">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-                    <strong>Bin set </strong>
-                    <span>{{ binSet.name }}</span>
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <router-link v-for="bs in binSets" :class="{ disabled: bs.id === binSet.id }" 
-                                class="dropdown-item" to="/overview" @click.native="selectBinSet(bs)">
-                        {{ bs.name }}
-                    </router-link>
-                </ul>
-            </li>
-        </div>
-    </ul>
-    
     <keep-alive>
         <router-view></router-view>
     </keep-alive>
@@ -75,52 +15,28 @@
 
 <script>
 import 'bootstrap'
+import { mapActions } from 'vuex'
 
 export default {
-    data() {
-        return {
-            show: true,
-            allDisabled: false
-        }
-    },  
-    
     methods: {
-        selectAssembly(assembly) {
-            this.allDisabled = true
-            this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
-                this.allDisabled = false
-            })
-        },
-        selectBinSet(binSet) {
-            this.allDisabled = true
-            this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
-                this.allDisabled = false
-            })
-        }
+        ...mapActions({
+            checkAssemblyJob: 'CHECK_ASSEMBLY_JOB'
+        })
     },
     
     computed: {
-        compareDisabled() {
-            return this.allDisabled || !this.$store.state.binSet
-        },
-        refineDisabled() {
-            return this.allDisabled || !this.$store.state.bin
-        },
-        assembly() {
-            return this.$store.state.assembly
-        },
-        assemblies() {
-            return this.$store.state.assemblies
-        },
-        binSet() {
-            return this.$store.state.binSet
-        },
-        binSets() {
-            return this.$store.state.binSets
-        },
         message() {
             return this.$store.state.message
+        },
+        assemblyJob() {
+            return this.$store.state.assemblyJob
         }
+    },
+
+    created() {
+        setInterval(() => {
+            if (this.assemblyJob) this.checkAssemblyJob()
+        }, 5000)
     }
 }
 </script>
