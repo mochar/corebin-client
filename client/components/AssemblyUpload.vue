@@ -43,7 +43,7 @@
                 </small>
             </div>
             
-            <button class="btn btn-link btn-sm" @click="add = false"><small>Cancel</small></button>
+            <button class="btn btn-link btn-sm" @click="add = false">Cancel</button>
             
             <button type="submit" id="submit-button" class="btn btn-success pull-right btn-sm" :disabled="loading">
                 <span class="fa fa-refresh fa-spin" v-show="loading"></span>
@@ -81,12 +81,13 @@ export default {
 
     methods: {
         ...mapActions({
-            cancelAssemblyJob: 'CANCEL_ASSEMBLY_JOB'
+            cancelAssemblyJob: 'CANCEL_ASSEMBLY_JOB',
+            submitAssemblyAction: 'SUBMIT_ASSEMBLY'
         }),
         submitAssembly(event) {
             this.loading = true
             const formData = new FormData(event.srcElement)
-            this.$store.dispatch('SUBMIT_ASSEMBLY', { formData }).done(() => {
+            this.submitAssemblyAction({ formData }).done(() => {
                 this.loading = false
                 this.add = false
                 event.srcElement.reset()

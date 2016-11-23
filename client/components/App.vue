@@ -20,7 +20,8 @@ import { mapActions } from 'vuex'
 export default {
     methods: {
         ...mapActions({
-            checkAssemblyJob: 'CHECK_ASSEMBLY_JOB'
+            checkAssemblyJob: 'CHECK_ASSEMBLY_JOB',
+            checkBinSetJobs: 'CHECK_BIN_SET_JOBS'
         })
     },
     
@@ -36,6 +37,7 @@ export default {
     created() {
         setInterval(() => {
             if (this.assemblyJob) this.checkAssemblyJob()
+            this.checkBinSetJobs()
         }, 5000)
     }
 }

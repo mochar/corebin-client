@@ -67,14 +67,17 @@
                         <div class="bin-set-list">
                             <div v-for="bs in binSets" class="list-item">
                                 {{ bs.name }}
-                                <!--<span class="tag tag-default">{{ bs.bins.length }}</span>-->
                                 <router-link to="/overview" class="float-xs-right" @click.native="selectBinSet(bs)">
                                     Overview
                                 </router-link>
                             </div>
-                            <button class="btn btn-outline-primary btn-sm btn-block">Add bin set</button>
+                            <div v-for="job in binSetJobs" class="list-item">
+                                {{ job.meta.name }}
+                                <span class="fa fa-refresh fa-spin float-xs-right"></span>
+                            </div>
+                            <bin-set-upload :assembly="a.id"></bin-set-upload>
                         </div>
-                        <router-link to="/compare" class="btn btn-sm btn-primary btn-block" id="add-bs-btn" v-show="binSets.length">
+                        <router-link to="/compare" class="btn btn-sm btn-primary btn-block" id="add-bs-btn" :disabled="!binSets.length" tag="button">
                             <span class="fa fa-balance-scale"></span> Compare bin sets
                         </router-link>
                         <p class="card-text" style="margin-top: .5rem">
@@ -100,6 +103,7 @@
 <script>
 import { mapState } from 'vuex'
 import AssemblyUpload from '../components/AssemblyUpload'
+import BinSetUpload from '../components/BinSetUpload'
 
 export default {
     data() {
@@ -108,9 +112,10 @@ export default {
             binSetLoading: false
         }
     },
-    
+
     components: {
-        AssemblyUpload
+        AssemblyUpload,
+        BinSetUpload
     },
 
     methods: {
@@ -129,7 +134,8 @@ export default {
             'assemblies',
             'assembly',
             'binSets',
-            'binSet'
+            'binSet',
+            'binSetJobs'
         ])
     },
     

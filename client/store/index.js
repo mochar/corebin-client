@@ -15,7 +15,7 @@ const state = {
 
     // Jobs
     assemblyJob: null,
-    binSetJob: null,
+    binSetJobs: [],
     hmmerJobs: [],
     
     // Other
@@ -56,13 +56,20 @@ const mutations = {
             if (job.meta.type == 'A') { // assembly job
                 state.assemblyJob = job
             } else if (job.meta.type == 'B') { // bin set job
-                state.binSetJob = job
+                state.binSetJobs.push(job)
             }
         })
         state.hmmerJobs = [...state.hmmerJobs, ...jobs.filter(job => job.meta.type == 'C')]
     },
     SET_MESSAGE(state, message) {
         state.message = message
+    },
+    REMOVE_BIN_SET_JOB(state, job) {
+        state.binSetJobs = state.binSetJobs.filter(j => j !== job)
+    },
+    APPEND_BIN_SETS(state, binSet) {
+        state.binSets.push(binSet)
+        if (state.binSets.length === 1) state.binSet = binSet
     },
 }
 
@@ -89,7 +96,22 @@ const actions = {
             const job = { location: xhr.getResponseHeader('Location'), meta: data }
             commit('SET_JOBS', [job])
         }, (xhr, textStatus, errorThrown) => {
-            console.log('failed')
+            console.log('assembly failed')
+        })
+    },
+    SUBMIT_BIN_SET({ commit }, { assembly, formData }) {
+        return $.post({
+            url: `${ROOTURL}/a/${assembly}/bs`,
+            data: formData,
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false
+        }).then((data, status, xhr) => {
+            const job = { location: xhr.getResponseHeader('Location'), meta: data }
+            commit('SET_JOBS', [job])
+        }, (xhr, textStatus, errorThrown) => {
+            console.log('bin set failed')
         })
     },
     GET_ASSEMBLIES({ commit, dispatch }) {
@@ -135,6 +157,18 @@ const actions = {
             type: 'DELETE',
             url: state.assemblyJob.location
         }).done(() => commit('SET_ASSEMBLY_JOB', null))
+    },
+    CHECK_BIN_SET_JOBS({ commit, state }) {
+        const jobs = state.binSetJobs
+        jobs.forEach(job => {
+            $.getJSON(job.location, (data, textStatus, jqXHR) => {
+                if (jqXHR.status == 201) {
+                    commit('REMOVE_BIN_SET_JOB', job)
+                    const location = jqXHR.getResponseHeader('Location')
+                    $.getJSON(location, binSet => commit('APPEND_BIN_SETS', binSet))
+                } 
+            })
+        })
     }
 }
 
