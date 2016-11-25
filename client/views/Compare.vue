@@ -1,17 +1,50 @@
 <template>
-<div class="card">
-    <div class="row" style="display: flex;">
-        <div class="col-xs-8" id="compare-left">
-            <div id="chord-set-settings">
-                <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input">
-                    Color by bins
-                </label>
-                <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input">
-                    Show names
-                </label>
+<div>
+    <div class="card card-block">
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Bin-set (left)</label>
+                <select class="custom-select" v-model="potentialBinSet">
+                    <!-- <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option> -->
+                    <option 
+                        v-for="(bs, index) in binSets" 
+                        :selected="index === 0"
+                        :value="bs">
+                        {{ bs.name }}
+                    </option>
+                </select>
             </div>
+            <div class="form-group">
+                <label>Bin-set (right)</label>
+                <select class="custom-select" v-model="otherPotentialBinSet">
+                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>By</label>
+                <select class="custom-select">
+                    <option @click="potentialBy = 'count'"># shared contigs</option>
+                    <option @click="potentialBy = 'bp'"># bp</option>
+                </select>
+            </div>
+            <button class="btn btn-primary float-xs-right" @click="plot" :disabled="plotButtonDisabled">
+                <span v-show="!loading">Plot</span>
+                <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
+            </button>
+        </form>
+
+        <div id="chord-set-settings">
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input">
+                Color by bins
+            </label>
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input">
+                Show names
+            </label>
+        </div>
+
+        <div id="chord">
             <chord 
                 :plotData="plotData" 
                 :name="name" 
@@ -24,59 +57,16 @@
                 Select the bin sets and click on the Plot button
             </span>
         </div>
-        <div class="col-xs-4" style="padding-left: 0;">
-            <div class="card card-outline-secondary">
-                <nav class="nav nav-pills nav-stacked back">
-                    <router-link to="/home" class="nav-link">
-                        <span class="fa fa-arrow-left"></span>
-                        Return to Home
-                    </router-link>
-                </nav>
-            </div>
-            
-            <div class="card-block">
-                <div class="row">
-                    <label class="col-xs-4">By</label>
-                    <div class="col-xs-8">
-                        <select class="custom-select">
-                            <option @click="potentialBy = 'count'"># shared contigs</option>
-                            <option @click="potentialBy = 'bp'"># bp</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-xs-5" style="padding-left: 0">
-                        <select class="custom-select btn-block" v-model="potentialBinSet">
-                            <option class="text-muted" :value="null">Bin set (left)</option>
-                            <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-                        </select>
-                    </div>
-                    <div class="col-xs-5" style="padding-left: 0">
-                        <select class="custom-select btn-block" v-model="otherPotentialBinSet">
-                            <option class="text-muted" :value="null">Bin set (right)</option>
-                            <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-                        </select>
-                    </div>
-                    <div class="col-xs-2" style="padding: 0">
-                        <button class="btn btn-block" @click="plot" :disabled="plotButtonDisabled">
-                            <span v-show="!loading">Plot</span>
-                            <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+    </div>
 
-            <div class="card-block" style="padding-top: 0">
-                <span class="message text-muted" v-show="otherBins.length > 0 && !selectedBin">
-                    Select a bin by left-clicking.
-                </span>
-                <div class="card" v-if="selectedBin" id="bin-info">
-                    <div class="card-block">
-                        <h4>{{ selectedBin.name }}</h4>
-                        <button class="btn btn-secondary btn-sm float-xs-right">Hide</button>
-                    </div>
-                </div>
+    <div class="card card-block">
+        <span class="message text-muted" v-show="otherBins.length > 0 && !selectedBin">
+            Select a bin by left-clicking.
+        </span>
+        <div class="card" v-if="selectedBin" id="bin-info">
+            <div class="card-block">
+                <h4>{{ selectedBin.name }}</h4>
+                <button class="btn btn-secondary btn-sm float-xs-right">Hide</button>
             </div>
         </div>
     </div>
@@ -171,7 +161,7 @@ export default {
 </script>
 
 <style>
-#compare-left:hover #chord-set-settings {
+#chord:hover #chord-set-settings {
     opacity: 1;
     transition: opacity .15s ease-in-out;
 }

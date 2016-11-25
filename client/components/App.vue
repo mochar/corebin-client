@@ -7,17 +7,31 @@
         </strong>
     </div>
         
-    <keep-alive>
-        <router-view></router-view>
-    </keep-alive>
+    <div class="row">
+        <div class="col-xs-3" style="padding-right: 0; padding-left: 0">
+            <selection></selection>
+        </div>
+        <div class="col-xs-9" style="padding: 0">
+            <transition name="fade" mode="out-in">
+                <keep-alive>
+                    <router-view></router-view>
+                </keep-alive>
+            </transition>
+        </div>
+    </div>
 </div>
 </template>
 
 <script>
 import 'bootstrap'
 import { mapActions } from 'vuex'
+import Selection from '../components/Selection'
 
 export default {
+    components: {
+        Selection
+    },
+
     methods: {
         ...mapActions({
             checkAssemblyJob: 'CHECK_ASSEMBLY_JOB',
@@ -43,13 +57,28 @@ export default {
 }
 </script>
 
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s ease;
+}
+
+.fade-enter, .fade-leave-active {
+    opacity: 0;
+}
+</style>
+
 <style>
 @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../../node_modules/font-awesome/css/font-awesome.min.css";
 
+html {
+    height: 100%;
+}
+
 body {
     font-size: 14px;
     background-color: #eee;
+    height: 100%;
 }
 
 * {
@@ -86,40 +115,6 @@ input[type="file"] {
 }
 
 #app {
-    margin-top: .5em;
-    padding: 0;
-}
-
-#app > ul {
-    color: white;
-    background-color: #3b668b;
-    margin-bottom: .5em;
-    border: 1px solid #3b668b;
-}
-
-.nav li > a {
-  color: white;
-}
-
-.nav li a:hover,
-.nav li.dropdown a:focus {
-  background-color: steelblue;
-  color: white;
-}
-
-.nav-link.active {
-    color: #555 !important;
-    font-weight: bold;
-    background-color: white !important;
-}
-
-.nav li.disabled a,
-.nav li.disabled a:hover {
-  color:#bac0c3;
-}
-
-.nav-item.open .nav-link {
-    background-color: steelblue !important;
 }
 
 #message {

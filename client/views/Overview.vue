@@ -1,77 +1,27 @@
 <template>
-<div class="row">
-    <div class="col-xs-3">
-        <div class="card card-outline-secondary">
-            <nav class="nav nav-pills nav-stacked back">
-                <router-link to="/home" class="nav-link">
-                    <span class="fa fa-arrow-left"></span>
-                    Return to Home
-                </router-link>
-            </nav>
-        </div>
-        
-        <div class="card info-card" style="border-width: 1px">
-            <div class="card-block name-block">
-                <span class="name" id="bin-set-name">{{ binSet.name }}</span>
-                <div class="dropdown float-xs-right">
-                    <button class="btn btn-secondary dropdown-toggle open-menu" data-toggle="dropdown">
-                        <span class="fa fa-ellipsis-v"></span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">
-                            <span class="fa fa-fw fa-pencil text-primary"></span> Rename
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <span class="fa fa-fw fa-trash text-danger"></span> Delete
-                        </a>
-                    </div>
-                </div>
+<div class="card" id="bins">
+    <div class="card-header">
+        <button class="btn btn-primary btn-sm btn-header">
+            <span class="fa fa-plus"></span>
+            Add bin
+        </button>
+        <div class="dropdown float-xs-right">
+            <button class="btn btn-outline-secondary btn-sm dropdown-toggle btn-header" 
+                    data-toggle="dropdown" id="sort-button">
+                <strong>Sort by</strong>
+                {{ sortBy }}
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'size'">Size</a>
+                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'gc'">GC</a>
+                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'contamination'">Contamination</a>
+                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'completeness'">Completeness</a>
             </div>
-            
-            <div class="card-block">
-                <dl class="row">
-                    <dt class="col-xs-9 text-muted">Bins</dt>
-                    <dd class="col-xs-3">{{ bins.length }}</dd>
-                    
-                    <dt class="col-xs-9 text-muted">Binned contigs</dt>
-                    <dd class="col-xs-3">{{ bins.length }}</dd>
-                    
-                    <dt class="col-xs-9 text-muted">Unbinned contigs</dt>
-                    <dd class="col-xs-3">{{ bins.length }}</dd>
-                </dl>
-                
-                <div class="input-group ">
-                    <input type="text" class="form-control form-control-sm" placeholder="New bin">
-                    <span class="input-group-btn">
-                        <button class="btn btn-sm btn-outline-primary">Add</button>
-                    </span>
-                </div>
-            </div>
-            
-            <router-link to="/refine" class="btn btn-sm btn-primary btn-block">
-                <span class="fa fa-cog"></span> Refine bins
-            </router-link>
         </div>
     </div>
     
-    <div class="col-xs-9 card" id="bins">
-        <div class="card-header">
-            <div class="dropdown float-xs-right">
-                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" 
-                        data-toggle="dropdown" id="sort-button">
-                    <strong>Sort by</strong>
-                    {{ sortBy }}
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'size'">Size</a>
-                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'gc'">GC</a>
-                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'contamination'">Contamination</a>
-                    <a class="dropdown-item" href="#" @click.prevent="sortBy = 'completeness'">Completeness</a>
-                </div>
-            </div>
-        </div>
-        
-        <div id="bins-body">
+    <div id="bins-body">
+        <transition-group name="list">
             <bin 
                 v-for="bin in sortedBins"
                 :key="bin.id"
@@ -79,7 +29,7 @@
                 :maxSize="maxSize"
                 :minSize="minSize">
             </bin>
-        </div>
+        </transition-group>
     </div>
 </div>
 </template>
@@ -117,6 +67,21 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.list-item {
+  transition: all 1s;
+  display: inline-block;
+  margin-right: 10px;
+}
+.list-enter, .list-leave-active {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.list-leave-active {
+  position: absolute;
+}
+</style>
 
 <style>
 .name {
@@ -164,7 +129,6 @@ export default {
 
 #bins {
     padding: 0;
-    max-height: 95vh;
 }
 
 #bins > div.card-header {
@@ -175,11 +139,14 @@ export default {
 #bins-body {
     overflow-y: scroll;
     padding-right: 1rem;
-    max-height: 90vh;
+    max-height: 95vh;
 }
 
 #sort-button {
     color: inherit;
+}
+
+.btn-header {
     font-size: .8rem;
 }
 </style>
