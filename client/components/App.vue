@@ -117,6 +117,12 @@ input[type="file"] {
 #app {
 }
 
+.back a {
+    color: #444;
+}
+</style>
+
+<style scoped>
 #message {
     position: absolute;
     left: 50%;
@@ -128,9 +134,5 @@ input[type="file"] {
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
        -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
             box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
-}
-
-.back a {
-    color: #444;
 }
 </style>

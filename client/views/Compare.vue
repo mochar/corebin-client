@@ -53,16 +53,10 @@
                 :otherBins="otherBins"
                 @binSelected="selectBin"
             ></chord>
-            <span v-show="otherBins.length === 0" class="message text-muted">
+            <span id="message" v-show="otherBins.length === 0" class="text-muted">
                 Select the bin sets and click on the Plot button
             </span>
         </div>
-    </div>
-
-    <div class="card card-block">
-        <span class="message text-muted" v-show="otherBins.length > 0 && !selectedBin">
-            Select a bin by left-clicking.
-        </span>
         <div class="card" v-if="selectedBin" id="bin-info">
             <div class="card-block">
                 <h4>{{ selectedBin.name }}</h4>
@@ -173,37 +167,22 @@ export default {
     top: 1em;
     right: 1em;
 }
-
-.message {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 10%;
-    width: 50%;
-    margin: auto;
-    position: absolute;
-    text-align: center !important;
-}
-
-#settings {
-    background-color: #f5f5f5;
-    border: 1px solid #e3e3e3;
-    margin: .3rem;
-    padding: 0 .5rem;
-}
-
-#settings > h6 {
-    font-size: .9rem;
-    font-weight: bold;
-    margin-top: .5rem;
-    color: #555;
-}
 </style>
 
 <style scoped>
 #bin-info {
     background-color: rgba(0,0,0,.125);
     border: 1px solid rgba(0,0,0,.25);
+}
+
+#message {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    height: 5rem;
+    width: 50%;
 }
 </style>
