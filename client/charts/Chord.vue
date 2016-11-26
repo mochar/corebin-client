@@ -112,6 +112,7 @@ export default {
             
             const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
             const ribbon = d3.ribbon().radius(innerRadius-5)
+            const nameArc = d3.arc().innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
             
             //--------------------------
             const chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
@@ -176,11 +177,12 @@ export default {
                 .attr('d', ribbon)
                 
                 
-            //this.svg.select('defs').select('path')
-            //    .attr('d', arc.innerRadius(outerRadius * 1.02).outerRadius(outerRadius * 1.03).startAngle(toRad(40)).endAngle(50))
+            this.svg.select('defs').select('path#text-path')
+                .attr('d', nameArc.startAngle(toRad(45)).endAngle(toRad(135)))
+                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
 
-            this.svg.select('text#name').text(this.name)
-            this.svg.select('text#other-name').text(this.otherName)
+            this.svg.select('text#name textPath').text(this.name)
+            this.svg.select('text#other-name textPath').text(this.otherName)
         }
     },
     
@@ -197,8 +199,8 @@ export default {
     },
     
     mounted() {
-        let width = parseInt(d3.select(this.$el).style('width'), 10)
-        let height = width * .9
+        const width = parseInt(d3.select(this.$el).style('width'), 10)
+        const height = width * .9
         this.svg = d3.select(this.$el).append('svg').attr('width', width).attr('height', height)
         this.g = this.svg.append('g')
             .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
@@ -206,28 +208,20 @@ export default {
         this.g.append('g').attr('class', 'groups')
         this.g.append('g').attr('class', 'ribbons')
         
-        this.svg.append('defs').append('path').attr('id', 'curve')
-            
-        this.svg.selectAll('text').data(['name', 'other-name'])
-          .enter().append('text')
-            .attr('id', d => d)
+        // Bin set names
+        this.svg.append('defs').append('path').attr('id', 'text-path')
+        this.svg.append('path').attr('id', 'path')
+        this.svg.append('clipPath')
+            .attr('id', 'text-clip')
+          .append('use')
+            .attr('xlink:href', '#path')
+        this.svg.append('text')
+            .attr('clip-path', 'url(#text-cli[p)')
+            .attr('id', 'name')
+            .attr('font-size', 30)
           .append('textPath')
-            .attr('xlink:href', '#curve')
-            .attr('text-anchor', 'middle')
-            .text(d => d)
-        
-        this.svg.append('rect').attr('id', 'binSet1Rect')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', (width / 2) * .999)
-            .attr('height', height)
-            .attr('fill-opacity', .1)
-        this.svg.append('rect').attr('id', 'binSet2Rect')
-            .attr('x', width / 2)
-            .attr('y', 0)
-            .attr('width', (width / 2) * .999)
-            .attr('height', height)
-            .attr('fill-opacity', .1)
+            .attr('xlink:href', '#text-path')
+            .text('NAME')
             
         this.updatePlot()
     }
@@ -241,14 +235,5 @@ export default {
 
 .groups > path {
     cursor: pointer;
-}
-
-svg > rect {
-    visibility: hidden;
-}
-
-svg > rect:not(:hover) {
-    opacity: 0;
-    transition: opacity .15s ease-in-out;
 }
 </style>
