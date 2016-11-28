@@ -67,7 +67,7 @@ let chord = function(bins1, bins2, matrix) {
                 index: j,
                 data: j < bins1.length ? bins1[j] : bins2[j - bins1.length]
             }
-            
+
             ribs.push({ source, target })
             return ribs
         }, [])
@@ -165,14 +165,14 @@ export default {
                 .attr('d', arc)
                 
             // Update ribbons
-            let colorScale = d3.scaleLinear().domain([0, chordData.groups.length]).range(['steelblue', 'brown'])
             let ribbonPaths = ribbonG.selectAll('path')
                 .data(chordData.ribbons)
             ribbonPaths.exit().transition().remove()
             ribbonPaths.enter().append('path')
               .merge(ribbonPaths)
-                .style('fill', (d, i) => this.binsMap.get(d.target.data).color)
-                .style('stroke', (d, i) => d3.rgb(this.binsMap.get(d.target.data).color).darker())
+                .style('fill', '#bbb')
+                // .style('fill', (d, i) => this.binsMap.get(d.target.data).color)
+                // .style('stroke', (d, i) => d3.rgb(this.binsMap.get(d.target.data).color).darker())
               .transition()
                 .attr('d', ribbon)
                 
