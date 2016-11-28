@@ -57,16 +57,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.fade-enter-active, .fade-leave-active {
-    transition: opacity .2s ease;
-}
-
-.fade-enter, .fade-leave-active {
-    opacity: 0;
-}
-</style>
-
 <style>
 @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../../node_modules/font-awesome/css/font-awesome.min.css";
@@ -119,6 +109,14 @@ input[type="file"] {
 
 .back a {
     color: #444;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s ease;
+}
+
+.fade-enter, .fade-leave-active {
+    opacity: 0;
 }
 </style>
 

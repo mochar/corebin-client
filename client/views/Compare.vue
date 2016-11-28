@@ -57,11 +57,19 @@
                 Select the bin sets and click on the Plot button
             </span>
         </div>
-        <div class="card" v-if="selectedBin" id="bin-info">
-            <div class="card-block">
-                <h4>{{ selectedBin.name }}</h4>
-                <button class="btn btn-secondary btn-sm float-xs-right">Hide</button>
-            </div>
+
+        <div v-if="selectedBin">
+            <h4 style="display: inline-block">Selected bin</h4>
+            <button class="btn btn-link float-xs-right" @click="selectedBin = null">
+                <small>deselect</small>
+            </button>
+            <bin 
+                :bin="selectedBin" 
+                :minSize="0"
+                :maxSize="selectedBin.size">
+            </bin>
+
+            <!-- <h5>Connected bins</h5> -->
         </div>
     </div>
 </div>
@@ -70,6 +78,7 @@
 <script>
 import { mapState } from 'vuex'
 import Chord from '../charts/Chord'
+import Bin from '../components/Bin'
 
 /* "otherPotentialBinSet" is the selected bin set. "otherBinSet" is set to 
  * "otherPotentialBinSet" when the plot botton is clicked. Same for potentialBy.
@@ -92,7 +101,8 @@ export default {
     },
     
     components: {
-        Chord
+        Chord,
+        Bin
     },
 
     methods: {
@@ -170,11 +180,6 @@ export default {
 </style>
 
 <style scoped>
-#bin-info {
-    background-color: rgba(0,0,0,.125);
-    border: 1px solid rgba(0,0,0,.25);
-}
-
 #message {
     position: absolute;
     top: 50%;
