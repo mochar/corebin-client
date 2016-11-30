@@ -33,17 +33,6 @@
             </button>
         </form>
 
-        <div id="chord-set-settings">
-            <label class="form-check-label">
-                <input type="checkbox" class="form-check-input">
-                Color by bins
-            </label>
-            <label class="form-check-label">
-                <input type="checkbox" class="form-check-input">
-                Show names
-            </label>
-        </div>
-
         <div id="chord">
             <chord 
                 :plotData="plotData" 
@@ -59,17 +48,15 @@
         </div>
 
         <div v-if="selectedBin">
-            <h4 style="display: inline-block">Selected bin</h4>
-            <button class="btn btn-link float-xs-right" @click="selectedBin = null">
+            <strong style="font-size: 1rem">SELECTED BIN</strong>
+            <a href="#" @click.prevent="selectedBin = null">
                 <small>deselect</small>
-            </button>
+            </a>
             <bin 
                 :bin="selectedBin" 
                 :minSize="0"
                 :maxSize="selectedBin.size">
             </bin>
-
-            <!-- <h5>Connected bins</h5> -->
         </div>
     </div>
 </div>
@@ -165,18 +152,6 @@ export default {
 </script>
 
 <style>
-#chord:hover #chord-set-settings {
-    opacity: 1;
-    transition: opacity .15s ease-in-out;
-}
-
-#chord-set-settings {
-    opacity: 0;
-    position: absolute;
-    left: 2em;
-    top: 1em;
-    right: 1em;
-}
 </style>
 
 <style scoped>
