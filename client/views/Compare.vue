@@ -40,6 +40,9 @@
                 :otherName="otherName"
                 :bins="bins"
                 :otherBins="otherBins"
+                :selected="selectedBin"
+                :connected="connectedBins"
+                :binsMap="binsMap"
                 @binSelected="selectBin"
             ></chord>
             <span id="message" v-show="otherBins.length === 0" class="text-muted">
@@ -48,15 +51,29 @@
         </div>
 
         <div v-if="selectedBin">
-            <strong style="font-size: 1rem">SELECTED BIN</strong>
-            <a href="#" @click.prevent="selectedBin = null">
-                <small>deselect</small>
-            </a>
-            <bin 
-                :bin="selectedBin" 
-                :minSize="0"
-                :maxSize="selectedBin.size">
-            </bin>
+            <div>
+                <strong style="font-size: 1rem">SELECTED BIN</strong>
+                <a href="#" @click.prevent="selectedBin = null">
+                    <small>deselect</small>
+                </a>
+                <bin 
+                    :bin="selectedBin" 
+                    :simple="true"
+                    :minSize="minSize"
+                    :maxSize="maxSize">
+                </bin>
+            </div>
+
+            <div style="margin-top: 1rem">
+                <strong style="font-size: 1rem">CONNECTED BINS</strong>
+                <bin 
+                    v-for="bin in connectedBins"
+                    :bin="binsMap.get(bin.id)"
+                    :simple="true"
+                    :minSize="minSize"
+                    :maxSize="maxSize">
+                </bin>
+            </div>
         </div>
     </div>
 </div>
@@ -64,6 +81,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { map as d3Map } from 'd3'
 import Chord from '../charts/Chord'
 import Bin from '../components/Bin'
 
@@ -136,6 +154,29 @@ export default {
                    (this.otherBinSet === this.otherPotentialBinSet &&
                     this.binSet === this.potentialBinSet &&
                     this.by === this.potentialBy)
+        },
+        binsMap() {
+            return d3Map([...this.bins, ...this.otherBins], bin => bin.id)
+        },
+        connectedBins() {
+            if (!this.selectedBin) return []
+            const id = this.selectedBin.id
+            const all = [...this.plotData.bins1, ...this.plotData.bins2]
+            return this.plotData.matrix[all.indexOf(id)]
+                .reduce(function(connected, cur, i) {
+                    if (cur === 0) return connected
+                    const connectedBin = { percentage: 100, id: all.indexOf(i) }
+                    connected.push(connectedBin)
+                    return connected
+                }, [])
+        },
+        maxSize() {
+            const bins = [this.selectedBin, ...this.connectedBins]
+            return Math.max(...bins.map(bin => this.binsMap.get(bin.id).size))
+        },
+        minSize() {
+            const bins = [this.selectedBin, ...this.connectedBins]
+            return Math.min(...bins.map(bin => this.binsMap.get(bin.id).size))
         }
     },
 

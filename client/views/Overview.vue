@@ -25,6 +25,7 @@
             v-for="bin in sortedBins"
             :key="bin.id"
             :bin="bin"
+            :simple="false"
             :maxSize="maxSize"
             :minSize="minSize">
         </bin>

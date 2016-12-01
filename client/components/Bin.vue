@@ -1,6 +1,6 @@
 <template>
 <div class="card row bin-container" :class="{ more: more }">
-    <div class="col-xs-2 bin-name-container text-xs-center">
+    <div class="col-xs-2 bin-name-container text-xs-center" v-if="!simple">
         <div class="row">
             <div class="col-xs-3 left-buttons">
                 <button class="btn btn-sm btn-xs btn-secondary">
@@ -19,7 +19,7 @@
         </div>
     </div>
     
-    <div class="col-xs-8 bin-info">
+    <div class="col-xs-8 bin-info" :class="simple ? 'col-xs-10' : 'col-xs-8'">
         <div class="row">
             <div class="col-xs-2"><small class="text-muted">Size (bp)</small></div>
             <div class="col-xs-9"><div class="bar" :style="{ width: sizeBarPercent + '%', 'background-color': bin.color }"></div></div>
@@ -44,10 +44,10 @@
             <router-link to="/refine" class="btn btn-sm btn-xs btn-secondary btn-block">
                 Refine
             </router-link>
-            <button class="btn btn-link btn-sm btn-xs btn-block" @click="more = true" v-show="!more">
+            <button class="btn btn-link btn-sm btn-xs btn-block" @click="more = true" v-show="!more" v-if="!simple">
                 <span class="fa fa-caret-down"></span> More
             </button>
-            <button class="btn btn-link btn-sm btn-xs btn-block" @click="more = false" v-show="more">
+            <button class="btn btn-link btn-sm btn-xs btn-block" @click="more = false" v-show="more" v-if="!simple">
                 <span class="fa fa-caret-up"></span> Less
             </button>
         </div>
@@ -83,7 +83,7 @@ export default {
         }
     },
     
-    props: ['bin', 'maxSize', 'minSize'],
+    props: ['bin', 'maxSize', 'minSize', 'simple'],
     
     components: {
         Histogram

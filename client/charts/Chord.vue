@@ -1,9 +1,67 @@
 <template>
-<div></div>
+<div>
+    <svg :width="width" :height="height">
+        <g :transform="gTransform">
+            <transition-group name="flip" tag="g" class="groups">
+                <path
+                    v-for="group in chordData.groups"
+                    :key="group.index"
+                    :style="{ stroke: '#000000', fill: binsMap.get(group.data).color }"
+                    :d="arc.startAngle(group.startAngle).endAngle(group.endAngle)()"
+                    @mouseover="hoveredBin = group.data"
+                    @mouseout="hoveredBin = null"
+                    @click="selectBin(group.data)">
+                </path>
+            </transition-group>
+            <g class="ribbons">
+                <ribbon
+                    v-for="ribb in chordData.ribbons"
+                    :ribbon="ribb"
+                    :selectedBin="selected"
+                    :hoveredBin="hoveredBin"
+                    :binsMap="binsMap"
+                    :rgb="rgb"
+                    :d="ribbon({source: ribb.source, target: ribb.target})">
+                </ribbon>
+            </g>
+        </g>
+
+        <g class="labels">
+            <text
+                v-for="(bin, i) in connected"
+                x="10"
+                font-size="16"
+                :y="(height / connected.length) * i">
+                {{ binsMap.get(bin.id).name }}: {{ bin.percentage }}%
+            </text>
+        </g>
+
+        <defs>
+            <path 
+                id="name-path" 
+                :d="nameArc.startAngle(toRad(60)).endAngle(toRad(120))()"
+                :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
+            </path>
+            <path 
+                id="other-name-path" 
+                :d="nameArc.startAngle(toRad(240)).endAngle(toRad(300))()"
+                :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
+            </path>
+        </defs>
+
+        <text id="name" font-size="30" v-show="!selected">
+            <textPath xlink:href="#name-path">{{ name }}</textPath>
+        </text>
+        <text id="otherName" font-size="30" v-show="!selected">
+            <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
+        </text>
+    </svg>
+</div>
 </template>
 
 <script>
 import * as d3 from 'd3'
+import Ribbon from './Ribbon'
 
 let toRad = (degree) => degree * (Math.PI / 180)
     
@@ -37,7 +95,7 @@ let chord = function(bins1, bins2, matrix) {
     })
     
     // Create scales for each bin: value -> angle
-    let scales = matrix.map(function(bin, i) {
+    const scales = matrix.map(function(bin, i) {
         return d3.scaleLinear()
             .domain([0, d3.sum(bin)])
             .range([groups[i].startAngle, groups[i].endAngle])
@@ -45,7 +103,7 @@ let chord = function(bins1, bins2, matrix) {
     
     // Calculate angles for the ribbons
     let ribbons = []
-    matrix.forEach(function(bin, i) {
+    matrix.slice(0, bins1.length).forEach(function(bin, i) {
         let sourceScale = scales[i]
         let ribs = bin.reduce(function(ribs, size, j) { 
             if (size == 0) return ribs
@@ -80,115 +138,60 @@ let chord = function(bins1, bins2, matrix) {
 export default {
     data() {
         return {
-            svg: null,
-            g: null,
-            selected: null
+            width: 100,
+            height: 100,
+            nameArc: d3.arc().innerRadius(0).outerRadius(0),
+            arc: d3.arc().innerRadius(0).outerRadius(0),
+            ribbon: d3.ribbon().radius(0),
+            hoveredBin: null,
+            chordData: {groups: [], ribbons: []}
         }
     },
+
+    components: {
+        Ribbon
+    },
     
-    props: ['plotData', 'name', 'otherName', 'bins', 'otherBins'],
+    props: [
+        'plotData', 
+        'name', 
+        'otherName', 
+        'bins', 
+        'otherBins', 
+        'selected',
+        'connected',
+        'binsMap'
+    ],
     
     methods: {
-        fade(opacity, g) {
-            this.g.selectAll('.ribbons path')
-                .attr('opacity', 1)
-              .filter(d => d.source.index != g.index && d.target.index != g.index)
-              .transition()
-                .attr('opacity', opacity)
-        },
         updatePlot() {
-            const width = parseInt(d3.select(this.$el).style('width'), 10)
-            const height = width * .9
-            const outerRadius = Math.min(width, height) * 0.5 - 40
+            this.width = parseInt(d3.select(this.$el).style('width'), 10)
+            this.height = this.width * .9
+
+            const outerRadius = Math.min(this.width, this.height) * 0.5 - 40
             const outerRadiusLg = outerRadius * 1.01
             const outerRadiusSm = outerRadius * .98
             const innerRadius = outerRadius - 30
             const innerRadiusLg = innerRadius * .99
             const innerRadiusSm = innerRadius * 1.02
             
-            const groupG = this.g.select('g.groups')
-            const ribbonG = this.g.select('g.ribbons')
-            const fade = this.fade
-            
-            const arc = d3.arc().innerRadius(innerRadius).outerRadius(outerRadius)
-            const ribbon = d3.ribbon().radius(innerRadius-5)
-            const nameArc = d3.arc().innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
-            
-            //--------------------------
-            const chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
-            let selected = this.selected
-                
-            this.svg.select('rect#binSet1Rect')
-                .attr('fill', '#a00342')
-                .attr('stroke', d3.rgb('#a00342').darker())
-                
-            this.svg.select('rect#binSet2Rect')
-                .attr('fill', '#2d0682')
-                .attr('stroke', d3.rgb('#2d0682').darker())
-            
-            // Update groups
-            let groupPaths = groupG.selectAll('path')
-                .data(chordData.groups, d => d.index)
-            groupPaths.exit().transition().remove()
-            groupPaths.enter().append('path')
-                .on('click', (d, i) => {
-                    this.g.selectAll('.groups path')
-                      .filter(g => g === selected)
-                      .transition()
-                        .attr('d', arc.innerRadius(innerRadius).outerRadius(outerRadius)) 
-                    this.g.selectAll('.groups path')
-                      .filter(g => g !== d)
-                      .transition()
-                        .attr('d', arc
-                            .innerRadius(d === selected ? innerRadius : innerRadiusSm)
-                            .outerRadius(d === selected ? outerRadius : outerRadiusSm)) 
-                    selected = selected === d ? null : d
-                    this.$emit('binSelected', selected ? this.binsMap.get(selected.data) : null)
-                })
-                .on('mouseover', function(d, i) { 
-                    if (selected !== d) {
-                        d3.select(this).transition().attr('d', arc.innerRadius(innerRadiusLg).outerRadius(outerRadiusLg)) 
-                        fade(.1, d)
-                    }
-                })
-                .on('mouseout', function(d, i) { 
-                    if (selected !== d) {
-                        if (selected) d3.select(this).transition().attr('d', arc.innerRadius(innerRadiusSm).outerRadius(outerRadiusSm)) 
-                        else d3.select(this).transition().attr('d', arc.innerRadius(innerRadius).outerRadius(outerRadius)) 
-                        selected ? fade(.1, selected) : fade(1, d)
-                    }
-                })
-                .style("stroke", '#000000')
-              .merge(groupPaths)
-                .style('fill', (d, i) => this.binsMap.get(d.data).color)
-              .transition()
-                .attr('d', arc)
-                
-            // Update ribbons
-            let ribbonPaths = ribbonG.selectAll('path')
-                .data(chordData.ribbons)
-            ribbonPaths.exit().transition().remove()
-            ribbonPaths.enter().append('path')
-              .merge(ribbonPaths)
-                .style('fill', '#bbb')
-                // .style('fill', (d, i) => this.binsMap.get(d.target.data).color)
-                // .style('stroke', (d, i) => d3.rgb(this.binsMap.get(d.target.data).color).darker())
-              .transition()
-                .attr('d', ribbon)
-                
-                
-            this.svg.select('defs').select('path#text-path')
-                .attr('d', nameArc.startAngle(toRad(45)).endAngle(toRad(135)))
-                .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
-
-            this.svg.select('text#name textPath').text(this.name)
-            this.svg.select('text#other-name textPath').text(this.otherName)
-        }
+            this.arc.innerRadius(innerRadius).outerRadius(outerRadius)
+            this.ribbon.radius(innerRadius - 5)
+            this.nameArc.innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
+            this.chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
+        },
+        selectBin(binId) {
+            const selected = this.selected && this.selected.id === binId ? null : binId
+            this.$emit('binSelected', selected ? this.binsMap.get(binId) : null)
+        },
+        toRad,
+        rgb: d3.rgb
     },
     
     computed: {
-        binsMap() {
-            return d3.map([...this.bins, ...this.otherBins], bin => bin.id)
+        gTransform() {
+            const x = this.selected ? this.width * .75 : this.width * .5
+            return 'translate(' + x + ',' + this.height / 2 + ')'
         }
     },
 
@@ -199,30 +202,8 @@ export default {
     },
     
     mounted() {
-        const width = parseInt(d3.select(this.$el).style('width'), 10)
-        const height = width * .9
-        this.svg = d3.select(this.$el).append('svg').attr('width', width).attr('height', height)
-        this.g = this.svg.append('g')
-            .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
-            
-        this.g.append('g').attr('class', 'groups')
-        this.g.append('g').attr('class', 'ribbons')
-        
-        // Bin set names
-        this.svg.append('defs').append('path').attr('id', 'text-path')
-        this.svg.append('path').attr('id', 'path')
-        this.svg.append('clipPath')
-            .attr('id', 'text-clip')
-          .append('use')
-            .attr('xlink:href', '#path')
-        this.svg.append('text')
-            .attr('clip-path', 'url(#text-cli[p)')
-            .attr('id', 'name')
-            .attr('font-size', 30)
-          .append('textPath')
-            .attr('xlink:href', '#text-path')
-            .text('NAME')
-            
+        this.width = parseInt(d3.select(this.$el).style('width'), 10)
+        this.height = this.width * .9
         this.updatePlot()
     }
 }
@@ -235,5 +216,14 @@ export default {
 
 .groups > path {
     cursor: pointer;
+}
+
+.labels > text:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.flip-move {
+  transition: transform .2s;
 }
 </style>
