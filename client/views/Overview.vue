@@ -1,22 +1,39 @@
 <template>
 <div class="card" id="bins">
     <div class="card-header">
-        <button class="btn btn-primary btn-sm btn-header">
-            <span class="fa fa-plus"></span>
-            Add bin
-        </button>
-        <div class="dropdown float-xs-right">
-            <button class="btn btn-outline-secondary btn-sm dropdown-toggle btn-header" 
-                    data-toggle="dropdown" id="sort-button">
-                <strong>Sort by</strong>
-                {{ sortBy }}
+        <popover>
+            <button slot="button" class="btn btn-primary btn-sm btn-header">
+                <span class="fa fa-plus"></span>
+                Add bin
             </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'size'">Size</a>
-                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'gc'">GC</a>
-                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'contamination'">Contamination</a>
-                <a class="dropdown-item" href="#" @click.prevent="sortBy = 'completeness'">Completeness</a>
+            <div slot="body">
+                <input placeholder="Bin name">
+                <button class="btn btn-primary btn-sm">Add</button>
             </div>
+        </popover>
+
+        <div class="dropdown float-xs-right">
+            <popover>
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle btn-header" 
+                        id="sort-button" slot="button">
+                    <strong>Sort by</strong>
+                    {{ sortBy }}
+                </button>
+                <div slot="body">
+                    <button class="btn btn-secondary btn-sm" @click="sortBy = 'size'">
+                        Size
+                    </button>
+                    <button class="btn btn-secondary btn-sm" @click="sortBy = 'gc'">
+                        GC
+                    </button>
+                    <button class="btn btn-secondary btn-sm" @click="sortBy = 'contamination'">
+                        Contamination
+                    </button>
+                    <button class="btn btn-secondary btn-sm" @click="sortBy = 'completeness'">
+                        Completeness
+                    </button>
+                </div>
+            </popover>
         </div>
     </div>
     
@@ -35,6 +52,7 @@
 
 <script>
 import Bin from '../components/Bin'
+import Popover from '../components/Popover'
 
 export default {
     data() {
@@ -44,7 +62,8 @@ export default {
     },
 
     components: {
-        Bin
+        Bin,
+        Popover
     },
     
     computed: {

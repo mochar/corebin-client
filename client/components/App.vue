@@ -60,6 +60,7 @@ export default {
 <style>
 @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "../../node_modules/font-awesome/css/font-awesome.min.css";
+@import "../../node_modules/webui-popover/dist/jquery.webui-popover.min.css";
 
 html {
     height: 100%;
@@ -105,6 +106,10 @@ input[type="file"] {
 }
 
 #app {
+}
+
+.webui-popover .webui-popover-content>div:first-child {
+    width: 100%;
 }
 
 .back a {

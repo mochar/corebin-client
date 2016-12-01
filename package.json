@@ -42,6 +42,7 @@
     "font-awesome": "^4.6.3",
     "d3": "latest",
     "d3-lasso": "latest",
-    "moment": "latest"
+    "moment": "latest",
+    "webui-popover": "latest"
   }
 }
