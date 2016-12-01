@@ -109,17 +109,11 @@ export default {
 
 <style>
 .bin-container {
-    border-left-width: 3px;
-    transition: border-left-width .15s ease-in-out; 
     margin-bottom: 0;
 }
 
 .bin-container:not(:last-child) {
     border-bottom: 0;
-}
-
-.bin-container:hover {
-    border-left-width: 6px;
 }
 
 .bin-name {

@@ -20,17 +20,15 @@
         </div>
     </div>
     
-    <div id="bins-body">
-        <transition-group name="list">
-            <bin 
-                v-for="bin in sortedBins"
-                :key="bin.id"
-                :bin="bin"
-                :maxSize="maxSize"
-                :minSize="minSize">
-            </bin>
-        </transition-group>
-    </div>
+    <transition-group name="list" tag="div" id="bins-body">
+        <bin 
+            v-for="bin in sortedBins"
+            :key="bin.id"
+            :bin="bin"
+            :maxSize="maxSize"
+            :minSize="minSize">
+        </bin>
+    </transition-group>
 </div>
 </template>
 
@@ -139,6 +137,7 @@ export default {
 #bins-body {
     overflow-y: scroll;
     padding-right: 1rem;
+    padding-left: 1rem;
     max-height: 95vh;
 }
 
