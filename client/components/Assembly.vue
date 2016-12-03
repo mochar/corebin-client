@@ -4,12 +4,25 @@
         <span class="name assembly-name">{{ assembly.name }}</span>
 
         <div class="float-xs-right" v-show="selected">
-            <button class="btn btn-secondary assembly-button">
-	            <span class="fa fa-fw fa-pencil"></span>
-            </button>
-            <button class="btn btn-secondary assembly-button">
-	            <span class="fa fa-fw fa-trash text-danger"></span> 
-            </button>
+            <popover :options="{placement: 'bottom'}">
+                <button slot="button" class="btn btn-secondary assembly-button">
+                    <span class="fa fa-fw fa-pencil"></span>
+                </button>
+                <div slot="body">
+                    <input placeholder="Assembly name">
+                    <button class="btn btn-secondary btn-sm">Rename</button>
+                </div>
+            </popover>
+
+            <popover :options="{placement: 'bottom'}">
+                <button slot="button" class="btn btn-secondary assembly-button">
+    	            <span class="fa fa-fw fa-trash text-danger"></span> 
+                </button>
+                <div slot="body">
+                    <span class="text-danger">Delete assembly?</span>
+                    <button class="btn btn-danger btn-sm">Delete</button>
+                </div>
+            </popover>
         </div>
     </div>
     <div class="card-block" style="padding: .5rem 1rem;" v-if="selected">
@@ -38,6 +51,7 @@
 
 <script>
 import BinSetUpload from '../components/BinSetUpload'
+import Popover from '../components/Popover'
 
 export default {
     data() {
@@ -48,7 +62,8 @@ export default {
     props: ['assembly', 'binSets', 'selected'],
 
     components: {
-        BinSetUpload
+        BinSetUpload,
+        Popover
     },
 
     methods: {
