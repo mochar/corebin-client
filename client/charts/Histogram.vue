@@ -9,7 +9,7 @@ export default {
     data() {
         return {
             svg: null,
-            margin: {top: 5, right: 8, bottom: 18, left: 5}
+            margin: {top: 0, right: 8, bottom: 18, left: 5}
         }
     },
     
@@ -23,6 +23,10 @@ export default {
         format: {
             type: Boolean,
             default: false
+        },
+        color: {
+            type: String,
+            default: 'steelblue'
         }
     },
     
@@ -53,6 +57,7 @@ export default {
             
             const rect = bar.enter().append('rect')
                 .attr('class', 'bar')
+                .attr('fill', this.color)
                 .attr('x', (d, i) => x(bins[i]))
                 .attr('y', height)
                 .attr('width', width / data.length -1)
@@ -92,7 +97,6 @@ export default {
 
 <style>
 .bar {
-  fill: steelblue;
   shape-rendering: crispEdges;
 }
 

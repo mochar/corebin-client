@@ -59,11 +59,11 @@
             </div>
             <div class="col-xs-4">
                 <h6>Contig GC%</h6>
-                <histogram :plotData="gcData"></histogram>
+                <histogram :plotData="gcData" :color="bin.color"></histogram>
             </div>
             <div class="col-xs-4">
                 <h6>Contig length</h6>
-                <histogram :plotData="lengthData" :format="true"></histogram>
+                <histogram :plotData="lengthData" :format="true" :color="bin.color"></histogram>
             </div>
         </div>
     </div>
