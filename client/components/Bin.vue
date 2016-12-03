@@ -110,6 +110,8 @@ export default {
 <style>
 .bin-container {
     margin-bottom: 0;
+    border-left: 0;
+    border-right: 0;
 }
 
 .bin-container:not(:last-child) {
