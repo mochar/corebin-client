@@ -15,7 +15,9 @@ import webuiPopover from 'webui-popover'
 export default {
 	props: {
 		options: {
-			default: {}
+			default() {
+				return {}
+			}
 		}
 	},
 
