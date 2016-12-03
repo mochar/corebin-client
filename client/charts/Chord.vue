@@ -6,7 +6,10 @@
                 <path
                     v-for="group in chordData.groups"
                     :key="group.index"
-                    :style="{ stroke: '#000000', fill: binsMap.get(group.data).color }"
+                    :style="{ 
+                        stroke: '#000000', 
+                        fill: binsMap.get(group.data).color
+                    }"
                     :d="arc.startAngle(group.startAngle).endAngle(group.endAngle)()"
                     @mouseover="hoveredBin = group.data"
                     @mouseout="hoveredBin = null"
@@ -17,7 +20,7 @@
                 <ribbon
                     v-for="ribb in chordData.ribbons"
                     :ribbon="ribb"
-                    :selectedBin="selected"
+                    :selectedBin="selected ? selected.id : null"
                     :hoveredBin="hoveredBin"
                     :binsMap="binsMap"
                     :rgb="rgb"

@@ -52,7 +52,7 @@
 
         <div v-if="selectedBin">
             <div>
-                <strong style="font-size: 1rem">SELECTED BIN</strong>
+                <strong style="font-size: .9rem">SELECTED BIN</strong>
                 <a href="#" @click.prevent="selectedBin = null">
                     <small>deselect</small>
                 </a>
@@ -65,7 +65,7 @@
             </div>
 
             <div style="margin-top: 1rem">
-                <strong style="font-size: 1rem">CONNECTED BINS</strong>
+                <strong style="font-size: .9rem">CONNECTED BINS</strong>
                 <bin 
                     v-for="bin in connectedBins"
                     :bin="binsMap.get(bin.id)"
@@ -165,7 +165,7 @@ export default {
             return this.plotData.matrix[all.indexOf(id)]
                 .reduce(function(connected, cur, i) {
                     if (cur === 0) return connected
-                    const connectedBin = { percentage: 100, id: all.indexOf(i) }
+                    const connectedBin = { percentage: 100, id: all[i] }
                     connected.push(connectedBin)
                     return connected
                 }, [])
