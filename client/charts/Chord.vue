@@ -1,7 +1,7 @@
 <template>
 <div>
     <svg :width="width" :height="height">
-        <g :transform="gTransform">
+        <g>
             <transition-group name="flip" tag="g" class="groups">
                 <path
                     v-for="group in chordData.groups"
@@ -201,6 +201,11 @@ export default {
     watch: {
         plotData() {
             this.updatePlot()
+        },
+        gTransform() {
+            d3.select(this.$el).select('svg > g')
+                .transition()
+                .attr('transform', this.gTransform)
         }
     },
     
