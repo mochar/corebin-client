@@ -19,8 +19,7 @@
     	            <span class="fa fa-fw fa-trash text-danger"></span> 
                 </button>
                 <div slot="body">
-                    <span class="text-danger">Delete assembly?</span>
-                    <button class="btn btn-danger btn-sm">Delete</button>
+                    <button class="btn btn-danger btn-sm">Delete assembly</button>
                 </div>
             </popover>
         </div>

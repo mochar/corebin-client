@@ -3,12 +3,24 @@
     <div class="col-xs-2 bin-name-container text-xs-center" v-if="!simple">
         <div class="row">
             <div class="col-xs-3 left-buttons">
-                <button class="btn btn-sm btn-xs btn-secondary">
-                    <span class="fa fa-fw fa-pencil"></span>
-                </button>
-                <button class="btn btn-sm btn-xs btn-secondary">
-                    <span class="fa fa-fw fa-trash text-danger"></span>
-                </button>
+                <popover :options="{placement: 'right'}">
+                    <button slot="button" class="btn btn-sm btn-xs btn-secondary">
+                        <span class="fa fa-fw fa-pencil"></span>
+                    </button>
+                    <div slot="body">
+                        <input placeholder="Bin name">
+                        <button class="btn btn-secondary btn-sm">Rename</button>
+                    </div>
+                </popover>
+
+                <popover :options="{placement: 'right'}">
+                    <button slot="button" class="btn btn-sm btn-xs btn-secondary">
+                        <span class="fa fa-fw fa-trash text-danger"></span>
+                    </button>
+                    <div slot="body">
+                        <button class="btn btn-danger btn-sm">Delete bin</button>
+                    </div>
+                </popover>
             </div>
             <div class="col-xs-9">
                 <div class="bin-name">
@@ -73,6 +85,7 @@
 <script>
 import { mapMutations } from 'vuex'
 import Histogram from '../charts/Histogram'
+import Popover from '../components/Popover'
 
 export default {
     data() {
@@ -86,7 +99,8 @@ export default {
     props: ['bin', 'maxSize', 'minSize', 'simple'],
     
     components: {
-        Histogram
+        Histogram,
+        Popover
     },
     
     computed: {
@@ -145,14 +159,14 @@ export default {
     border-top: 1px dashed #eee;
 }
 
-.left-buttons > button {
+.left-buttons button {
     border: 0;
     opacity: 0;
     transition: opacity .15s ease-in-out; 
 }
 
-.bin-container:hover .left-buttons > button,
-.more .left-buttons > button {
+.bin-container:hover .left-buttons button,
+.more .left-buttons button {
     opacity: 1;
 }
 </style>
