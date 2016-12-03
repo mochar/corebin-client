@@ -97,10 +97,11 @@ export default {
 
 <style>
 .bar {
-  shape-rendering: crispEdges;
+    shape-rendering: crispEdges;
+    stroke: rgba(0, 0, 0, 0.1);
 }
 
 .bar:hover {
-  fill: brown;
+    fill: brown;
 }
 </style>

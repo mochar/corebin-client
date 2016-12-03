@@ -1,6 +1,6 @@
 <template>
 <div class="card" id="bins">
-    <div class="card-header">
+    <div class="card-header" id="bins-header">
         <popover>
             <button slot="button" class="btn btn-primary btn-sm btn-header">
                 <span class="fa fa-plus"></span>
@@ -11,6 +11,15 @@
                 <button class="btn btn-primary btn-sm">Add</button>
             </div>
         </popover>
+
+        <label class="form-check-label">
+            <input 
+                type="checkbox" 
+                class="form-check-input align-middle" 
+                style="position: absolute"
+                v-model="showUnbinned">
+                Show unbinned
+        </label>
 
         <div class="dropdown float-xs-right">
             <popover>
@@ -57,7 +66,8 @@ import Popover from '../components/Popover'
 export default {
     data() {
         return {
-            sortBy: 'size'
+            sortBy: 'size',
+            showUnbinned: false
         }
     },
 
@@ -71,7 +81,8 @@ export default {
             return this.$store.state.binSet
         },
         bins() {
-            return this.$store.state.bins
+            const bins = this.$store.state.bins
+            return this.showUnbinned ? bins : bins.filter(bin => bin.name !== 'unbinned')
         },
         maxSize() {
             return Math.max(...this.bins.map(bin => bin.size))
@@ -149,9 +160,13 @@ export default {
     padding: 0;
 }
 
-#bins > div.card-header {
+#bins-header {
     background-color: white;
     padding: .25rem 1rem;
+}
+
+#bins-header > label {
+    margin-left: 1em;
 }
 
 #bins-body {
