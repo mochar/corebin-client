@@ -23,7 +23,7 @@ export default {
 
 	mounted() {
 		const els = $(this.$el).find('div')
-		$(this.$el).find('button').webuiPopover(this.options)
+		$(this.$el).find('button').first().webuiPopover(this.options)
 	}
 }	
 </script>
