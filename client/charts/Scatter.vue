@@ -1,20 +1,28 @@
 <template>
-<div></div>
+<div>
+    <svg :width="width" :height="height">
+        <g class="x axis" :transform="`translate(0,${height-10})`"></g>
+        <g class="y axis" :transform="'translate(10,0)'"></g>
+    </svg>
+</div>
 </template>
 
 <script>
+import { lasso as d3Lasso } from 'd3-lasso'
 import * as d3 from 'd3'
 
 export default {
     data() {
         return {
             svg: null,
-            view: null,
             zoom: null,
             x: null,
             y: null,
             xAxis: null,
-            yAxis: null
+            yAxis: null,
+            lasso: d3Lasso(),
+            height: 100,
+            width: 100
         }
     },
     
@@ -22,70 +30,83 @@ export default {
     
     methods: {
         updatePlot() {
+            this.x = d3.scaleLinear()
+                .domain([d3.min(this.contigs, c => c[this.xData]), d3.max(this.contigs, c => c[this.xData])])
+                .range([0, this.width])
+                
+            this.y = d3.scaleLinear()
+                .domain([d3.min(this.contigs, c => c[this.yData]), d3.max(this.contigs, c=> c[this.yData])])
+                .range([0, this.height])
+            
+            this.xAxis = d3.axisTop(this.x).ticks(12)
+            this.yAxis = d3.axisRight(this.y).ticks(12 * this.height / this.width)
+
+            this.svg.select('g.x').call(this.xAxis)
+            this.svg.select('g.y').call(this.yAxis)
+
+            const circle = this.svg.selectAll('circle')
+                .data(this.contigs, c => c.id)
+
+            circle.transition()
+                .attr('cx', contig => this.x(contig[this.xData]))
+                .attr('cy', contig => this.y(contig[this.yData]))
+
+            circle.exit().transition()
+                .attr('r', 0)
+                .remove()
+
+            circle.enter().append('circle')
+                .attr('class', 'dot')
+                .attr('r', 0)
+                .attr('cx', contig => this.x(contig[this.xData]))
+                .attr('cy', contig => this.y(contig[this.yData]))
+                .attr('fill', contig => contig[`color_${this.binSet}`])
+                .style('opacity', .5)
+              .transition()
+                .attr('r', 4)
         },
         zoomed() {
-            this.view.attr('transform', d3.event.transform)
-            d3.select(this.$el).select('g.x').call(this.xAxis.scale(d3.event.transform.rescaleX(this.x)))
-            d3.select(this.$el).select('g.y').call(this.yAxis.scale(d3.event.transform.rescaleY(this.y)))
+            const t = this.svg.transition().duration(750)
+            this.svg.select('g.x').transition(t).call(this.xAxis)
+            this.svg.select('g.y').transition(t).call(this.yAxis)
+            this.svg.selectAll('circle').transition(t)
+                .attr('cx', contig => this.x(contig[this.xData]))
+                .attr('cy', contig => this.y(contig[this.yData]))
         }
     },
 
     mounted() {
-        const width = parseInt(d3.select(this.$el).style('width'), 10)
-        const height = width
-        this.svg = d3.select(this.$el).append('svg').attr('width', width).attr('height', height)
+        this.width = parseInt(d3.select(this.$el).style('width'), 10)
+        this.height = this.width
+        this.svg = d3.select(this.$el).select('svg')
         
         this.zoom = d3.zoom()
             .scaleExtent([1, 40])
-            .translateExtent([[-100, -100], [width + 90, height + 100]])
+            .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
             .on('zoom', this.zoomed);
-        
-        this.x = d3.scaleLinear()
-            .domain([d3.min(this.contigs, c => c[xData]), d3.max(this.contigs, c => c[xData])])
-            .range([0, width])
-            
-        this.y = d3.scaleLinear()
-            .domain([d3.min(this.contigs, c => c[yData]), d3.max(this.contigs, c=> c[yData])])
-            .range([0, height])
-        
-        this.xAxis = d3.axisBottom(this.x)
-            .ticks((width + 2) / (height + 2) * 10)
-            .tickSize(height)
-            .tickPadding(8 - height)
 
-        this.yAxis = d3.axisRight(this.y)
-            .ticks(10)
-            .tickSize(width)
-            .tickPadding(8 - width)
-            
-        this.view = this.svg.append('rect')
-            .attr('class', 'view')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', width)
-            .attr('height', height)
-            
-        this.svg.append('g')
-            .attr('class', 'x axis hist-axis')
-            .call(this.xAxis)
-        
-        this.svg.append('g')
-            .attr('class', 'y axis hist-axis')
-            .call(this.yAxis)
+        // lasso.closePath
             
         this.svg.call(this.zoom)
     
         this.updatePlot()
     },
 
-    updated: function() {
-        console.log('update')
-        this.updatePlot()
+    computed: {
+        binSet() {
+            return this.$store.state.binSet.id
+        }
+    },
+
+    watch: {
+        contigs() {
+            this.updatePlot()
+        }
     }
 }
 </script>
 
-<style scoped>
+<style>
 .axis path {
   display: none;
 }
