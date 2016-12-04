@@ -6,8 +6,7 @@
             :assembly="a"
             :binSets="binSets"
             :selected="a === assembly"
-            :style="{ cursor: a === assembly ? 'initial' : 'cursor' }"
-            @click.native="selectAssembly(a)">
+            :style="{ cursor: a === assembly ? 'initial' : 'cursor' }">
         </assembly>
         <div class="card-footer text-muted" style="padding: 0">
             <assembly-upload></assembly-upload>
