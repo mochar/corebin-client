@@ -32,9 +32,10 @@
         <g class="labels">
             <text
                 v-for="(bin, i) in connected"
-                x="10"
                 font-size="16"
-                :y="(height / connected.length) * i">
+                :text-anchor="leftSelected ? 'start' : 'end'"
+                :x="leftSelected ? 10 : width - 10"
+                :y="labelScale(bin.id)">
                 {{ binsMap.get(bin.id).name }}: {{ bin.percentage }}%
             </text>
         </g>
@@ -147,7 +148,8 @@ export default {
             arc: d3.arc().innerRadius(0).outerRadius(0),
             ribbon: d3.ribbon().radius(0),
             hoveredBin: null,
-            chordData: {groups: [], ribbons: []}
+            chordData: {groups: [], ribbons: []},
+            labelScale: d3.scaleBand()
         }
     },
 
@@ -192,8 +194,15 @@ export default {
     },
     
     computed: {
+        leftSelected() {
+            // True if the selected bin belongs to the left bin set. Otherwise false.
+            // This also means that the value is false when there is no bin selected.
+            return this.selected && this.plotData.bins1.indexOf(this.selected.id) > -1
+        },
         gTransform() {
-            const x = this.selected ? this.width * .75 : this.width * .5
+            let scaling = .5
+            if (this.selected) scaling = this.leftSelected ? .75 : .25
+            const x = this.width * scaling
             return 'translate(' + x + ',' + this.height / 2 + ')'
         }
     },
@@ -206,6 +215,11 @@ export default {
             d3.select(this.$el).select('svg > g')
                 .transition()
                 .attr('transform', this.gTransform)
+        },
+        connected() {
+            this.labelScale = this.labelScale
+                .domain([...this.connected.map(x => x.id), -1])
+                .range([this.height, 0])
         }
     },
     
