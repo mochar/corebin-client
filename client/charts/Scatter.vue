@@ -1,8 +1,8 @@
 <template>
 <div>
     <svg :width="width" :height="height">
-        <g class="x axis" :transform="`translate(0,${height-10})`"></g>
-        <g class="y axis" :transform="'translate(10,0)'"></g>
+        <g class="x axis" :transform="`translate(0,${height})`"></g>
+        <g class="y axis" :transform="'translate(0,0)'"></g>
     </svg>
 </div>
 </template>

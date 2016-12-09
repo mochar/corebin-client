@@ -81,4 +81,7 @@ export default {
 </script>
 
 <style>
+.multiselect > div {
+    border-bottom: 0;
+}
 </style>
