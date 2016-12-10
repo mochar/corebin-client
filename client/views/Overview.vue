@@ -1,5 +1,5 @@
 <template>
-<div class="card" id="bins">
+<div id="bins">
     <div class="card-header" id="bins-header">
         <popover>
             <button slot="button" class="btn btn-primary btn-sm btn-header">
@@ -46,16 +46,18 @@
         </div>
     </div>
     
-    <transition-group name="list" tag="div" id="bins-body">
-        <bin 
-            v-for="bin in sortedBins"
-            :key="bin.id"
-            :bin="bin"
-            :simple="false"
-            :maxSize="maxSize"
-            :minSize="minSize">
-        </bin>
-    </transition-group>
+    <div class="row">
+        <div v-for="(bin, i) in sortedBins" 
+             :class="i % 2 === 0 ? 'left-bin' : 'right-bin'"
+             class="col-xs-6">
+            <bin
+                :bin="bin" 
+                :simple="false"
+                :maxSize="maxSize"
+                :minSize="minSize">
+            </bin>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -96,21 +98,6 @@ export default {
     }
 }
 </script>
-
-<style scoped>
-.list-item {
-  transition: all 1s;
-  display: inline-block;
-  margin-right: 10px;
-}
-.list-enter, .list-leave-active {
-  opacity: 0;
-  transform: translateY(30px);
-}
-.list-leave-active {
-  position: absolute;
-}
-</style>
 
 <style>
 .name {
@@ -182,5 +169,13 @@ export default {
 
 .btn-header {
     font-size: .8rem;
+}
+
+.left-bin {
+    padding-right: .1rem;
+}
+
+.right-bin {
+    padding-left: .1rem;
 }
 </style>

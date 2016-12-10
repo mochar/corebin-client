@@ -56,23 +56,23 @@
                 <a href="#" @click.prevent="selectedBin = null">
                     <small>deselect</small>
                 </a>
-                <bin 
+                <compare-bin 
                     :bin="selectedBin" 
                     :simple="true"
                     :minSize="minSize"
                     :maxSize="maxSize">
-                </bin>
+                </compare-bin>
             </div>
 
-            <div style="margin-top: 1rem">
+            <div style="margin-top: 1rem" id="connected">
                 <strong style="font-size: .9rem">CONNECTED BINS</strong>
-                <bin 
+                <compare-bin 
                     v-for="bin in connectedBins"
                     :bin="binsMap.get(bin.id)"
                     :simple="true"
                     :minSize="minSize"
                     :maxSize="maxSize">
-                </bin>
+                </compare-bin>
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@
 import { mapState } from 'vuex'
 import { map as d3Map } from 'd3'
 import Chord from '../charts/Chord'
-import Bin from '../components/Bin'
+import CompareBin from '../components/CompareBin'
 
 /* "otherPotentialBinSet" is the selected bin set. "otherBinSet" is set to 
  * "otherPotentialBinSet" when the plot botton is clicked. Same for potentialBy.
@@ -107,7 +107,7 @@ export default {
     
     components: {
         Chord,
-        Bin
+        CompareBin
     },
 
     methods: {
@@ -193,6 +193,9 @@ export default {
 </script>
 
 <style>
+#connected > div:not(:last-child) {
+    border-bottom: 0;
+}
 </style>
 
 <style scoped>

@@ -5,6 +5,7 @@ import Overview from '../views/Overview'
 import Compare from '../views/Compare'
 import Refine from '../views/Refine'
 import Help from '../views/Help'
+import Bin from '../views/Bin'
 
 Vue.use(Router)
 
@@ -22,6 +23,15 @@ export default new Router({
 		{
 			path: '/overview',
 			component: Overview,
+			beforeEnter: (to, from, next) => {
+				const fromHasInstance = from.matched.length > 0
+				if (fromHasInstance && from.matched[0].instances.default.$store.state.binSet) next()
+				else next(fromHasInstance ? false : next('/home'))
+			}
+		},
+		{
+			path: '/overview/:bin',
+			component: Bin,
 			beforeEnter: (to, from, next) => {
 				const fromHasInstance = from.matched.length > 0
 				if (fromHasInstance && from.matched[0].instances.default.$store.state.binSet) next()
