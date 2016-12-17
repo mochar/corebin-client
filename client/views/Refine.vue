@@ -1,25 +1,23 @@
 <template>
-<div>
-    <div class="card">
-        <multiselect
-            :multiple="true"
-            :options="bins"
-            :selected="selectedBins"
-            :disabled="loading"
-            @select="getContigs"
-            @remove="removeContigs"
-            selectLabel=""
-            deselectLabel=""
-            placeholder="Select bin"
-            label="name"
-            key="name">
-        </multiselect>
-        <scatter
-            :contigs="contigs"
-            :xData="xData"
-            :yData="yData"
-        ></scatter
-    </div>
+<div class="card">
+    <multiselect
+        :multiple="true"
+        :options="bins"
+        :selected="selectedBins"
+        :disabled="loading"
+        @select="getContigs"
+        @remove="removeContigs"
+        selectLabel=""
+        deselectLabel=""
+        placeholder="Select bin"
+        label="name"
+        key="name">
+    </multiselect>
+    <scatter
+        :contigs="contigs"
+        :xData="xData"
+        :yData="yData"
+    ></scatter
 </div>
 </template>
 
@@ -82,6 +80,6 @@ export default {
 
 <style>
 .multiselect > div {
-    border-bottom: 0;
+    border: 0;
 }
 </style>

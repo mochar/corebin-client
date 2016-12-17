@@ -1,79 +1,79 @@
 <template>
-<div>
-    <div class="card card-block">
-        <form class="form-inline">
-            <div class="form-group">
-                <label>Bin-set (left)</label>
-                <select class="custom-select" v-model="potentialBinSet">
-                    <!-- <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option> -->
-                    <option 
-                        v-for="(bs, index) in binSets" 
-                        :selected="index === 0"
-                        :value="bs">
-                        {{ bs.name }}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Bin-set (right)</label>
-                <select class="custom-select" v-model="otherPotentialBinSet">
-                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>By</label>
-                <select class="custom-select">
-                    <option @click="potentialBy = 'count'"># shared contigs</option>
-                    <option @click="potentialBy = 'bp'"># bp</option>
-                </select>
-            </div>
-            <button class="btn btn-primary float-xs-right" @click="plot" :disabled="plotButtonDisabled">
-                <span v-show="!loading">Plot</span>
-                <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
-            </button>
-        </form>
+<div class="card card-block" id="compare">
+    <form class="form-inline">
+        <div class="form-group">
+            <label>Bin-set (left)</label>
+            <select class="custom-select" v-model="potentialBinSet">
+                <!-- <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option> -->
+                <option 
+                    v-for="(bs, index) in binSets" 
+                    :selected="index === 0"
+                    :value="bs">
+                    {{ bs.name }}
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Bin-set (right)</label>
+            <select class="custom-select" v-model="otherPotentialBinSet">
+                <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>By</label>
+            <select class="custom-select">
+                <option @click="potentialBy = 'count'"># shared contigs</option>
+                <option @click="potentialBy = 'bp'"># bp</option>
+            </select>
+        </div>
+        <button class="btn btn-primary float-xs-right" @click="plot" :disabled="plotButtonDisabled">
+            <span v-show="!loading">Plot</span>
+            <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
+        </button>
+    </form>
 
-        <div id="chord">
-            <chord 
-                :plotData="plotData" 
-                :name="name" 
-                :otherName="otherName"
-                :bins="bins"
-                :otherBins="otherBins"
-                :selected="selectedBin"
-                :connected="connectedBins"
-                :binsMap="binsMap"
-                @binSelected="selectBin"
-            ></chord>
-            <span id="message" v-show="otherBins.length === 0" class="text-muted">
-                Select the bin sets and click on the Plot button
-            </span>
+    <div id="chord">
+        <chord 
+            :plotData="plotData" 
+            :name="name" 
+            :otherName="otherName"
+            :bins="bins"
+            :otherBins="otherBins"
+            :selected="selectedBin"
+            :connected="connectedBins"
+            :binsMap="binsMap"
+            @binSelected="selectBin"
+        ></chord>
+        <span id="message" v-show="otherBins.length === 0" class="text-muted">
+            <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
+            <!-- Select the bin sets to compare and click on the Plot button -->
+            <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
+        </span>
+    </div>
+
+    <div v-if="selectedBin">
+        <div>
+            <strong style="font-size: .9rem">SELECTED BIN</strong>
+            <a href="#" @click.prevent="selectedBin = null">
+                <small>deselect</small>
+            </a>
+            <compare-bin 
+                :bin="selectedBin" 
+                :simple="true"
+                :minSize="minSize"
+                :maxSize="maxSize">
+            </compare-bin>
         </div>
 
-        <div v-if="selectedBin">
-            <div>
-                <strong style="font-size: .9rem">SELECTED BIN</strong>
-                <a href="#" @click.prevent="selectedBin = null">
-                    <small>deselect</small>
-                </a>
-                <compare-bin 
-                    :bin="selectedBin" 
-                    :simple="true"
-                    :minSize="minSize"
-                    :maxSize="maxSize">
-                </compare-bin>
-            </div>
-
-            <div style="margin-top: 1rem" id="connected">
-                <strong style="font-size: .9rem">CONNECTED BINS</strong>
-                <compare-bin 
-                    v-for="bin in connectedBins"
-                    :bin="binsMap.get(bin.id)"
-                    :simple="true"
-                    :minSize="minSize"
-                    :maxSize="maxSize">
-                </compare-bin>
-            </div>
+        <div style="margin-top: 1rem" id="connected">
+            <strong style="font-size: .9rem">CONNECTED BINS</strong>
+            <compare-bin 
+                v-for="bin in connectedBins"
+                :bin="binsMap.get(bin.id)"
+                :simple="true"
+                :minSize="minSize"
+                :maxSize="maxSize">
+            </compare-bin>
         </div>
     </div>
 </div>
@@ -196,17 +196,27 @@ export default {
 #connected > div:not(:last-child) {
     border-bottom: 0;
 }
+
+#compare {
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+#scale-icon {
+    display: block;
+    padding-bottom: 1rem;
+}
 </style>
 
 <style scoped>
 #message {
     position: absolute;
     top: 50%;
-    left: 25%;
+    left: 15%;
     right: 0;
     bottom: 0;
     text-align: center;
     height: 5rem;
-    width: 50%;
+    width: 70%;
 }
 </style>

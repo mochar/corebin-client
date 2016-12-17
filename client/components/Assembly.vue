@@ -1,5 +1,5 @@
 <template>
-<div class="card" style="margin-bottom: 0">
+<div class="card" style="margin-bottom: 0; border-left: 0; border-right: 0">
     <div class="name-block">
         <span class="name assembly-name">{{ assembly.name }}</span>
 

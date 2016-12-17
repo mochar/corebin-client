@@ -1,6 +1,14 @@
 <template>
 <div>
-    <div class="card info-card">
+    <div v-show="showForm">
+        <assembly-upload @done="showForm = false"></assembly-upload>
+
+        <a href="#" style="text-align: center; display: block" v-show="assemblies.length === 0">
+            Try CoReBIN with demo data
+        </a>
+    </div>
+
+    <div v-show="!showForm">
         <assembly
             v-for="a in assemblies"
             :assembly="a"
@@ -8,13 +16,22 @@
             :selected="a === assembly"
             :style="{ cursor: a === assembly ? 'initial' : 'cursor' }">
         </assembly>
+
         <div class="card-footer text-muted" style="padding: 0">
-            <assembly-upload></assembly-upload>
+            <button 
+                @click="showForm = true"
+                class="btn btn-outline-secondary btn-block" 
+                style="color: #666; border: 0">
+                <span class="fa fa-plus"></span> Assembly
+            </button>
         </div>
     </div>
     
-    <div class="float-xs-right">
-        <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
+    <div class="float-xs-right" id="madeby">
+        <div>
+            <small><router-link to="/home"><span class="fa fa-home"></span> Home</router-link></small> |
+            <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
+        </div>
         <small class="text-muted">Made by Mohammed Charrout</small> <br>
         <small class="text-muted">Supervised by Lex Overmars</small>
     </div>
@@ -22,20 +39,34 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import AssemblyUpload from '../components/AssemblyUpload'
 import Assembly from '../components/Assembly'
 
 export default {
+    data() {
+        return {
+            cancelling: false,
+            showForm: false
+        }
+    },
+
     components: {
         AssemblyUpload,
         Assembly
     },
 
     methods: {
+        ...mapActions({
+            cancelAssemblyJob: 'CANCEL_ASSEMBLY_JOB'
+        }),
         selectAssembly(assembly) {
             this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
             })
+        },
+        cancelJob() {
+            this.cancelling = true
+            this.cancelAssemblyJob().done(() => this.cancelling = false)
         }
     },
     
@@ -44,16 +75,17 @@ export default {
             'assemblies',
             'assembly',
             'binSets',
-            'binSet'
+            'binSet',
+            'assemblyJob'
         ])
     },
     
     beforeMount() {
         // Fetch data from server
         this.$store.dispatch('GET_ASSEMBLIES').then(() => {
-            this.loading = false
-            if (!this.assembly) 
-                this.$nextTick(() => $('[data-toggle="tooltip"]').tooltip('show'))
+            this.loading = false 
+            this.showForm = this.assemblyJob ? false : true
+            this.showForm = this.assemblies.length ? false : true
         })
     }
 }
@@ -77,10 +109,6 @@ export default {
     margin-top: 1rem;
 }
 
-#add-btn {
-    border: 0;
-}
-
 .unselected {
     opacity: .3;
 }
@@ -102,6 +130,12 @@ export default {
 
 .btn-sm {
     padding: .25rem .5rem; 
+}
+
+#madeby {
+    position: fixed;
+    bottom: 1rem;
+    padding: 1rem;
 }
 </style>
 

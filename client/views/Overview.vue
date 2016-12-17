@@ -22,6 +22,15 @@
         </label>
 
         <div class="dropdown float-xs-right">
+            <div class="btn-group">
+                <button class="btn btn-secondary btn-sm btn-header active">
+                    <span class="fa fa-th-large"></span>
+                </button>
+                <button class="btn btn-secondary btn-sm btn-header">
+                    <span class="fa fa-table"></span>
+                </button>
+            </div>
+
             <popover>
                 <button class="btn btn-outline-secondary btn-sm dropdown-toggle btn-header" 
                         id="sort-button" slot="button">

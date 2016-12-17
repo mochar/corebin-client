@@ -8,10 +8,10 @@
     </div>
         
     <div class="row">
-        <div class="col-xs-3" style="padding-right: 0; padding-left: 0">
+        <div class="col-xs-3" id="left">
             <selection></selection>
         </div>
-        <div class="col-xs-9" style="padding: 0">
+        <div class="col-xs-9" id="right" style="padding: 0">
             <transition name="fade" mode="out-in">
                 <keep-alive>
                     <router-view></router-view>
@@ -122,6 +122,19 @@ input[type="file"] {
 
 .fade-enter, .fade-leave-active {
     opacity: 0;
+}
+
+#left {
+    padding-left: 0;
+    padding-right: 0;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    height: 100vh;
+    background-color: #F4F4F4;
+}
+
+#right > div.card {
+    border-left: 0;
 }
 </style>
 

@@ -1,9 +1,9 @@
 <template>
-<div class="card card-block">
-    <h2>CoReBIN <small class="text-muted">Comparison and Refinement of metagenomic binning</small></h2>
+<div class="card card-block" id="home">
+    <h2>CoReBIN <small class="text-muted">Comparison and Refinement of metagenomic bins</small></h2>
     <hr>
 
-    <p class="lead">
+    <p class="lead rounded" id="lead">
         CoReBIN is a user-friendly web-based tool to compare the results of different binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.               
     </p>
     
@@ -39,3 +39,15 @@
     </p>           
 </div>
 </template>
+
+<style>
+#home {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+#lead {
+    background-color: #fafafa;
+    padding: 1rem;
+}
+</style>

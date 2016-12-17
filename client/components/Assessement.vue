@@ -29,7 +29,7 @@
     		</tbody>
     	</table>
     	<small class="text-muted">
-    		Select assessement to be used in plots and figures by clicking a row.
+    		Select assessement to be used in tables and figures by clicking the row.
     	</small>
     </div>
 </div>
