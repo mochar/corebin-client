@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div v-show="showForm">
+    <div v-if="showForm" key="form">
         <assembly-upload @done="showForm = false"></assembly-upload>
 
         <a href="#" style="text-align: center; display: block" v-show="assemblies.length === 0">
@@ -8,7 +8,7 @@
         </a>
     </div>
 
-    <div v-show="!showForm">
+    <div v-else key="assemblies">
         <assembly
             v-for="a in assemblies"
             :assembly="a"
@@ -20,6 +20,7 @@
         <div class="card-footer text-muted" style="padding: 0">
             <button 
                 @click="showForm = true"
+                :disabled="assemblyJob"
                 class="btn btn-outline-secondary btn-block" 
                 style="color: #666; border: 0">
                 <span class="fa fa-plus"></span> Assembly

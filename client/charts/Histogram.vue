@@ -31,7 +31,7 @@ export default {
     },
     
     methods: {
-        updatePlot: function() {
+        updatePlot() {
             let width = parseInt(d3.select(this.$el).style('width'), 10)
             width = width - this.margin.left - this.margin.right
             let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
@@ -70,11 +70,12 @@ export default {
         }
     },
     
-    mounted: function() {
+    mounted() {
         let width = parseInt(d3.select(this.$el).style('width'), 10)
         width = width - this.margin.left - this.margin.right
         let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
         height = height - this.margin.top - this.margin.bottom
+
         this.svg = d3.select(this.$el).append('svg')
                 .attr('width', width + this.margin.left + this.margin.right)
                 .attr('height', height + this.margin.top + this.margin.bottom)
@@ -85,11 +86,6 @@ export default {
             .attr('class', 'x axis hist-axis')
             .attr('transform', 'translate(0,' + height + ')')
             
-        this.updatePlot()
-    },
-
-    updated: function() {
-        console.log('update')
         this.updatePlot()
     }
 }

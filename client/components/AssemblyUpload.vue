@@ -31,13 +31,16 @@
         </div>
         
         <div class="form-group">
-            <label>Hmmer search</label>
-            <div class="form-check">
+            <label>Find essential genes</label>
+            <div class="form-check" style="margin-bottom: 0">
                 <label class="form-check-label">
-                    <input type="checkbox" name="fourmers" class="form-check-input">
+                    <input type="checkbox" name="hmmer" class="form-check-input">
                         Search contigs for essential genes
                 </label>
             </div>
+            <small class="form-text text-muted">
+                Allows for calculations of completeness and contamination per bin.
+            </small>
         </div>
         
         <button 
@@ -74,6 +77,7 @@ export default {
             this.submitAssemblyAction({ formData }).done(() => {
                 this.loading = false
                 event.srcElement.reset()
+                this.$emit('done')
             })
         }
     },
