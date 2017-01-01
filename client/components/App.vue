@@ -133,6 +133,10 @@ input[type="file"] {
     background-color: #F4F4F4;
 }
 
+#right {
+    border-right: 1px solid #ccc;
+}
+
 #right > div.card {
     border-left: 0;
 }

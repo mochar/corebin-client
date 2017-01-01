@@ -6,13 +6,11 @@
 				<div class="card-block" style="padding-top: 0">
 				    <span class="name" id="bin-name" style="margin-left: 0">{{ bin.name }}</span>
 			    </div>
+
 			    <div class="card-block">
-			    	<hr>
-			    	<p>
-				    	<strong>Assess</strong> this bin to check for
-				    	<i>contamination</i> and <i>completeness</i>.
-			    	</p>
-			    	<assessement></assessement>
+					<router-link class="btn btn-primary" tag="button" to="/refine">
+				    	<span class="fa fa-cog"></span> Refine
+					</router-link>
 			    </div>
 			</div>
 

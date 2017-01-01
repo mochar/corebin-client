@@ -44,6 +44,7 @@
 #home {
     height: 100vh;
     overflow-y: auto;
+    border-right: 0;
 }
 
 #lead {

@@ -4,7 +4,6 @@
         <div class="form-group">
             <label>Bin-set (left)</label>
             <select class="custom-select" v-model="potentialBinSet">
-                <!-- <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option> -->
                 <option 
                     v-for="(bs, index) in binSets" 
                     :selected="index === 0"
@@ -198,8 +197,8 @@ export default {
 }
 
 #compare {
-    height: 100vh;
-    overflow-y: scroll;
+    min-height: 100vh;
+    border-right: 0;
 }
 
 #scale-icon {

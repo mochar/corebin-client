@@ -38,7 +38,7 @@
             </div>
             <bin-set-upload :assembly="assembly.id"></bin-set-upload>
         </div>
-        <router-link to="/compare" class="btn btn-sm btn-primary btn-block" id="add-bs-btn" :disabled="!binSets.length" tag="button">
+        <router-link to="/compare" class="btn btn-sm btn-secondary btn-block" id="add-bs-btn" :disabled="!binSets.length" tag="button">
             <span class="fa fa-balance-scale"></span> Compare bin sets
         </router-link>
         <p class="card-text" style="margin-top: .5rem">
