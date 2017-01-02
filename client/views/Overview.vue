@@ -10,17 +10,21 @@
                             <span class="fa fa-fw fa-pencil"></span>
                         </button>
                         <div slot="body">
-                            <input placeholder="Assembly name">
+                            <input placeholder="Bin set name">
                             <button class="btn btn-secondary btn-sm">Rename</button>
                         </div>
                     </popover>
+
+                    <button class="btn btn-secondary assembly-button">
+                        <span class="fa fa-fw fa-download"></span>
+                    </button>
 
                     <popover :options="{placement: 'bottom'}">
                         <button slot="button" class="btn btn-secondary assembly-button">
                             <span class="fa fa-fw fa-trash text-danger"></span> 
                         </button>
                         <div slot="body">
-                            <button class="btn btn-danger btn-sm">Delete assembly</button>
+                            <button class="btn btn-danger btn-sm">Delete bin set</button>
                         </div>
                     </popover>
                 </div>
@@ -28,10 +32,12 @@
 
             <div class="dropdown col-xs-6">
                 <div class="float-xs-right">
-                    <label class="align-middle form-check-label">
-                        <input type="checkbox" v-model="showUnbinned" class="form-check-input">
-                        Show unbinned
-                    </label>
+                    <button 
+                        class="btn btn-link btn-sm btn-header" 
+                        @click="showUnbinned = !showUnbinned">
+                        <span v-if="showUnbinned">Hide unbinned</span>
+                        <span v-else>Show unbinned</span>
+                    </button>
 
                     <popover>
                         <button slot="button" class="btn btn-primary btn-sm btn-header">
@@ -43,6 +49,11 @@
                             <button class="btn btn-primary btn-sm">Add</button>
                         </div>
                     </popover>
+
+                    <router-link to="refine" tag="button" class="btn btn-success btn-sm btn-header">
+                        <span class="fa fa-cog"></span>
+                        Refine bins
+                    </button>
                 </div>
             </div>
         </div>
@@ -112,7 +123,9 @@
                 <bar-column :percentage="(bin.contamination * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <bar-column :percentage="(bin.completeness * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <td>
-                    <router-link :to="`/overview/${bin.id}`" class="btn btn-secondary btn-block btn-xs">View</router-link>
+                    <button class="btn btn-secondary btn-block btn-xs" @click.stop="refineBin">
+                        Refine
+                    </button>
                 </td>
             </tr>
         </tbody>
@@ -164,6 +177,9 @@ export default {
                 this.sortBy = by
                 this.sortOrder ='desc'
             }
+        },
+        refineBin() {
+            this.$router.push({ path: 'refine' })
         }
     },
     
