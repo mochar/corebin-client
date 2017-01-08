@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import { lasso as d3Lasso } from 'd3-lasso'
+// import { lasso as d3Lasso } from 'd3-lasso'
+import { lasso } from 'd3-lasso'
 import * as d3 from 'd3'
 
 export default {
@@ -16,11 +17,11 @@ export default {
         return {
             svg: null,
             zoom: null,
+            lasso: null,
             x: null,
             y: null,
             xAxis: null,
             yAxis: null,
-            lasso: d3Lasso(),
             height: 100,
             width: 100
         }
@@ -45,7 +46,7 @@ export default {
             this.svg.select('g.y').call(this.yAxis)
 
             const circle = this.svg.selectAll('circle')
-                .data(this.contigs, c => c.id)
+                .data(this.contigs, function c() { return c.id })
 
             circle.transition()
                 .attr('cx', contig => this.x(contig[this.xData]))
@@ -64,30 +65,37 @@ export default {
                 .style('opacity', .5)
               .transition()
                 .attr('r', 4)
+
+            this.lasso.items(circle)
         },
         zoomed() {
-            const t = this.svg.transition().duration(750)
-            this.svg.select('g.x').transition(t).call(this.xAxis)
-            this.svg.select('g.y').transition(t).call(this.yAxis)
-            this.svg.selectAll('circle').transition(t)
-                .attr('cx', contig => this.x(contig[this.xData]))
-                .attr('cy', contig => this.y(contig[this.yData]))
+            this.svg.select('g.x')
+                .call(this.xAxis.scale(d3.event.transform.rescaleX(this.x)))
+            this.svg.select('g.y')
+                .call(this.yAxis.scale(d3.event.transform.rescaleY(this.y)))
+            this.svg.selectAll('circle')
+                .attr('transform', d3.event.transform)
         }
     },
 
     mounted() {
         this.width = parseInt(d3.select(this.$el).style('width'), 10)
-        this.height = this.width
+        this.height = this.width * .8
         this.svg = d3.select(this.$el).select('svg')
         
         this.zoom = d3.zoom()
-            .scaleExtent([1, 40])
+            .scaleExtent([.5, 5])
             .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
             .on('zoom', this.zoomed);
 
-        // lasso.closePath
-            
+        this.lasso = lasso()
+            .targetArea(this.svg)
+            .on('start', () => console.log('start'))
+            .on('draw', () => console.log('draw'))
+            .on('end', () => console.log('end'))
+
         this.svg.call(this.zoom)
+        this.svg.call(this.lasso)
     
         this.updatePlot()
     },
@@ -114,5 +122,24 @@ export default {
 .axis line {
   stroke-opacity: 0.3;
   shape-rendering: crispEdges;
+}
+
+.lasso path {
+    stroke: rgb(80,80,80);
+    stroke-width:2px;
+}
+
+.lasso .drawn {
+    fill-opacity:.05 ;
+}
+
+.lasso .loop_close {
+    fill:none;
+    stroke-dasharray: 4,4;
+}
+
+.lasso .origin {
+    fill:#3399FF;
+    fill-opacity:.5;
 }
 </style>

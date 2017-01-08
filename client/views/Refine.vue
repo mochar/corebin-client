@@ -1,23 +1,56 @@
 <template>
-<div class="card">
-    <multiselect
-        :multiple="true"
-        :options="bins"
-        :selected="selectedBins"
-        :disabled="loading"
-        @select="getContigs"
-        @remove="removeContigs"
-        selectLabel=""
-        deselectLabel=""
-        placeholder="Select bin"
-        label="name"
-        key="name">
-    </multiselect>
+<div class="card" id="refine">
+    <div style="display: flex">
+        <multiselect
+            :multiple="true"
+            :options="bins"
+            :selected="selectedBins"
+            :disabled="loading"
+            :custom-tag-style="function(option) { return { 'background': option.color } }"
+            @select="getContigs"
+            @remove="removeContigs"
+            selectLabel=""
+            deselectLabel=""
+            placeholder="Select bin"
+            label="name"
+            track-by="name">
+        </multiselect>
+        <button class="btn btn-secondary float-xs-right" :class="{active: panning}" @click="panning = !panning">
+            Pan
+        </button>
+    </div>
     <scatter
         :contigs="contigs"
         :xData="xData"
         :yData="yData"
-    ></scatter
+    ></scatter>
+
+    <ul class="nav nav-inline text-xs-center" id="refine-nav">
+        <li class="nav-item">
+            <h5>
+                <a class="nav-link active" href="#">Plot</a>
+            </h5>
+        </li>
+        <li class="nav-item">
+            <h5>
+                <a class="nav-link" href="#">Selection</a>
+            </h5>
+        </li>
+        <li class="nav-item">
+            <h5>
+                <a class="nav-link" href="#">Refinement</a>
+            </h5>
+        </li>
+    </ul>
+
+    <div class="card-block">
+        <span>Horizontal axis</span>
+        <select><option selected>GC</option></select>
+        <label class="form-check-label">
+            <input type="checkbox" name="hmmer" class="form-check-input">
+                Log scale
+        </label>
+    </div>
 </div>
 </template>
 
@@ -33,7 +66,8 @@ export default {
             xData: 'gc',
             yData: 'length',
             selectedBins: [],
-            loading: false
+            loading: false,
+            panning: true
         }
     },
     
@@ -81,5 +115,14 @@ export default {
 <style>
 .multiselect > div {
     border: 0;
+}
+
+#refine {
+    border-right: 0;
+    min-height: 100vh;
+}
+
+#refine-nav {
+    margin-top: 1rem;
 }
 </style>

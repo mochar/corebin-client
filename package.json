@@ -44,6 +44,6 @@
     "d3-lasso": "latest",
     "moment": "latest",
     "webui-popover": "latest",
-    "vue-multiselect": "next"
+    "vue-multiselect": "mochar/vue-multiselect#2.0"
   }
 }

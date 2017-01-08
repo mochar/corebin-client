@@ -51,7 +51,7 @@
                     </popover>
 
                     <router-link to="refine" tag="button" class="btn btn-success btn-sm btn-header">
-                        <span class="fa fa-cog"></span>
+                        <span class="fa fa-wrench"></span>
                         Refine bins
                     </button>
                 </div>
@@ -61,7 +61,7 @@
         <div v-if="!selected.length" class="row" id="table-head">
             <sort-head
                 class="col-xs-2"
-                label="Name"
+                label="Bin"
                 name="name"
                 :by="sortBy"
                 :order="sortOrder"
@@ -107,6 +107,9 @@
             <span style="font-size: .75rem; margin-right: .5re">Selected bin(s)</span>
             <button class="btn btn-secondary btn-table">
                 <span class="fa fa-sitemap"></span> Merge
+            </button>
+            <button class="btn btn-secondary btn-table">
+                <span class="fa fa-wrench"></span> Refine
             </button>
             <button class="btn btn-danger btn-table">
                 <span class="fa fa-trash-o"></span> Delete

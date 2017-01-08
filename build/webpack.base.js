@@ -62,7 +62,8 @@ module.exports = {
       jQuery: 'jquery',
       'window.jQuery': 'jquery',
       'Tether': 'tether',
-      'window.Tether': 'tether'
+      'window.Tether': 'tether',
+      'd3': 'd3'
     })
   ],
   target: _.target
