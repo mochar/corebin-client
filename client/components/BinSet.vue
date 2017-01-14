@@ -2,7 +2,7 @@
 <div class="card info-card" id="bin-set-card" v-if="binSet" :style="{ 'border-left-color': binSet.color }">
     <div class="card-block name-block">
         <span class="name" id="bin-set-name">{{ binSet.name }}</span>
-        <div class="action-buttons float-xs-right">
+        <div class="action-buttons float-right">
             <button id="rename-bin-set" class="btn btn-link" data-toggle="popover">
                 <span class="fa fa-pencil text-primary"></span>
             </button>

@@ -3,7 +3,7 @@
     <div class="name-block">
         <span class="name assembly-name">{{ assembly.name }}</span>
 
-        <div class="float-xs-right" v-show="selected">
+        <div class="float-right" v-show="selected">
             <popover :options="{placement: 'bottom'}">
                 <button slot="button" class="btn btn-secondary assembly-button">
                     <span class="fa fa-fw fa-pencil"></span>
@@ -28,13 +28,13 @@
         <div class="bin-set-list">
             <div v-for="bs in binSets" class="list-item">
                 {{ bs.name }}
-                <router-link to="/overview" class="float-xs-right" @click.native="selectBinSet(bs)">
+                <router-link to="/overview" class="float-right" @click.native="selectBinSet(bs)">
                     Overview
                 </router-link>
             </div>
             <div v-for="job in binSetJobs" class="list-item">
                 {{ job.meta.name }}
-                <span class="fa fa-refresh fa-spin float-xs-right"></span>
+                <span class="fa fa-refresh fa-spin float-right"></span>
             </div>
             <bin-set-upload :assembly="assembly.id"></bin-set-upload>
         </div>

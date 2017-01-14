@@ -1,7 +1,7 @@
 <template>
 <td class="align-middle">
     <div :style="{'background-color': color, 'height': `${percentage}%`}"></div>
-    <span class="text-xs-center">
+    <span class="text-center">
         {{ labelText }}
     </span>
 </td>

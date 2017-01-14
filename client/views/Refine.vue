@@ -15,7 +15,7 @@
             label="name"
             track-by="name">
         </multiselect>
-        <button class="btn btn-secondary float-xs-right" :class="{active: panning}" @click="panning = !panning">
+        <button class="btn btn-secondary float-right" :class="{active: panning}" @click="panning = !panning">
             Pan
         </button>
     </div>
@@ -25,7 +25,7 @@
         :yData="yData"
     ></scatter>
 
-    <ul class="nav nav-inline text-xs-center" id="refine-nav">
+    <ul class="nav nav-inline text-center" id="refine-nav">
         <li class="nav-item">
             <h5>
                 <a class="nav-link active" href="#">Plot</a>

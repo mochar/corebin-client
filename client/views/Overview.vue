@@ -2,9 +2,9 @@
 <div id="bins">
     <div class="card-header" id="bins-header">
         <div class="row">
-            <div class="col-xs-6" style="border-right: 1px solid #eee">
+            <div class="col-6" style="border-right: 1px solid #eee">
                 <span class="name bin-set-name">{{ binSet.name }}</span>
-                <div class="float-xs-right">
+                <div class="float-right">
                     <popover :options="{placement: 'bottom'}">
                         <button slot="button" class="btn btn-secondary assembly-button">
                             <span class="fa fa-fw fa-pencil"></span>
@@ -30,8 +30,8 @@
                 </div>
             </div>
 
-            <div class="dropdown col-xs-6">
-                <div class="float-xs-right">
+            <div class="dropdown col-6">
+                <div class="float-right">
                     <button 
                         class="btn btn-link btn-sm btn-header" 
                         @click="showUnbinned = !showUnbinned">
@@ -60,7 +60,7 @@
 
         <div v-if="!selected.length" class="row" id="table-head">
             <sort-head
-                class="col-xs-2"
+                class="col-2"
                 label="Bin"
                 name="name"
                 :by="sortBy"
@@ -68,7 +68,7 @@
                 @sort="sort('name')">
             </sort-head>
             <sort-head
-                class="col-xs-2"
+                class="col-2"
                 label="Size (bp)"
                 name="size"
                 :by="sortBy"
@@ -76,7 +76,7 @@
                 @sort="sort('size')">
             </sort-head>
             <sort-head
-                class="col-xs-2"
+                class="col-2"
                 label="GC"
                 name="gc"
                 :by="sortBy"
@@ -84,7 +84,7 @@
                 @sort="sort('gc')">
             </sort-head>
             <sort-head
-                class="col-xs-2"
+                class="col-2"
                 label="Contamination"
                 name="contamination"
                 :by="sortBy"
@@ -92,14 +92,14 @@
                 @sort="sort('contamination')">
             </sort-head>
             <sort-head
-                class="col-xs-2"
+                class="col-2"
                 label="Completeness"
                 name="completeness"
                 :by="sortBy"
                 :order="sortOrder"
                 @sort="sort('completeness')">
             </sort-head>
-            <div class="col-xs-2">
+            <div class="col-2">
             </div>
         </div>
 

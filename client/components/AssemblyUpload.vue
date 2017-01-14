@@ -8,7 +8,7 @@
         
         <div class="form-group">
             <label for="contigs">Contigs</label>
-            <span class="text-info float-xs-right">Required</span>
+            <span class="text-info float-right">Required</span>
             <input type="file" name="contigs" class="form-control-file form-control-sm">
             <small class="form-text text-muted">
                 The contigs used for binning in fasta format.

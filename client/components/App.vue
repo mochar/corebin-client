@@ -8,10 +8,10 @@
     </div>
         
     <div class="row">
-        <div class="col-xs-3" id="left">
+        <div class="col-3" id="left">
             <selection></selection>
         </div>
-        <div class="col-xs-9" id="right" style="padding: 0">
+        <div class="col-9" id="right" style="padding: 0">
             <transition name="fade" mode="out-in">
                 <keep-alive>
                     <router-view></router-view>
@@ -87,6 +87,13 @@ input[type="file"] {
 .form-group > label {
     font-weight: bold;
     margin-bottom: .25rem;
+}
+
+.btn {
+    cursor: pointer;
+    -webkit-transition: initial;
+       -moz-transition: initial;
+            transition: initial;
 }
 
 .btn-sm {

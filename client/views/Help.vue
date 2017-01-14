@@ -205,6 +205,5 @@
 <style scoped>
 #help {
     max-height: 98vh;
-    overflow-y: scroll;
 }
 </style>

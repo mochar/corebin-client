@@ -1,25 +1,25 @@
 <template>
 <div class="card row bin-container">
-    <div class="col-xs-10 bin-info">
+    <div class="col-10 bin-info">
         <div class="row">
-            <div class="col-xs-2"><small class="text-muted">Size (bp)</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: sizeBarPercent + '%', 'background-color': bin.color }"></div></div>
-            <div class="col-xs-1"><small class="text-muted">{{ bin.size }}</small></div>
+            <div class="col-2"><small class="text-muted">Size (bp)</small></div>
+            <div class="col-9"><div class="bar" :style="{ width: sizeBarPercent + '%', 'background-color': bin.color }"></div></div>
+            <div class="col-1"><small class="text-muted">{{ bin.size }}</small></div>
             <br>
-            <div class="col-xs-2"><small class="text-muted">GC</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: gc + '%', 'background-color': bin.color }"></div></div>
-            <div class="col-xs-1"><small class="text-muted">{{ gc }}%</small></div>
+            <div class="col-2"><small class="text-muted">GC</small></div>
+            <div class="col-9"><div class="bar" :style="{ width: gc + '%', 'background-color': bin.color }"></div></div>
+            <div class="col-1"><small class="text-muted">{{ gc }}%</small></div>
             <br>
-            <div class="col-xs-2"><small class="text-muted">contamination</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: contamination + '%', 'background-color': bin.color }"></div></div>
-            <div class="col-xs-1"><small class="text-muted">{{ contamination }}%</small></div>
+            <div class="col-2"><small class="text-muted">contamination</small></div>
+            <div class="col-9"><div class="bar" :style="{ width: contamination + '%', 'background-color': bin.color }"></div></div>
+            <div class="col-1"><small class="text-muted">{{ contamination }}%</small></div>
             <br>
-            <div class="col-xs-2"><small class="text-muted">completeness</small></div>
-            <div class="col-xs-9"><div class="bar" :style="{ width: completeness + '%', 'background-color': bin.color }"></div></div>
-            <div class="col-xs-1"><small class="text-muted">{{ completeness }}%</small></div>
+            <div class="col-2"><small class="text-muted">completeness</small></div>
+            <div class="col-9"><div class="bar" :style="{ width: completeness + '%', 'background-color': bin.color }"></div></div>
+            <div class="col-1"><small class="text-muted">{{ completeness }}%</small></div>
         </div>
     </div>
-    <div class="col-xs-2 buttons">
+    <div class="col-2 buttons">
         <button class="btn btn-sm btn-secondary btn-block">
             View
         </button>

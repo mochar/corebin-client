@@ -17,7 +17,7 @@
             :style="{ cursor: a === assembly ? 'initial' : 'cursor' }">
         </assembly>
 
-        <div class="card-footer text-muted" style="padding: 0">
+        <div class="card-footer text-muted" style="padding: 0; background-color: inherit">
             <button 
                 @click="showForm = true"
                 :disabled="assemblyJob"
@@ -28,7 +28,7 @@
         </div>
     </div>
     
-    <div class="float-xs-right" id="madeby">
+    <div class="float-right" id="madeby">
         <div>
             <small><router-link to="/home"><span class="fa fa-home"></span> Home</router-link></small> |
             <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>

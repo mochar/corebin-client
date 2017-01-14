@@ -25,9 +25,9 @@
                 <option @click="potentialBy = 'bp'"># bp</option>
             </select>
         </div>
-        <button class="btn btn-primary float-xs-right" @click="plot" :disabled="plotButtonDisabled">
+        <button class="btn btn-primary float-right" @click="plot" :disabled="plotButtonDisabled">
             <span v-show="!loading">Plot</span>
-            <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-xs-right"></span>
+            <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-right"></span>
         </button>
     </form>
 
