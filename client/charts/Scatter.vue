@@ -40,7 +40,8 @@ export default {
             legendScale: null,
             height: 100,
             width: 100,
-            colorScale: null
+            colorScale: null,
+            sizeScale: null
         }
     },
     
@@ -91,7 +92,7 @@ export default {
                 })
                 .style('opacity', .5)
             circleEnter.transition()
-                .attr('r', 4)
+                .attr('r', contig => this.sizeScale(contig.length))
 
             this.lasso.items(circleEnter)
         },
@@ -137,6 +138,11 @@ export default {
         this.colorScale = d3.scaleLinear()
             .domain([0.3, 0.7])
             .range(['blue', 'red'])
+
+        this.sizeScale = d3.scaleLog()
+            .clamp(true)
+            .domain([10000, 200000])
+            .range([4, 10])
         
         this.zoom = d3.zoom()
             .scaleExtent([.5, 5])
