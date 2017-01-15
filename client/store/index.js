@@ -172,10 +172,17 @@ const actions = {
     }
 }
 
+const getters = {
+    withoutUnbinned(state) {
+        return state.bins.filter(bin => bin.name !== 'unbinned')
+    }
+}
+
 const store = new Vuex.Store({
     state,
     mutations,
-    actions
+    actions,
+    getters
 })
 
 export default store

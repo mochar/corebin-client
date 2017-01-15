@@ -96,6 +96,10 @@ input[type="file"] {
             transition: initial;
 }
 
+.btn:focus {
+    box-shadow: initial;
+}
+
 .btn-sm {
     padding: .5rem;
 }

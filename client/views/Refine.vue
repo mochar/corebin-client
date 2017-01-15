@@ -2,11 +2,11 @@
 <div class="card" id="refine">
     <div style="display: flex">
         <multiselect
+            v-model="selectedBins"
             :multiple="true"
             :options="bins"
-            :selected="selectedBins"
             :disabled="loading"
-            :custom-tag-style="function(option) { return { 'background': option.color } }"
+            :custom-tag-style="option => { return {'background': option.color} }"
             @select="getContigs"
             @remove="removeContigs"
             selectLabel=""
@@ -15,41 +15,71 @@
             label="name"
             track-by="name">
         </multiselect>
-        <button class="btn btn-secondary float-right" :class="{active: panning}" @click="panning = !panning">
-            Pan
-        </button>
     </div>
     <scatter
         :contigs="contigs"
         :xData="xData"
         :yData="yData"
+        :colorBy="colorBy"
+        :colorBinSet="colorBinSet"
+        :showLegend="showLegend"
+        @selected="selected => { selectedContigs = selected }"
     ></scatter>
 
-    <ul class="nav nav-inline text-center" id="refine-nav">
-        <li class="nav-item">
-            <h5>
-                <a class="nav-link active" href="#">Plot</a>
-            </h5>
-        </li>
-        <li class="nav-item">
-            <h5>
-                <a class="nav-link" href="#">Selection</a>
-            </h5>
-        </li>
-        <li class="nav-item">
-            <h5>
-                <a class="nav-link" href="#">Refinement</a>
-            </h5>
-        </li>
-    </ul>
+    <div class="card" style="border-width: 1px 0 0 0">
+        <div class="card-header" style="font-size: 1rem">
+            <ul class="nav nav-tabs card-header-tabs" id="refine-nav">
+                <li class="nav-item">
+                    <a 
+                        class="nav-link" 
+                        href="#" 
+                        :class="{ 'active': tab === 'PlotTab' }"
+                        @click.prevent="tab = 'PlotTab'">
+                        <span class="fa fa-line-chart"></span>
+                        Plot
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                        class="nav-link" 
+                        href="#" 
+                        :class="{ 'active': tab === 'SelectionTab' }"
+                        @click.prevent="tab = 'SelectionTab'">
+                        <span class="fa fa-tasks"></span>
+                        Selection
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a 
+                        class="nav-link" 
+                        href="#"
+                        :class="{ 'active': tab === 'RefinementTab' }"
+                        @click.prevent="tab = 'RefinementTab'">
+                        <span class="fa fa-wrench"></span>
+                        Refinement
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-block" style="font-size: 1rem">
+            <component 
+                :is="tab"
 
-    <div class="card-block">
-        <span>Horizontal axis</span>
-        <select><option selected>GC</option></select>
-        <label class="form-check-label">
-            <input type="checkbox" name="hmmer" class="form-check-input">
-                Log scale
-        </label>
+                :xData="xData"
+                :yData="yData"
+                :colorBy="colorBy"
+                :colorBinSet="colorBinSet"
+                :showLegend="legend"
+                @updateX="x => { xData = x }"
+                @updateY="y => { yData = y }"
+                @updateBy="by => { colorBy = by }"
+                @updateColor="bs => { colorBinSet = bs }"
+                @updateLegend="show => { showLegend = show }"
+
+                :contigs="selectedContigs"
+            >
+            </component>
+        </div>
     </div>
 </div>
 </template>
@@ -57,23 +87,32 @@
 <script>
 import Scatter from '../charts/Scatter'
 import Multiselect from 'vue-multiselect'
+import PlotTab from '../components/PlotTab'
+import SelectionTab from '../components/SelectionTab'
+import RefinementTab from '../components/RefinementTab'
 
 export default {
     data() {
         return {
-            tab: 'bins',
+            tab: 'PlotTab',
             contigs: [],
             xData: 'gc',
             yData: 'length',
             selectedBins: [],
+            selectedContigs: [],
             loading: false,
-            panning: true
+            colorBy: 'binSet',
+            colorBinSet: this.$store.state.binSet.id,
+            showLegend: true
         }
     },
     
     components: {
         Scatter,
-        Multiselect
+        Multiselect,
+        PlotTab,
+        SelectionTab,
+        RefinementTab
     },
 
     methods: {
@@ -107,6 +146,15 @@ export default {
         },
         bins() {
             return this.$store.state.bins
+        },
+        binSet() {
+            return this.$store.state.binSet
+        }
+    },
+
+    watch: {
+        binSet(binSet) {
+            this.colorBinSet = binSet.id
         }
     }
 }
@@ -123,6 +171,5 @@ export default {
 }
 
 #refine-nav {
-    margin-top: 1rem;
 }
 </style>

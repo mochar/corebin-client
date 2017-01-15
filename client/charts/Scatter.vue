@@ -1,6 +1,21 @@
 <template>
 <div>
     <svg :width="width" :height="height">
+        <defs>
+            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0.0%" stop-color="#f00"></stop>
+                <stop offset="100.0%" stop-color="#00f"></stop>
+            </linearGradient>
+        </defs>
+        <g id="legend" v-show="colorBy === 'gc' && showLegend">
+            <g class="axis" :transform="`translate(${width-30},10)`"></g>
+            <rect 
+                :width="20" 
+                :height="height / 8" 
+                :y="10" :x="width - 30" 
+                id="color-legend">
+            </rect>
+        </g>
         <g class="x axis" :transform="`translate(0,${height})`"></g>
         <g class="y axis" :transform="'translate(0,0)'"></g>
     </svg>
@@ -8,7 +23,6 @@
 </template>
 
 <script>
-// import { lasso as d3Lasso } from 'd3-lasso'
 import { lasso } from 'd3-lasso'
 import * as d3 from 'd3'
 
@@ -22,12 +36,15 @@ export default {
             y: null,
             xAxis: null,
             yAxis: null,
+            legendAxis: null,
+            legendScale: null,
             height: 100,
-            width: 100
+            width: 100,
+            colorScale: null
         }
     },
     
-    props: ['contigs', 'xData', 'yData'],
+    props: ['contigs', 'xData', 'yData', 'colorBy', 'colorBinSet', 'showLegend'],
     
     methods: {
         updatePlot() {
@@ -39,11 +56,18 @@ export default {
                 .domain([d3.min(this.contigs, c => c[this.yData]), d3.max(this.contigs, c=> c[this.yData])])
                 .range([0, this.height])
             
+            this.legendScale = d3.scaleLinear()
+                .domain([0.7, 0.3])
+                .range([0, this.height / 8])
+
             this.xAxis = d3.axisTop(this.x).ticks(12)
             this.yAxis = d3.axisRight(this.y).ticks(12 * this.height / this.width)
+            this.legendAxis = d3.axisLeft(this.legendScale)
+                .tickValues([0.3, 0.5, 0.7])
 
             this.svg.select('g.x').call(this.xAxis)
             this.svg.select('g.y').call(this.yAxis)
+            this.svg.select('g#legend g.axis').call(this.legendAxis)
 
             const circle = this.svg.selectAll('circle')
                 .data(this.contigs, function c() { return c.id })
@@ -56,25 +80,52 @@ export default {
                 .attr('r', 0)
                 .remove()
 
-            circle.enter().append('circle')
+            const circleEnter = circle.enter().append('circle')
                 .attr('class', 'dot')
                 .attr('r', 0)
                 .attr('cx', contig => this.x(contig[this.xData]))
                 .attr('cy', contig => this.y(contig[this.yData]))
-                .attr('fill', contig => contig[`color_${this.binSet}`])
+                .attr('fill', contig => {
+                    if (this.colorBy === 'gc') return this.colorScale(contig.gc)
+                    return contig[`color_${this.colorBinSet}`]
+                })
                 .style('opacity', .5)
-              .transition()
+            circleEnter.transition()
                 .attr('r', 4)
 
-            this.lasso.items(circle)
+            this.lasso.items(circleEnter)
         },
         zoomed() {
             this.svg.select('g.x')
                 .call(this.xAxis.scale(d3.event.transform.rescaleX(this.x)))
             this.svg.select('g.y')
                 .call(this.yAxis.scale(d3.event.transform.rescaleY(this.y)))
-            this.svg.selectAll('circle')
+            this.svg.selectAll('circle.dot')
                 .attr('transform', d3.event.transform)
+        },
+        lassoStarted() {
+            this.lasso.items()
+                .classed('not_possible', true)
+                .classed('selected', false)
+        },
+        lassoDrawing() {
+            this.lasso.possibleItems()
+                .classed('not_possible', false)
+                .classed('possible', true)
+
+            this.lasso.notPossibleItems()
+                .classed('not_possible', true)
+                .classed('possible', false)
+        },
+        lassoEnded() {
+            this.lasso.items()
+                .classed('not_possible', false)
+                .classed('possible', false);
+
+            this.lasso.selectedItems()
+                .classed('selected', true)
+
+            this.$emit('selected', this.lasso.selectedItems().data())
         }
     },
 
@@ -82,21 +133,26 @@ export default {
         this.width = parseInt(d3.select(this.$el).style('width'), 10)
         this.height = this.width * .8
         this.svg = d3.select(this.$el).select('svg')
+
+        this.colorScale = d3.scaleLinear()
+            .domain([0.3, 0.7])
+            .range(['blue', 'red'])
         
         this.zoom = d3.zoom()
             .scaleExtent([.5, 5])
             .translateExtent([[-100, -100], [this.width + 90, this.height + 100]])
+            .on('start', null)
             .on('zoom', this.zoomed);
 
         this.lasso = lasso()
             .targetArea(this.svg)
-            .on('start', () => console.log('start'))
-            .on('draw', () => console.log('draw'))
-            .on('end', () => console.log('end'))
+            .on('start', this.lassoStarted)
+            .on('draw', this.lassoDrawing)
+            .on('end', this.lassoEnded)
 
-        this.svg.call(this.zoom)
         this.svg.call(this.lasso)
-    
+        this.svg.call(this.zoom)
+
         this.updatePlot()
     },
 
@@ -107,9 +163,11 @@ export default {
     },
 
     watch: {
-        contigs() {
-            this.updatePlot()
-        }
+        contigs() { this.updatePlot() },
+        xData() { this.updatePlot() },
+        yData() { this.updatePlot() },
+        colorBy() { this.updatePlot() },
+        colorBinSet() { this.updatePlot() }
     }
 }
 </script>
@@ -122,6 +180,11 @@ export default {
 .axis line {
   stroke-opacity: 0.3;
   shape-rendering: crispEdges;
+}
+
+.dot {
+    stroke: black;
+    stroke-width: .5;
 }
 
 .lasso path {
@@ -141,5 +204,22 @@ export default {
 .lasso .origin {
     fill:#3399FF;
     fill-opacity:.5;
+}
+
+.not_possible {
+}
+
+.possible {
+    opacity: 1 !important;
+}
+
+.selected {
+    opacity: 1 !important;
+}
+
+#color-legend {
+    fill: url(#gradient);
+    opacity: .8;
+    /*stroke: #000;*/
 }
 </style>
