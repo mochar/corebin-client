@@ -31,9 +31,8 @@ export default {
 
     methods: {
         go() {
-            if (this.action === 'move') {
-                this.$emit('move', this.toBin)
-            }
+            const toBin = this.action === 'move' ? this.toBin : this.unbinned
+            this.$emit('move', toBin)
         }
     },
 
@@ -44,6 +43,9 @@ export default {
     computed: {
         bins() { 
             return this.$store.getters.withoutUnbinned
+        },
+        unbinned() {
+            return this.$store.getters.unbinned
         }
     }
 }
