@@ -71,6 +71,9 @@ const mutations = {
         state.binSets.push(binSet)
         if (state.binSets.length === 1) state.binSet = binSet
     },
+    APPEND_BIN(state, bin) {
+        state.bins.push(bin)
+    }
 }
 
 const actions = {
@@ -168,6 +171,12 @@ const actions = {
                     $.getJSON(location, binSet => commit('APPEND_BIN_SETS', binSet))
                 } 
             })
+        })
+    },
+    SUBMIT_BIN({ commit, state }, name) {
+        const url = `${ROOTURL}/a/${state.assembly.id}/bs/${state.binSet.id}/b`
+        return $.post(url, { name }).then(data => {
+            if (data.binSetId === state.binSet.id) commit('APPEND_BIN', data)
         })
     }
 }

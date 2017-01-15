@@ -40,13 +40,23 @@
                     </button>
 
                     <popover>
-                        <button slot="button" class="btn btn-primary btn-sm btn-header">
-                            <span class="fa fa-plus"></span>
+                        <button 
+                            slot="button" 
+                            :disabled="adding"
+                            class="btn btn-primary btn-sm btn-header">
+                            <span v-if="adding" class="fa fa-refresh fa-spin"></span>
+                            <span class="fa fa-plus" v-else></span>
                             Add bin
                         </button>
                         <div slot="body">
-                            <input placeholder="Bin name">
-                            <button class="btn btn-primary btn-sm">Add</button>
+                            <input placeholder="Bin name" v-model="newBinName">
+                            <button 
+                                class="btn btn-primary btn-sm" 
+                                @click="addBin"
+                                :disabled="adding">
+                                <span v-show="adding" class="fa fa-refresh fa-spin"></span>
+                                Add
+                            </button>
                         </div>
                     </popover>
 
@@ -147,7 +157,10 @@ export default {
             sortBy: 'size',
             sortOrder: 'desc',
             showUnbinned: false,
-            selected: []
+            selected: [],
+
+            newBinName: '',
+            adding: false // true when adding bin
         }
     },
 
@@ -183,6 +196,12 @@ export default {
         },
         refineBin() {
             this.$router.push({ path: 'refine' })
+        },
+        addBin() {
+            this.adding = true
+            this.$store.dispatch('SUBMIT_BIN', this.newBinName).then(() => {
+                this.adding = false
+            })
         }
     },
     
