@@ -5,13 +5,15 @@
             <option value="move">Move</option>
             <option value="delete">Delete</option>
         </select>
-        <span v-if="action === 'delete'">contigs</span>
-        <div v-else>
-            <span>contigs to bin</span>
-            <select class="custom-select" v-model="toBin">
-                <option :value="bin" v-for="bin in bins">{{ bin.name }}</option>
-            </select>
-        </div>
+        <span v-if="action === 'delete'">contigs from bin.</span>
+        <span v-if="action === 'move'">contigs to bin</span>
+        <select v-if="action === 'move'" class="custom-select" v-model="toBin">
+            <option :value="bin" v-for="bin in bins">{{ bin.name }}</option>
+        </select>
+        <button class="btn btn-primary" @click="go" :disabled="loading || !toBin">
+            <span v-show="loading" class="fa fa-refresh fa-spin"></span>
+            Go
+        </button>
     </div>
 </div>
 </template>
@@ -22,6 +24,16 @@ export default {
         return {
             action: 'move',
             toBin: null,
+        }
+    },
+
+    props: ['loading'],
+
+    methods: {
+        go() {
+            if (this.action === 'move') {
+                this.$emit('move', this.toBin)
+            }
         }
     },
 

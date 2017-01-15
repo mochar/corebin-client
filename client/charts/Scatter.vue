@@ -135,7 +135,7 @@ export default {
             this.lasso.selectedItems()
                 .classed('selected', true)
 
-            this.$emit('selected', this.lasso.selectedItems().data())
+            this.$emit('selected', this.lasso.selectedItems().data().map(c => c.id))
         }
     },
 

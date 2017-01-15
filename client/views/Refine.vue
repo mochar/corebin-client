@@ -83,6 +83,9 @@
                 @updateYLog="log => { yLog = log }"
 
                 :contigs="selectedContigs"
+
+                :loading="loading"
+                @move="moveContigs"
             >
             </component>
         </div>
@@ -139,12 +142,40 @@ export default {
                 this.contigs.push(...data.contigs)
                 this.loading = false
             }, () => {
-                console.log('fail getContigs')
                 this.loading = false
             })
         },
         removeContigs(bin) {
             this.contigs = this.contigs.filter(c => c.bin !== bin.id)
+        },
+        moveContigs(toBin) {
+            this.loading = true
+            const data = { action: 'move', contigs: this.selectedContigs, to_bin: toBin.id }
+            $.ajax({
+                url: `${ROOTURL}/a/${this.assembly.id}/bs/${this.binSet.id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).then(() => {
+                // First, update the bin attr of the selected contigs
+                this.contigs.forEach(contig => {
+                    if (this.selectedContigs.indexOf(contig.id) > -1) {
+                        contig.bin = toBin.id
+                        contig[`color_${this.binSet.id}`] = toBin.color
+                    } 
+                })
+                // Then, unselect all contigs as these have now been moved
+                this.selectedContigs = []
+                // Then, filter out the contigs which have been moved to an unselected bin
+                const selectedBins = this.selectedBins.map(bin => bin.id)
+                this.contigs = this.contigs.filter(contig => {
+                    return selectedBins.indexOf(contig.bin) > -1
+                })
+                // Finally, update refetch bins
+                this.$store.dispatch('GET_BINS').then(() => this.loading = false)
+            }, () => {
+                this.loading = false
+            })
         }
     },
 
