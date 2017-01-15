@@ -73,6 +73,9 @@ const mutations = {
     },
     APPEND_BIN(state, bin) {
         state.bins.push(bin)
+    },
+    RENAME_BIN_SET(state, name) {
+        state.binSet.name = name
     }
 }
 
@@ -177,6 +180,16 @@ const actions = {
         const url = `${ROOTURL}/a/${state.assembly.id}/bs/${state.binSet.id}/b`
         return $.post(url, { name }).then(data => {
             if (data.binSetId === state.binSet.id) commit('APPEND_BIN', data)
+        })
+    },
+    RENAME_BIN_SET({ commit, state }, name) {
+        return $.ajax({
+            url: `${ROOTURL}/a/${state.assembly.id}/bs/${state.binSet.id}`,
+            method: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ name })
+        }).then(data => {
+            commit('RENAME_BIN_SET', name)
         })
     }
 }

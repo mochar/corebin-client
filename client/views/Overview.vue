@@ -6,12 +6,22 @@
                 <span class="name bin-set-name">{{ binSet.name }}</span>
                 <div class="float-right">
                     <popover :options="{placement: 'bottom'}">
-                        <button slot="button" class="btn btn-secondary assembly-button">
+                        <button 
+                            slot="button" 
+                            :disabled="renaming"
+                            class="btn btn-secondary assembly-button">
+                            <span v-if="renaming" class="fa fa-refresh fa-spin"></span>
                             <span class="fa fa-fw fa-pencil"></span>
                         </button>
                         <div slot="body">
-                            <input placeholder="Bin set name">
-                            <button class="btn btn-secondary btn-sm">Rename</button>
+                            <input placeholder="Bin set name" v-model="newBinSetName">
+                            <button 
+                                class="btn btn-secondary btn-sm"
+                                @click="renameBinSet"
+                                :disabled="renaming">
+                                <span v-show="renaming" class="fa fa-refresh fa-spin"></span>
+                                Rename
+                            </button>
                         </div>
                     </popover>
 
@@ -160,7 +170,10 @@ export default {
             selected: [],
 
             newBinName: '',
-            adding: false // true when adding bin
+            adding: false, // true when adding bin
+
+            newBinSetName: '',
+            renaming: false // true when renaming bin set
         }
     },
 
@@ -200,7 +213,15 @@ export default {
         addBin() {
             this.adding = true
             this.$store.dispatch('SUBMIT_BIN', this.newBinName).then(() => {
+                this.newBinName = ''
                 this.adding = false
+            })
+        },
+        renameBinSet() {
+            this.renaming = true
+            this.$store.dispatch('RENAME_BIN_SET', this.newBinSetName).then(() => {
+                this.newBinSetName = ''
+                this.renaming = false
             })
         }
     },
