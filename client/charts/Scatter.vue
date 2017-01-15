@@ -45,16 +45,25 @@ export default {
         }
     },
     
-    props: ['contigs', 'xData', 'yData', 'colorBy', 'colorBinSet', 'showLegend'],
+    props: [
+        'contigs', 
+        'xData', 
+        'yData', 
+        'colorBy', 
+        'colorBinSet', 
+        'showLegend',
+        'xLog',
+        'yLog'
+    ],
     
     methods: {
         updatePlot() {
-            this.x = d3.scaleLinear()
-                .domain([d3.min(this.contigs, c => c[this.xData]), d3.max(this.contigs, c => c[this.xData])])
+            this.x = this.xLog ? d3.scaleLog() : d3.scaleLinear()
+            this.x.domain([d3.min(this.contigs, c => c[this.xData]), d3.max(this.contigs, c => c[this.xData])])
                 .range([0, this.width])
                 
-            this.y = d3.scaleLinear()
-                .domain([d3.min(this.contigs, c => c[this.yData]), d3.max(this.contigs, c=> c[this.yData])])
+            this.y = this.yLog ? d3.scaleLog() : d3.scaleLinear()
+            this.y.domain([d3.min(this.contigs, c => c[this.yData]), d3.max(this.contigs, c=> c[this.yData])])
                 .range([0, this.height])
             
             this.legendScale = d3.scaleLinear()
@@ -173,7 +182,9 @@ export default {
         xData() { this.updatePlot() },
         yData() { this.updatePlot() },
         colorBy() { this.updatePlot() },
-        colorBinSet() { this.updatePlot() }
+        colorBinSet() { this.updatePlot() },
+        xLog() { this.updatePlot() },
+        yLog() { this.updatePlot() }
     }
 }
 </script>

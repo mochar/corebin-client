@@ -12,7 +12,7 @@
         </div>
         <div class="col-2">
             <label class="form-check-label">
-                <input type="checkbox" class="form-check-input">
+                <input type="checkbox" class="form-check-input" v-model="xLogAxis">
                     Log scale
             </label>
         </div>
@@ -30,7 +30,7 @@
         </div>
         <div class="col-2">
             <label class="form-check-label">
-                <input type="checkbox" class="form-check-input">
+                <input type="checkbox" class="form-check-input" v-model="yLogAxis">
                     Log scale
             </label>
         </div>
@@ -64,7 +64,15 @@
 
 <script>
 export default {
-    props: ['xData', 'yData', 'colorBy', 'colorBinSet', 'showLegend'],
+    props: [
+        'xData', 
+        'yData', 
+        'colorBy', 
+        'colorBinSet', 
+        'showLegend',
+        'xLog',
+        'yLog'
+    ],
 
     computed: {
         binSets() {
@@ -89,6 +97,14 @@ export default {
         legend: {
             get() { return this.showLegend },
             set(val) { this.$emit('updateLegend', val) }
+        },
+        xLogAxis: {
+            get() { return this.xLog },
+            set(val) { this.$emit('updateXLog', val) }
+        },
+        yLogAxis: {
+            get() { return this.yLog },
+            set(val) { this.$emit('updateYLog', val) }
         }
     }
 }

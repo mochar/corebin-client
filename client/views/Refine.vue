@@ -20,6 +20,8 @@
         :contigs="contigs"
         :xData="xData"
         :yData="yData"
+        :xLog="xLog"
+        :yLog="yLog"
         :colorBy="colorBy"
         :colorBinSet="colorBinSet"
         :showLegend="showLegend"
@@ -70,11 +72,15 @@
                 :colorBy="colorBy"
                 :colorBinSet="colorBinSet"
                 :showLegend="legend"
+                :xLog="xLog"
+                :yLog="yLog"
                 @updateX="x => { xData = x }"
                 @updateY="y => { yData = y }"
                 @updateBy="by => { colorBy = by }"
                 @updateColor="bs => { colorBinSet = bs }"
                 @updateLegend="show => { showLegend = show }"
+                @updateXLog="log => { xLog = log }"
+                @updateYLog="log => { yLog = log }"
 
                 :contigs="selectedContigs"
             >
@@ -103,7 +109,9 @@ export default {
             loading: false,
             colorBy: 'binSet',
             colorBinSet: this.$store.state.binSet.id,
-            showLegend: true
+            showLegend: true,
+            xLog: false,
+            yLog: false
         }
     },
     
