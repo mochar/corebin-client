@@ -204,6 +204,7 @@
 
 <style scoped>
 #help {
-    max-height: 98vh;
+    min-height: 100vh;
+    border-right: 0;
 }
 </style>
