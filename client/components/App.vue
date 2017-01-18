@@ -11,7 +11,7 @@
         <div class="col-3" id="left">
             <selection></selection>
         </div>
-        <div class="col-9" id="right" style="padding: 0">
+        <div class="col-9" id="right">
             <transition name="fade" mode="out-in">
                 <keep-alive>
                     <router-view></router-view>
@@ -146,6 +146,9 @@ input[type="file"] {
 
 #right {
     border-right: 1px solid #ccc;
+    padding: 0;
+    overflow-y: auto;
+    max-height: 100vh;
 }
 
 #right > div.card {

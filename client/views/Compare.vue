@@ -1,35 +1,37 @@
 <template>
-<div class="card card-block" id="compare">
-    <form class="form-inline">
-        <div class="form-group">
-            <label>Bin-set (left)</label>
-            <select class="custom-select" v-model="potentialBinSet">
-                <option 
-                    v-for="(bs, index) in binSets" 
-                    :selected="index === 0"
-                    :value="bs">
-                    {{ bs.name }}
-                </option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>Bin-set (right)</label>
-            <select class="custom-select" v-model="otherPotentialBinSet">
-                <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label>By</label>
-            <select class="custom-select">
-                <option @click="potentialBy = 'count'"># shared contigs</option>
-                <option @click="potentialBy = 'bp'"># bp</option>
-            </select>
-        </div>
-        <button class="btn btn-primary float-right" @click="plot" :disabled="plotButtonDisabled">
-            <span v-show="!loading">Plot</span>
-            <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-right"></span>
-        </button>
-    </form>
+<div class="card" id="compare">
+    <div id="compare-form">
+        <form class="form-inline">
+            <div class="form-group">
+                <label>Bin-set (left)</label>
+                <select class="custom-select" v-model="potentialBinSet">
+                    <option 
+                        v-for="(bs, index) in binSets" 
+                        :selected="index === 0"
+                        :value="bs">
+                        {{ bs.name }}
+                    </option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bin-set (right)</label>
+                <select class="custom-select" v-model="otherPotentialBinSet">
+                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>By</label>
+                <select class="custom-select">
+                    <option @click="potentialBy = 'count'"># shared contigs</option>
+                    <option @click="potentialBy = 'bp'"># bp</option>
+                </select>
+            </div>
+            <button class="btn btn-primary float-right" @click="plot" :disabled="plotButtonDisabled">
+                <span v-show="!loading">Plot</span>
+                <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-right"></span>
+            </button>
+        </form>
+    </div>
 
     <div id="chord">
         <chord 
@@ -50,7 +52,7 @@
         </span>
     </div>
 
-    <div v-if="selectedBin">
+    <div class="card-block" v-if="selectedBin">
         <div>
             <strong style="font-size: .9rem">SELECTED BIN</strong>
             <a href="#" @click.prevent="selectedBin = null">
@@ -204,6 +206,15 @@ export default {
 #scale-icon {
     display: block;
     padding-bottom: 1rem;
+}
+
+#compare-form {
+    padding: 1.25rem;
+    padding-bottom: 0;
+}
+
+#chord {
+    padding: 0 .5rem;
 }
 </style>
 

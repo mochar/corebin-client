@@ -1,6 +1,6 @@
 <template>
 <div>
-    <svg :width="width" :height="height">
+    <svg :width="width" :height="height" style="width: 100%">
         <g>
             <transition-group name="flip" tag="g" class="groups">
                 <path
