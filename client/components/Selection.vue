@@ -8,13 +8,14 @@
         </a>
     </div>
 
-    <div v-else key="assemblies">
+    <div id="assemblies" v-else key="assemblies">
         <assembly
             v-for="a in assemblies"
             :assembly="a"
             :binSets="binSets"
             :selected="a === assembly"
-            :style="{ cursor: a === assembly ? 'initial' : 'cursor' }">
+            :style="{ cursor: a === assembly ? 'initial' : 'cursor',
+                      opacity: a === assembly ? 1 : .5 }">
         </assembly>
 
         <div class="card-footer text-muted" style="padding: 0; background-color: inherit">
@@ -137,6 +138,10 @@ export default {
     position: fixed;
     bottom: 1rem;
     padding: 1rem;
+}
+
+#assemblies > .assembly:not(:first-child) {
+    border-top: 0;
 }
 </style>
 

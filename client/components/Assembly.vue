@@ -1,7 +1,14 @@
 <template>
-<div class="card" style="margin-bottom: 0; border-left: 0; border-right: 0">
+<div class="card assembly">
     <div class="name-block">
         <span class="name assembly-name">{{ assembly.name }}</span>
+
+        <button 
+            v-if="!selected" 
+            class="btn btn-link assembly-button float-right text-muted"
+            @click="select">
+            Work on
+        </button>
 
         <div class="float-right" v-show="selected">
             <popover :options="{placement: 'bottom'}">
@@ -69,6 +76,10 @@ export default {
         selectBinSet(binSet) {
             this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
             })
+        },
+        select() {
+            this.$store.dispatch('SELECT_ASSEMBLY', this.assembly).then(() => {
+            })
         }
     },
 
@@ -81,3 +92,11 @@ export default {
     }
 }
 </script>
+
+<style>
+.assembly {
+    margin-bottom: 0;
+    border-left: 0;
+    border-right: 0;
+}
+</style>
