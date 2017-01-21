@@ -92,7 +92,7 @@ export default {
 
 <style>
 #submit-button {
-    padding: .25rem 1rem;
+    padding: .25rem 1.5rem;
 }
 
 #assembly-form {

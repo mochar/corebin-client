@@ -323,6 +323,8 @@ export default {
 
 .btn-header {
     font-size: .8rem;
+    padding-right: 1rem;
+    padding-left: 1rem;
 }
 
 .btn-table {

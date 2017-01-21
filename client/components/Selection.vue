@@ -22,8 +22,8 @@
             <button 
                 @click="showForm = true"
                 :disabled="assemblyJob"
-                class="btn btn-outline-secondary btn-block" 
-                style="color: #666; border: 0">
+                id="add-assembly-button"
+                class="btn btn-block">
                 <span class="fa fa-plus"></span> Assembly
             </button>
         </div>
@@ -142,6 +142,15 @@ export default {
 
 #assemblies > .assembly:not(:first-child) {
     border-top: 0;
+}
+
+#add-assembly-button {
+    color: #666;
+    border: 0;
+    background-color: transparent;
+}
+#add-assembly-button:hover {
+    background-color: #ddd;
 }
 </style>
 

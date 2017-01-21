@@ -91,13 +91,29 @@ input[type="file"] {
 
 .btn {
     cursor: pointer;
+    position: relative;
     -webkit-transition: initial;
        -moz-transition: initial;
             transition: initial;
 }
 
+.btn-primary, .btn-success, .btn-danger {
+    border-width: 0 1px 2px 1px;
+}
+
+.btn-primary:active, .btn-success:active, .btn-danger:active {
+    border-width: 2px 1px 0 1px;
+}
+
+.btn-primary { border-color: #01549b; }
+.btn-primary:hover { background-color: #0275d8; }
+.btn-success { border-color: #419641; }
+.btn-success:hover { background-color: #5cb85c; }
+.btn-danger { border-color: #c12e2a; }
+.btn-danger:hover { background-color: #d9534f; }
+
 .btn:focus {
-    box-shadow: initial;
+    box-shadow: inherit;
 }
 
 .btn-sm {
@@ -105,7 +121,7 @@ input[type="file"] {
 }
 
 .btn-xs {
-    padding: .3rem .5rem;
+    padding: .3rem 1rem;
 }
 
 .rounded {
