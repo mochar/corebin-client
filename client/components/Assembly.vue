@@ -54,10 +54,12 @@ export default {
 
     methods: {
         select() {
-            this.$store.dispatch('SELECT_ASSEMBLY', this.assembly).then(() => {
-                if (this.binSets.length > 0) 
-                    this.$store.dispatch('SELECT_BIN_SET', this.binSets[0])
-            })
+            if (!this.$store.state.assembly.id == this.assembly.id) {
+                this.$store.dispatch('SELECT_ASSEMBLY', this.assembly).then(() => {
+                    if (this.binSets.length > 0) 
+                        this.$store.dispatch('SELECT_BIN_SET', this.binSets[0])
+                })
+            }
             this.$emit('selected')
         }
     },
