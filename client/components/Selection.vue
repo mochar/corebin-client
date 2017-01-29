@@ -1,31 +1,65 @@
 <template>
 <div>
-    <div v-if="showForm" key="form">
-        <assembly-upload @done="showForm = false"></assembly-upload>
+    <div id="assemblies">
+        <div v-if="showAssemblies">
+            <strong class="selection-button" style="position: absolute; right: 0">
+                <span class="fa fa-plus fa-lg text-muted" data-toggle="modal" 
+                      data-target="#assembly-upload-modal">
+                </span>
+            </strong>
+            <strong class="text-center text-muted selection-title">
+                ASSEMBLIES
+            </strong>
 
-        <a href="#" style="text-align: center; display: block" v-show="assemblies.length === 0">
-            Try CoReBIN with demo data
-        </a>
-    </div>
+            <div v-if="assemblies.length === 0 && !assemblyJob">
+                <span class="text-muted empty-message">No assemblies.</span>
+                <a href="#" id="try-link" class="text-muted">
+                    Try CoReBIN with demo data
+                </a>
+            </div>
 
-    <div id="assemblies" v-else key="assemblies">
-        <assembly
-            v-for="a in assemblies"
-            :assembly="a"
-            :binSets="binSets"
-            :selected="a === assembly"
-            :style="{ cursor: a === assembly ? 'initial' : 'cursor',
-                      opacity: a === assembly ? 1 : .5 }">
-        </assembly>
+            <assembly
+                v-for="a in assemblies"
+                @selected="showAssemblies = false"
+                :assembly="a">
+            </assembly>
 
-        <div class="card-footer text-muted" style="padding: 0; background-color: inherit">
-            <button 
-                @click="showForm = true"
-                :disabled="assemblyJob"
-                id="add-assembly-button"
-                class="btn btn-block">
-                <span class="fa fa-plus"></span> Assembly
-            </button>
+            <job :job="assemblyJob" v-if="assemblyJob"></job>
+        </div>
+        <div v-else>
+            <div class="selection-button" style="position: absolute; left: 0">
+                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"
+                      @click="showAssemblies = true">
+                </span>
+            </div>
+            <strong class="selection-title text-muted text-center">
+                BIN-SETS
+            </strong>
+            <div style="position: absolute; right: 0; display: flex; top: 0">
+                <router-link tag="div" class="selection-button" to="/compare"
+                        :class="{ 'inactive-button': !binSets.length }">
+                    <span class="fa fa-balance-scale fa-lg text-muted"></span>
+                </router-link>
+                <div class="selection-button">
+                    <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
+                          data-target="#bin-set-upload-modal">
+                    </span>
+                </div>
+            </div>
+
+            <div v-if="binSets.length === 0 && binSetJobs.length === 0">
+                <span class="text-muted empty-message">No bin-sets.</span>
+            </div>
+
+            <bin-set
+                v-for="bs in binSets"
+                :binSet="bs">
+            </bin-set>
+
+            <job 
+                v-for="job in binSetJobs"
+                :job="job">
+            </job>
         </div>
     </div>
     
@@ -42,30 +76,28 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import AssemblyUpload from '../components/AssemblyUpload'
 import Assembly from '../components/Assembly'
+import BinSet from '../components/BinSet'
+import Job from '../components/Job'
 
 export default {
     data() {
         return {
             cancelling: false,
-            showForm: false
+            showAssemblies: true
         }
     },
 
     components: {
-        AssemblyUpload,
-        Assembly
+        Assembly,
+        BinSet,
+        Job
     },
 
     methods: {
         ...mapActions({
             cancelAssemblyJob: 'CANCEL_ASSEMBLY_JOB'
         }),
-        selectAssembly(assembly) {
-            this.$store.dispatch('SELECT_ASSEMBLY', assembly).then(() => {
-            })
-        },
         cancelJob() {
             this.cancelling = true
             this.cancelAssemblyJob().done(() => this.cancelling = false)
@@ -78,7 +110,8 @@ export default {
             'assembly',
             'binSets',
             'binSet',
-            'assemblyJob'
+            'assemblyJob',
+            'binSetJobs'
         ])
     },
     
@@ -86,45 +119,12 @@ export default {
         // Fetch data from server
         this.$store.dispatch('GET_ASSEMBLIES').then(() => {
             this.loading = false 
-            this.showForm = this.assemblyJob ? false : true
-            this.showForm = this.assemblies.length ? false : true
         })
     }
 }
 </script>
 
 <style>
-.assembly-name::before {
-    content: "Assembly ";
-}
-
-.bin-set-list {
-    padding-left: 1rem;
-    border-left: 1px solid #ccc;
-}
-
-.list-item {
-    margin: .5rem 0; 
-}
-
-#add-bs-btn {
-    margin-top: 1rem;
-}
-
-.unselected {
-    opacity: .3;
-}
-
-.unselected span {
-    font-size: large;
-}
-
-.unselected:hover {
-    opacity: .9;
-    transition: opacity .15s ease-in-out;
-    cursor: pointer;
-}
-
 .assembly-button {
     border: 0;
     padding: .5rem;
@@ -140,7 +140,8 @@ export default {
     padding: 1rem;
 }
 
-#assemblies > .assembly:not(:first-child) {
+#assemblies .assembly + .assembly,
+#assemblies .bin-set + .bin-set {
     border-top: 0;
 }
 
@@ -151,6 +152,40 @@ export default {
 }
 #add-assembly-button:hover {
     background-color: #ddd;
+}
+
+.selection-title {
+    display: block;
+    font-size: 1.0rem;
+    padding: .5rem ;
+}
+
+.selection-button {
+    cursor: pointer;
+    font-size: 1.0rem;
+}
+.selection-button:hover > span.fa {
+    color: #333 !important;
+}
+.selection-button > span.fa {
+    padding: .5rem;
+    line-height: initial;
+}
+
+.inactive-button {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.empty-message {
+    text-align: center;
+    display: block;
+}
+
+#try-link {
+    text-align: center;
+    display: block;
+    text-decoration: underline;
 }
 </style>
 

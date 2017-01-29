@@ -1,6 +1,11 @@
 <template>
-<div class="card card-block" id="assembly-form">
-    <h6 class="card-title">Upload assembly</h6>
+<div class="modal" id="assembly-upload-modal" tabindex="-1">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-body">
+
+    <h5 class="modal-title">Assembly upload</h5>
+
     <form name="assembly-form" method="post" enctype="multipart/form-data" @submit.prevent="submitAssembly">
         <div class="form-group">
             <input type="text" class="form-control form-control-sm" name="name" placeholder="Name">
@@ -8,7 +13,6 @@
         
         <div class="form-group">
             <label for="contigs">Contigs</label>
-            <span class="text-info float-right">Required</span>
             <input type="file" name="contigs" class="form-control-file form-control-sm">
             <small class="form-text text-muted">
                 The contigs used for binning in fasta format.
@@ -45,15 +49,18 @@
         
         <button 
             class="btn btn-link btn-sm" 
-            v-show="showCancel"
-            @click.prevent="$emit('done')">Cancel
+            @click.prevent="hide">Cancel
         </button>
         
-        <button type="submit" id="submit-button" class="btn btn-primary pull-right btn-sm" :disabled="loading">
+        <button type="submit" class="btn btn-primary pull-right submit-button btn-sm" :disabled="loading">
             <span class="fa fa-refresh fa-spin" v-show="loading"></span>
             Upload
         </button> 
     </form>
+
+</div>
+</div>
+</div>
 </div>
 </template>
 
@@ -77,26 +84,12 @@ export default {
             this.submitAssemblyAction({ formData }).done(() => {
                 this.loading = false
                 event.srcElement.reset()
-                this.$emit('done')
+                this.hide()
             })
-        }
-    },
-
-    computed: {
-        showCancel() {
-            return this.$store.state.assemblies.length > 0
+        },
+        hide() {
+            $(this.$el).modal('hide')
         }
     }
 }
 </script>
-
-<style>
-#submit-button {
-    padding: .25rem 1.5rem;
-}
-
-#assembly-form {
-    border-left: 0;
-    border-right: 0;
-}
-</style>

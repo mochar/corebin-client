@@ -1,18 +1,14 @@
 <template>
 <div class="card assembly">
     <div class="name-block">
-        <span class="name assembly-name">{{ assembly.name }}</span>
+        <span class="name">{{ assembly.name }}</span>
+    </div>
 
-        <button 
-            v-if="!selected" 
-            class="btn btn-link assembly-button float-right text-muted"
-            @click="select">
-            Work on
-        </button>
-
-        <div class="float-right" v-show="selected">
+    <div class="card-block" style="padding: .15rem 1rem;">
+        <div class="btn-group">
             <popover :options="{placement: 'bottom'}">
-                <button slot="button" class="btn btn-secondary assembly-button">
+                <button slot="button" class="btn btn-secondary btn-sm btn-header"
+                        style="border-right: 0">
                     <span class="fa fa-fw fa-pencil"></span>
                 </button>
                 <div slot="body">
@@ -20,34 +16,20 @@
                     <button class="btn btn-secondary btn-sm">Rename</button>
                 </div>
             </popover>
-
             <popover :options="{placement: 'bottom'}">
-                <button slot="button" class="btn btn-secondary assembly-button">
-    	            <span class="fa fa-fw fa-trash text-danger"></span> 
+                <button slot="button" class="btn btn-secondary btn-sm btn-header">
+                    <span class="fa fa-fw fa-trash"></span> 
                 </button>
                 <div slot="body">
                     <button class="btn btn-danger btn-sm">Delete assembly</button>
                 </div>
             </popover>
+            <router-link class="btn btn-primary btn-sm btn-header float-right"
+                    to="/overview" tag="button" @click.native="select">
+                Analyze
+            </router-link>
         </div>
-    </div>
-    <div class="card-block" style="padding: .5rem 1rem;" v-if="selected">
-        <div class="bin-set-list">
-            <div v-for="bs in binSets" class="list-item">
-                {{ bs.name }}
-                <router-link to="/overview" class="float-right" @click.native="selectBinSet(bs)">
-                    Overview
-                </router-link>
-            </div>
-            <div v-for="job in binSetJobs" class="list-item">
-                {{ job.meta.name }}
-                <span class="fa fa-refresh fa-spin float-right"></span>
-            </div>
-            <bin-set-upload :assembly="assembly.id"></bin-set-upload>
-        </div>
-        <router-link to="/compare" class="btn btn-sm btn-secondary btn-block" id="add-bs-btn" :disabled="!binSets.length" tag="button">
-            <span class="fa fa-balance-scale"></span> Compare bin sets
-        </router-link>
+
         <p class="card-text" style="margin-top: .5rem">
             <small class="text-muted">Added {{ assembly.submitDate }}</small>
         </p>
@@ -56,7 +38,6 @@
 </template>
 
 <script>
-import BinSetUpload from '../components/BinSetUpload'
 import Popover from '../components/Popover'
 
 export default {
@@ -65,25 +46,26 @@ export default {
         }
     },
 
-    props: ['assembly', 'binSets', 'selected'],
+    props: ['assembly'],
 
     components: {
-        BinSetUpload,
         Popover
     },
 
     methods: {
-        selectBinSet(binSet) {
-            this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
-            })
-        },
         select() {
             this.$store.dispatch('SELECT_ASSEMBLY', this.assembly).then(() => {
+                if (this.binSets.length > 0) 
+                    this.$store.dispatch('SELECT_BIN_SET', this.binSets[0])
             })
+            this.$emit('selected')
         }
     },
 
     computed: {
+        binSets() {
+            return this.$store.state.binSets
+        },
     	binSetJobs() {
     		return this.$store.state.binSetJobs.filter(job => {
     			return job.meta.assembly === this.assembly.id

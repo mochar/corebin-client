@@ -2,9 +2,9 @@
 <div id="bins">
     <div class="card-header" id="bins-header">
         <div class="row">
-            <div class="col-6" style="border-right: 1px solid #eee">
-                <span class="name bin-set-name">{{ binSet.name }}</span>
-                <div class="float-right">
+            <div class="col-6">
+                <span class="name" style="margin-left: 0">{{ binSet.name }}</span>
+<!--                 <div class="float-right">
                     <popover :options="{placement: 'bottom'}">
                         <button 
                             slot="button" 
@@ -25,10 +25,6 @@
                         </div>
                     </popover>
 
-                    <button class="btn btn-secondary assembly-button">
-                        <span class="fa fa-fw fa-download"></span>
-                    </button>
-
                     <popover :options="{placement: 'bottom'}">
                         <button slot="button" class="btn btn-secondary assembly-button">
                             <span class="fa fa-fw fa-trash text-danger"></span> 
@@ -38,7 +34,7 @@
                         </div>
                     </popover>
                 </div>
-            </div>
+ -->            </div>
 
             <div class="dropdown col-6">
                 <div class="float-right">
@@ -146,7 +142,7 @@
                 <bar-column :percentage="(bin.contamination * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <bar-column :percentage="(bin.completeness * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <td>
-                    <button class="btn btn-secondary btn-block btn-xs" @click.stop="refineBin">
+                    <button class="btn btn-secondary btn-block btn-sm" @click.stop="refineBin">
                         Refine
                     </button>
                 </td>
@@ -262,7 +258,7 @@ export default {
 
 <style>
 .name {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-left: 1rem;
 }
 

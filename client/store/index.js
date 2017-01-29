@@ -128,6 +128,7 @@ const actions = {
         ).then((respJobs, respAssemblies) => {
             commit('SET_JOBS', respJobs[0].jobs)
             commit('SET_ASSEMBLIES', respAssemblies[0].assemblies)
+            commit('SET_MESSAGE', '')
             if (respAssemblies[0].assemblies.length) {
                 dispatch('SELECT_ASSEMBLY', respAssemblies[0].assemblies[0])
             } else {

@@ -19,6 +19,9 @@
             </transition>
         </div>
     </div>
+
+    <assembly-upload-modal></assembly-upload-modal>
+    <bin-set-upload-modal></bin-set-upload-modal>
 </div>
 </template>
 
@@ -26,10 +29,14 @@
 import 'bootstrap'
 import { mapActions } from 'vuex'
 import Selection from '../components/Selection'
+import AssemblyUploadModal from '../components/AssemblyUploadModal'
+import BinSetUploadModal from '../components/BinSetUploadModal'
 
 export default {
     components: {
-        Selection
+        Selection,
+        AssemblyUploadModal,
+        BinSetUploadModal
     },
 
     methods: {
@@ -100,10 +107,12 @@ input[type="file"] {
 .btn-primary, .btn-success, .btn-danger {
     border-width: 0 1px 2px 1px;
 }
+.btn-secondary { border-width: 1px 1px 2px 1px }
 
 .btn-primary:active, .btn-success:active, .btn-danger:active {
     border-width: 2px 1px 0 1px;
 }
+.btn-secondary:active { border-width: 2px 1px 1px 1px }
 
 .btn-primary { border-color: #01549b; }
 .btn-primary:hover { background-color: #0275d8; }
@@ -111,6 +120,8 @@ input[type="file"] {
 .btn-success:hover { background-color: #5cb85c; }
 .btn-danger { border-color: #c12e2a; }
 .btn-danger:hover { background-color: #d9534f; }
+.btn-secondary { border-color: #adadad; }
+.btn-secondary:hover { background-color: #fff;  }
 
 .btn:focus {
     box-shadow: inherit;
@@ -133,6 +144,10 @@ input[type="file"] {
 }
 
 #app {
+}
+
+.submit-button {
+    padding: .25rem 1.5rem !important;
 }
 
 .webui-popover .webui-popover-content>div:first-child {
