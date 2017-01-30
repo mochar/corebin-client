@@ -65,9 +65,9 @@ export default {
 </script>
 
 <style>
-@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-@import "../../node_modules/font-awesome/css/font-awesome.min.css";
 @import "../../node_modules/webui-popover/dist/jquery.webui-popover.min.css";
+@import "../../node_modules/font-awesome/css/font-awesome.min.css";
+@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 
 html {
     height: 100%;
@@ -154,6 +154,20 @@ input[type="file"] {
     width: 100%;
 }
 
+/* Patch annoying webui behaviour */
+.webui-popover .dropdown-menu {
+    position: absolute;
+    top: 100%;
+    display: none;
+    float: left;
+    border: 1px solid rgba(0,0,0,.15);
+}
+
+.show > .dropdown-menu {
+    display: block;
+}
+/* end patch */
+
 .back a {
     color: #444;
 }
@@ -184,6 +198,10 @@ input[type="file"] {
 
 #right > div.card {
     border-left: 0;
+}
+
+.dropdown-menu-sm {
+    font-size: .9rem;
 }
 </style>
 

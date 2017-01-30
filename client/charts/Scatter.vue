@@ -1,6 +1,5 @@
 <template>
-<div>
-    <svg :width="width" :height="height" style="width: 100%">
+    <svg :width="width" :height="height">
         <defs>
             <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0.0%" stop-color="#f00"></stop>
@@ -19,7 +18,6 @@
         <g class="x axis" :transform="`translate(0,${height})`"></g>
         <g class="y axis" :transform="'translate(0,0)'"></g>
     </svg>
-</div>
 </template>
 
 <script>
@@ -140,9 +138,9 @@ export default {
     },
 
     mounted() {
-        this.width = parseInt(d3.select(this.$el).style('width'), 10)
-        this.height = this.width * .8
-        this.svg = d3.select(this.$el).select('svg')
+        this.width = $(this.$el).parent().width()
+        this.height = $(this.$el).parent().height()
+        this.svg = d3.select(this.$el)
 
         this.colorScale = d3.scaleLinear()
             .domain([0.3, 0.7])
