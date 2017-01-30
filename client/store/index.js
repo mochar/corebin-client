@@ -13,6 +13,10 @@ const state = {
     bins: [],
     bin: null,
 
+    // Refinement
+    refineBins: [],
+    contigs: [],
+
     // Jobs
     assemblyJob: null,
     binSetJobs: [],
@@ -76,6 +80,17 @@ const mutations = {
     },
     RENAME_BIN_SET(state, name) {
         state.binSet.name = name
+    },
+    PUSH_REFINE_BIN(state, { bin, contigs }) {
+        state.refineBins.push(bin)
+        state.contigs.push(...contigs)
+    },
+    REMOVE_REFINE_BIN(state, bin) {
+        state.refineBins = state.refineBins.filter(b => b.id !== bin.id)
+        state.contigs = state.contigs.filter(c => c.bin !== bin.id)
+    },
+    SET_CONTIGS(state, contigs) {
+        state.contigs = contigs
     }
 }
 
@@ -191,6 +206,21 @@ const actions = {
             data: JSON.stringify({ name })
         }).then(data => {
             commit('RENAME_BIN_SET', name)
+        })
+    },
+    PUSH_REFINE_BIN({ commit, state }, bin) {
+        const payload = {
+            fields: 'id,length,gc,name',
+            bins: bin.id,
+            coverages: true,
+            pca: state.assembly.hasFourmerfreqs,
+            colors: true,
+            items: state.assembly.size
+        }
+        return $.getJSON(`${ROOTURL}/a/${state.assembly.id}/c`, payload).then(data => {
+            data.contigs.forEach(c => c.bin = bin.id)
+            const contigs = data.contigs
+            commit('PUSH_REFINE_BIN', { bin, contigs })
         })
     }
 }

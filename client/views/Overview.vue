@@ -4,37 +4,7 @@
         <div class="row">
             <div class="col-6">
                 <span class="name" style="margin-left: 0">{{ binSet.name }}</span>
-<!--                 <div class="float-right">
-                    <popover :options="{placement: 'bottom'}">
-                        <button 
-                            slot="button" 
-                            :disabled="renaming"
-                            class="btn btn-secondary assembly-button">
-                            <span v-if="renaming" class="fa fa-refresh fa-spin"></span>
-                            <span class="fa fa-fw fa-pencil"></span>
-                        </button>
-                        <div slot="body">
-                            <input placeholder="Bin set name" v-model="newBinSetName">
-                            <button 
-                                class="btn btn-secondary btn-sm"
-                                @click="renameBinSet"
-                                :disabled="renaming">
-                                <span v-show="renaming" class="fa fa-refresh fa-spin"></span>
-                                Rename
-                            </button>
-                        </div>
-                    </popover>
-
-                    <popover :options="{placement: 'bottom'}">
-                        <button slot="button" class="btn btn-secondary assembly-button">
-                            <span class="fa fa-fw fa-trash text-danger"></span> 
-                        </button>
-                        <div slot="body">
-                            <button class="btn btn-danger btn-sm">Delete bin set</button>
-                        </div>
-                    </popover>
-                </div>
- -->            </div>
+            </div>
 
             <div class="dropdown col-6">
                 <div class="float-right">
@@ -142,7 +112,7 @@
                 <bar-column :percentage="(bin.contamination * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <bar-column :percentage="(bin.completeness * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <td>
-                    <button class="btn btn-secondary btn-block btn-sm" @click.stop="refineBin">
+                    <button class="btn btn-secondary btn-block btn-sm" @click.stop="refineBin(bin)">
                         Refine
                     </button>
                 </td>
@@ -203,7 +173,8 @@ export default {
                 this.sortOrder ='desc'
             }
         },
-        refineBin() {
+        refineBin(bin) {
+            this.$store.dispatch('PUSH_REFINE_BIN', bin)
             this.$router.push({ path: 'refine' })
         },
         addBin() {

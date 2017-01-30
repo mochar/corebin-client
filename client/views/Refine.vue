@@ -53,10 +53,9 @@ import RefinePopover from '../components/RefinePopover'
 export default {
     data() {
         return {
-            contigs: [],
             xData: 'gc',
             yData: 'length',
-            selectedBins: [],
+            // selectedBins: [],
             selectedContigs: [],
             loading: false,
             colorBy: 'binSet',
@@ -75,27 +74,6 @@ export default {
     },
 
     methods: {
-        getContigs(bin) {
-            this.loading = true
-            const payload = {
-                fields: 'id,length,gc,name',
-                bins: bin.id,
-                coverages: true,
-                pca: this.assembly.hasFourmerfreqs,
-                colors: true,
-                items: this.assembly.size
-            }
-            $.getJSON(`${ROOTURL}/a/${this.assembly.id}/c`, payload).then(data => {
-                data.contigs.forEach(c => c.bin = bin.id)
-                this.contigs.push(...data.contigs)
-                this.loading = false
-            }, () => {
-                this.loading = false
-            })
-        },
-        removeContigs(bin) {
-            this.contigs = this.contigs.filter(c => c.bin !== bin.id)
-        },
         moveContigs(toBin) {
             this.loading = true
             const data = { action: 'move', contigs: this.selectedContigs, to_bin: toBin.id }
@@ -105,8 +83,10 @@ export default {
                 contentType: 'application/json',
                 data: JSON.stringify(data)
             }).then(() => {
+                let contigs = $.extend(true, [], this.contigs) // deep-copy
+
                 // First, update the bin attr of the selected contigs
-                this.contigs.forEach(contig => {
+                contigs.forEach(contig => {
                     if (this.selectedContigs.indexOf(contig.id) > -1) {
                         contig.bin = toBin.id
                         contig[`color_${this.binSet.id}`] = toBin.color
@@ -116,9 +96,11 @@ export default {
                 this.selectedContigs = []
                 // Then, filter out the contigs which have been moved to an unselected bin
                 const selectedBins = this.selectedBins.map(bin => bin.id)
-                this.contigs = this.contigs.filter(contig => {
+                contigs = contigs.filter(contig => {
                     return selectedBins.indexOf(contig.bin) > -1
                 })
+                // Then, commit to store
+                this.$store.commit('SET_CONTIGS', contigs)
                 // Finally, update refetch bins
                 this.$store.dispatch('GET_BINS').then(() => this.loading = false)
             }, () => {
@@ -127,13 +109,14 @@ export default {
         },
         removeBin(bin) {
             this.loading = true
-            this.selectedBins = this.selectedBins.filter(bin => bin.id !== bin.id)
-            this.removeContigs(bin)
+            this.$store.commit('REMOVE_REFINE_BIN', bin)
             this.loading = false
         },
         pushBin(bin) {
-            this.selectedBins.push(bin)
-            this.getContigs(bin)
+            this.loading = true
+            this.$store.dispatch('PUSH_REFINE_BIN', bin).then(() => {
+                this.loading = false
+            })
         }
     },
 
@@ -146,6 +129,12 @@ export default {
         },
         binSet() {
             return this.$store.state.binSet
+        },
+        selectedBins() {
+            return this.$store.state.refineBins
+        },
+        contigs() {
+            return this.$store.state.contigs
         }
     },
 
