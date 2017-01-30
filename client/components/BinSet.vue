@@ -10,7 +10,7 @@
                     <span class="fa fa-fw fa-pencil"></span>
                 </button>
                 <div slot="body">
-                    <input placeholder="Assembly name">
+                    <input placeholder="Bin-set name">
                     <button class="btn btn-secondary btn-sm">Rename</button>
                 </div>
             </popover>

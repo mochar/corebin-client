@@ -7,44 +7,46 @@
     <h5 class="modal-title">Assembly upload</h5>
 
     <form name="assembly-form" method="post" enctype="multipart/form-data" @submit.prevent="submitAssembly">
-        <div class="form-group">
-            <input type="text" class="form-control form-control-sm" name="name" placeholder="Name">
-        </div>
-        
-        <div class="form-group">
-            <label for="contigs">Contigs</label>
-            <input type="file" name="contigs" class="form-control-file form-control-sm">
-            <small class="form-text text-muted">
-                The contigs used for binning in fasta format.
-            </small>
-        </div>
-        
-        <div class="form-check">
-            <label class="form-check-label">
-            <input type="checkbox" name="fourmers" class="form-check-input">
-                Calculate tetranucleotide frequencies
-            </label>
-        </div>
-        
-        <div class="form-group">
-            <label for="coverage">Coverage</label>
-            <input type="file" name="coverage" class="form-control-file form-control-sm">
-            <small class="form-text text-muted">
-                <router-link to="/help">How should this file look like?</router-link>
-            </small>
-        </div>
-        
-        <div class="form-group">
-            <label>Find essential genes</label>
-            <div class="form-check" style="margin-bottom: 0">
+        <div class="card-block">
+            <div class="form-group">
+                <input type="text" class="form-control form-control-sm" name="name" placeholder="Name">
+            </div>
+            
+            <div class="form-group">
+                <label for="contigs">Contigs</label>
+                <input type="file" name="contigs" class="form-control-file form-control-sm">
+                <small class="form-text text-muted">
+                    The contigs used for binning in fasta format.
+                </small>
+            </div>
+            
+            <div class="form-check">
                 <label class="form-check-label">
-                    <input type="checkbox" name="hmmer" class="form-check-input">
-                        Search contigs for essential genes
+                <input type="checkbox" name="fourmers" class="form-check-input">
+                    Calculate tetranucleotide frequencies
                 </label>
             </div>
-            <small class="form-text text-muted">
-                Allows for calculations of completeness and contamination per bin.
-            </small>
+            
+            <div class="form-group">
+                <label for="coverage">Coverage</label>
+                <input type="file" name="coverage" class="form-control-file form-control-sm">
+                <small class="form-text text-muted">
+                    <router-link to="/help">How should this file look like?</router-link>
+                </small>
+            </div>
+            
+            <div class="form-group">
+                <label>Find essential genes</label>
+                <div class="form-check" style="margin-bottom: 0">
+                    <label class="form-check-label">
+                        <input type="checkbox" name="hmmer" class="form-check-input">
+                            Search contigs for essential genes
+                    </label>
+                </div>
+                <small class="form-text text-muted">
+                    Allows for calculations of completeness and contamination per bin.
+                </small>
+            </div>
         </div>
         
         <button 

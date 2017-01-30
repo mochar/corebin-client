@@ -54,10 +54,13 @@ export default {
 
     methods: {
         select() {
-            if (!this.$store.state.assembly.id == this.assembly.id) {
+            const currentAssembly = this.$store.state.assembly
+            if (!currentAssembly || currentAssembly.id !== this.assembly.id) {
                 this.$store.dispatch('SELECT_ASSEMBLY', this.assembly).then(() => {
-                    if (this.binSets.length > 0) 
-                        this.$store.dispatch('SELECT_BIN_SET', this.binSets[0])
+                    if (this.binSets.length === 0) return
+                    this.$store.dispatch('SELECT_BIN_SET', this.binSets[0]).then(() => {
+                        this.$router.push({ path: 'overview' })
+                    })
                 })
             }
             this.$emit('selected')

@@ -7,17 +7,19 @@
     <h5 class="modal-title">Bin-set upload</h5>
 
     <form name="bin-set-form" method="post" enctype="multipart/form-data" @submit.prevent="submitBinSet">
-        <div class="form-group">
-            <input type="text" class="form-control form-control-sm" name="name"
-                    placeholder="Name">
-        </div>
-        
-        <div class="form-group">
-            <label for="bins">Bins</label>
-            <input type="file" name="bins" class="form-control-file form-control-sm">
-            <small class="form-text text-muted">
-                <router-link to="/help">How should this file look like?</router-link>
-            </small>
+        <div class="card-block">
+            <div class="form-group">
+                <input type="text" class="form-control form-control-sm" name="name"
+                        placeholder="Name">
+            </div>
+            
+            <div class="form-group">
+                <label for="bins">Bins</label>
+                <input type="file" name="bins" class="form-control-file form-control-sm">
+                <small class="form-text text-muted">
+                    <router-link to="/help">How should this file look like?</router-link>
+                </small>
+            </div>
         </div>
         
         <button class="btn btn-link btn-sm" @click="hide">Cancel</button>
