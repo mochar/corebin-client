@@ -1,34 +1,59 @@
 <template>
 <div class="card" id="compare">
     <div id="compare-form">
-        <form class="form-inline">
+        <form class="form-inline justify-content-center">
             <div class="form-group">
-                <label>Bin-set (left)</label>
-                <select class="custom-select" v-model="potentialBinSet">
-                    <option 
-                        v-for="(bs, index) in binSets" 
-                        :selected="index === 0"
-                        :value="bs">
-                        {{ bs.name }}
-                    </option>
-                </select>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" 
+                            style="font-size: .9rem; border-right: 0">
+                        <strong>Bin-set left</strong>
+                        {{ name }}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a
+                            v-for="bs in binSets"
+                            class="dropdown-item"
+                            href="#"
+                            @click.prevent="binSet = bs"
+                        >{{ bs.name }}
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label>Bin-set (right)</label>
-                <select class="custom-select" v-model="otherPotentialBinSet">
-                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-                </select>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" 
+                            style="font-size: .9rem; border-right: 0">
+                        <strong>Bin-set right</strong>
+                        {{ otherName }}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a
+                            v-for="bs in binSets"
+                            class="dropdown-item"
+                            href="#"
+                            @click.prevent="otherBinSet = bs"
+                        >{{ bs.name }}
+                        </a>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label>By</label>
-                <select class="custom-select">
-                    <option @click="potentialBy = 'count'"># shared contigs</option>
-                    <option @click="potentialBy = 'bp'"># bp</option>
-                </select>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                            style="font-size: .9rem; border-right: 0">
+                        <strong>Similarity by</strong>
+                        {{ byName }}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" @click.prevent="by = 'count'">shared contigs</a>
+                        <a class="dropdown-item" href="#" @click.prevent="by = 'bp'">basepairs</a>
+                    </div>
+                </div>
             </div>
-            <button class="btn btn-primary float-right" @click="plot" :disabled="plotButtonDisabled">
-                <span v-show="!loading">Plot</span>
-                <span v-show="loading" class="fa fa-refresh fa-spin fa-lg float-right"></span>
+            <button class="btn btn-primary float-right" @click="plot" :disabled="loading" id="plot-btn">
+                <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
+                PLOT
             </button>
         </form>
     </div>
@@ -43,39 +68,14 @@
             :selected="selectedBin"
             :connected="connectedBins"
             :binsMap="binsMap"
-            @binSelected="selectBin"
+            :visible="showPlot"
+            @binSelected="bin => { selectedBin = bin }"
         ></chord>
         <span id="message" v-show="otherBins.length === 0" class="text-muted">
             <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
             <!-- Select the bin sets to compare and click on the Plot button -->
             <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
         </span>
-    </div>
-
-    <div class="card-block" v-if="selectedBin">
-        <div>
-            <strong style="font-size: .9rem">SELECTED BIN</strong>
-            <a href="#" @click.prevent="selectedBin = null">
-                <small>deselect</small>
-            </a>
-            <compare-bin 
-                :bin="selectedBin" 
-                :simple="true"
-                :minSize="minSize"
-                :maxSize="maxSize">
-            </compare-bin>
-        </div>
-
-        <div style="margin-top: 1rem" id="connected">
-            <strong style="font-size: .9rem">CONNECTED BINS</strong>
-            <compare-bin 
-                v-for="bin in connectedBins"
-                :bin="binsMap.get(bin.id)"
-                :simple="true"
-                :minSize="minSize"
-                :maxSize="maxSize">
-            </compare-bin>
-        </div>
     </div>
 </div>
 </template>
@@ -84,39 +84,29 @@
 import { mapState } from 'vuex'
 import { map as d3Map } from 'd3'
 import Chord from '../charts/Chord'
-import CompareBin from '../components/CompareBin'
 
-/* "otherPotentialBinSet" is the selected bin set. "otherBinSet" is set to 
- * "otherPotentialBinSet" when the plot botton is clicked. Same for potentialBy.
- */
 export default {
     data() {
         return {
             plotData: { bins1: [], bins2: [], matrix: [] },
             binSet: null,
-            potentialBinSet: null,
             otherBinSet: null,
             bins: [],
-            otherPotentialBinSet: null,
             otherBins: [],
-            by: null,
-            potentialBy: 'count',
+            by: 'count',
             loading: false,
-            selectedBin: null
+            selectedBin: null,
+            showPlot: false
         }
     },
     
     components: {
-        Chord,
-        CompareBin
+        Chord
     },
 
     methods: {
         plot() {
             this.loading = true
-            this.otherBinSet = this.otherPotentialBinSet
-            this.binSet = this.potentialBinSet
-            this.by = this.potentialBy
             const params = { binset1: this.binSet.id, binset2: this.otherBinSet.id, by: this.by }
             const assemblyId = this.$store.state.assembly.id
             $.when(
@@ -127,12 +117,15 @@ export default {
                     this.bins = respBins[0].bins
                     this.otherBins = respOtherBins[0].bins
                     this.plotData = respMatrix[0]
+                    this.showPlot = true
                     this.loading = false
                 }
             )
         },
-        selectBin(bin) {
-            this.selectedBin = bin
+        setBinSets() {
+            this.binSet = this.binSet ? this.binSet : this.binSets[0]
+            const otherBinSet = this.binSets[this.binSets.length === 1 ? 0 : 1]
+            this.otherBinSet = this.otherBinSet ? this.otherBinSet : otherBinSet
         }
     },
 
@@ -148,16 +141,13 @@ export default {
             return this.otherBinSet ? this.otherBinSet.name : ''
         },
         byName() {
-            return this.potentialBy === 'count' ? '# contigs' : '# bp'
-        },
-        plotButtonDisabled() {
-            return (!this.otherPotentialBinSet && !this.otherBinSet) ||
-                   (this.otherBinSet === this.otherPotentialBinSet &&
-                    this.binSet === this.potentialBinSet &&
-                    this.by === this.potentialBy)
+            return this.by === 'count' ? 'shared contigs' : 'basepairs'
         },
         binsMap() {
             return d3Map([...this.bins, ...this.otherBins], bin => bin.id)
+        },
+        binSets() {
+            return this.$store.state.binSets
         },
         connectedBins() {
             if (!this.selectedBin) return []
@@ -185,10 +175,16 @@ export default {
         assembly() {
             this.plotData = { bins1: [], bins2: [], matrix: [] }
             this.otherBinSet = null
-            this.otherPotentialBinSet = null
             this.otherBins = []
             this.selectedBin = null
+        },
+        binSets() {
+            this.setBinSets()
         }
+    },
+
+    created() {
+        this.setBinSets()
     }
 }
 </script>
@@ -215,6 +211,12 @@ export default {
 
 #chord {
     padding: 0 .5rem;
+}
+
+#plot-btn {
+    font-size: .9rem;
+    letter-spacing: .025rem;
+    border-top-width: 1px;
 }
 </style>
 

@@ -1,7 +1,7 @@
 <template>
 <div>
     <svg :width="width" :height="height" style="width: 100%">
-        <g>
+        <g :transform="`translate(${width/2},${height/2})`">
             <transition-group name="flip" tag="g" class="groups">
                 <path
                     v-for="group in chordData.groups"
@@ -29,15 +29,9 @@
             </g>
         </g>
 
-        <g class="labels">
-            <text
-                v-for="(bin, i) in connected"
-                font-size="16"
-                :text-anchor="leftSelected ? 'start' : 'end'"
-                :x="leftSelected ? 10 : width - 10"
-                :y="labelScale(bin.id)">
-                {{ binsMap.get(bin.id).name }}: {{ bin.percentage }}%
-            </text>
+        <g v-show="selected" :transform="`translate(${width/3},${height/3})`">
+            <rect id="info-rect" :width="width / 3" :height="height / 3"></rect>
+            <text>Bin 4</text>
         </g>
 
         <defs>
@@ -53,10 +47,10 @@
             </path>
         </defs>
 
-        <text id="name" font-size="30" v-show="!selected">
+        <text id="name" font-size="30" v-show="visible">
             <textPath xlink:href="#name-path">{{ name }}</textPath>
         </text>
-        <text id="otherName" font-size="30" v-show="!selected">
+        <text id="otherName" font-size="30" v-show="visible">
             <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
         </text>
     </svg>
@@ -165,7 +159,8 @@ export default {
         'otherBins', 
         'selected',
         'connected',
-        'binsMap'
+        'binsMap',
+        'visible'
     ],
     
     methods: {
@@ -198,28 +193,12 @@ export default {
             // True if the selected bin belongs to the left bin set. Otherwise false.
             // This also means that the value is false when there is no bin selected.
             return this.selected && this.plotData.bins1.indexOf(this.selected.id) > -1
-        },
-        gTransform() {
-            let scaling = .5
-            if (this.selected) scaling = this.leftSelected ? .75 : .25
-            const x = this.width * scaling
-            return 'translate(' + x + ',' + this.height / 2 + ')'
         }
     },
 
     watch: {
         plotData() {
             this.updatePlot()
-        },
-        gTransform() {
-            d3.select(this.$el).select('svg > g')
-                .transition()
-                .attr('transform', this.gTransform)
-        },
-        connected() {
-            this.labelScale = this.labelScale
-                .domain([...this.connected.map(x => x.id), -1])
-                .range([this.height, 0])
         }
     },
     
@@ -240,12 +219,11 @@ export default {
     cursor: pointer;
 }
 
-.labels > text:hover {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
 .flip-move {
   transition: transform .2s;
+}
+
+#info-rect {
+    opacity: .7;
 }
 </style>
