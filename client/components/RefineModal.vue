@@ -32,9 +32,9 @@ export default {
             this.$store.commit('SET_MESSAGE', 'Fetching data')
             this.$store.dispatch('SELECT_BIN_SET', this.refineBinSet).then(() => {
                 this.$store.commit('SET_MESSAGE', '')
-                this.$router.push({ path: 'refine' })
-                this.hide()
             })
+            this.$router.push({ path: 'refine' })
+            this.hide()
         },
         switch_() {
             this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
