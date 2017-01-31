@@ -36,7 +36,7 @@
                         </div>
                     </popover>
 
-                    <router-link to="refine" tag="button" class="btn btn-success btn-sm btn-header">
+                    <button class="btn btn-success btn-sm btn-header" @click="refine()">
                         <span class="fa fa-wrench"></span>
                         Refine bins
                     </button>
@@ -112,7 +112,7 @@
                 <bar-column :percentage="(bin.contamination * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <bar-column :percentage="(bin.completeness * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <td>
-                    <button class="btn btn-secondary btn-block btn-sm" @click.stop="refineBin(bin)">
+                    <button class="btn btn-secondary btn-block btn-sm" @click.stop="refine(bin)">
                         Refine
                     </button>
                 </td>
@@ -173,8 +173,13 @@ export default {
                 this.sortOrder ='desc'
             }
         },
-        refineBin(bin) {
-            this.$store.dispatch('PUSH_REFINE_BIN', bin)
+        refine(bin) {
+            if (this.refineBinSet && this.refineBinSet.id !== this.binSet.id) {
+                $('#refine-modal').modal('show')
+                return
+            }
+            if (bin) this.$store.dispatch('PUSH_REFINE_BIN', bin)
+            this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
             this.$router.push({ path: 'refine' })
         },
         addBin() {
@@ -194,6 +199,9 @@ export default {
     },
     
     computed: {
+        refineBinSet() {
+            return this.$store.state.refineBinSet
+        },
         binSet() {
             return this.$store.state.binSet
         },

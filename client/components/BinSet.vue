@@ -29,6 +29,28 @@
                 Overview
             </router-link>
         </div>
+
+
+        <div style="margin-top: .5rem" v-if="refineBinSet && refineBinSet.id == binSet.id">
+            <span class="text-muted">
+                <span class="fa fa-wrench"></span>
+                Refinement in progress...
+                <a 
+                    href="#" 
+                    v-show="$route.path !== '/refine'"
+                    class="float-right text-muted" 
+                    style="text-decoration: underline"
+                   @click.prevent="viewRefine"
+                >View
+                </a>
+            </span>
+            <div style="opacity: .8">
+                <span v-for="bin in refineBins" style="font-size: .8rem; margin: 0 .5rem">
+                    <span class="fa fa-circle-o" :style="{ color: bin.color }"></span>
+                    {{ bin.name }}
+                </span>
+            </div>
+        </div>
     </div>
 </div>
 </template>
@@ -47,6 +69,22 @@ export default {
         select() {
             this.$store.dispatch('SELECT_BIN_SET', this.binSet).then(() => {
             })
+        },
+        viewRefine() {
+            this.$store.commit('SET_MESSAGE', 'Fetching data')
+            this.$store.dispatch('SELECT_BIN_SET', this.binSet).then(() => {
+                this.$store.commit('SET_MESSAGE', '')
+                this.$router.push({ path: 'refine' })
+            })
+        }
+    },
+
+    computed: {
+        refineBinSet() {
+            return this.$store.state.refineBinSet
+        },
+        refineBins() {
+            return this.$store.state.refineBins
         }
     }
 }

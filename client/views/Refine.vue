@@ -55,7 +55,6 @@ export default {
         return {
             xData: 'gc',
             yData: 'length',
-            // selectedBins: [],
             selectedContigs: [],
             loading: false,
             colorBy: 'binSet',
@@ -128,7 +127,7 @@ export default {
             return this.$store.state.bins
         },
         binSet() {
-            return this.$store.state.binSet
+            return this.$store.state.refineBinSet
         },
         selectedBins() {
             return this.$store.state.refineBins

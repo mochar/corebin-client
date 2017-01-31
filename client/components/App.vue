@@ -22,6 +22,7 @@
 
     <assembly-upload-modal></assembly-upload-modal>
     <bin-set-upload-modal></bin-set-upload-modal>
+    <refine-modal></refine-modal>
 </div>
 </template>
 
@@ -31,12 +32,14 @@ import { mapActions } from 'vuex'
 import Selection from '../components/Selection'
 import AssemblyUploadModal from '../components/AssemblyUploadModal'
 import BinSetUploadModal from '../components/BinSetUploadModal'
+import RefineModal from '../components/RefineModal'
 
 export default {
     components: {
         Selection,
         AssemblyUploadModal,
-        BinSetUploadModal
+        BinSetUploadModal,
+        RefineModal
     },
 
     methods: {

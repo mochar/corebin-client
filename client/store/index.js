@@ -14,6 +14,7 @@ const state = {
     bin: null,
 
     // Refinement
+    refineBinSet: null,
     refineBins: [],
     contigs: [],
 
@@ -91,6 +92,11 @@ const mutations = {
     },
     SET_CONTIGS(state, contigs) {
         state.contigs = contigs
+    },
+    SET_REFINE_BIN_SET(state, binSet) {
+        state.refineBinSet = binSet
+        state.refineBins = []
+        state.contigs = []
     }
 }
 
