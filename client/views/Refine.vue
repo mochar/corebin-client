@@ -1,6 +1,6 @@
 <template>
 <div class="card" id="refine">
-    <div class="text-center" id="plot-btns">
+    <div class="text-center d-flex justify-content-center" id="plot-btns">
         <plot-popover
             :xData="xData"
             :yData="yData"
@@ -153,10 +153,10 @@ export default {
 }
 
 #plot-btns {
-    display: block;
     position: absolute;
     width: 50%;
     right: 25%;
+    top: 1rem;
 }
 
 #plot-btns button {

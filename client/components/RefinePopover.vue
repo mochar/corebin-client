@@ -1,6 +1,6 @@
 <template>
 <popover :options="{ closeable: true }">
-    <button slot="button" class="btn btn-secondary">
+    <button slot="button" class="btn btn-secondary" style="border-left: 0; border-right: 0">
         <span class="fa fa-wrench"></span>
         Refine
     </button>
