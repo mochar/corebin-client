@@ -6,18 +6,13 @@
 
     <div class="card-block" style="padding: .15rem 1rem;">
         <div class="btn-group">
+            <rename-popover 
+                @done="name => { $store.commit('RENAME_ASSEMBLY', { assembly, name }) }"
+                :url="`a/${assembly.id}`">
+            </rename-popover>
             <popover :options="{placement: 'bottom'}">
                 <button slot="button" class="btn btn-secondary btn-sm btn-header"
-                        style="border-right: 0">
-                    <span class="fa fa-fw fa-pencil"></span>
-                </button>
-                <div slot="body">
-                    <input placeholder="Assembly name">
-                    <button class="btn btn-secondary btn-sm">Rename</button>
-                </div>
-            </popover>
-            <popover :options="{placement: 'bottom'}">
-                <button slot="button" class="btn btn-secondary btn-sm btn-header">
+                        style="border-right: 0; border-left: 0">
                     <span class="fa fa-fw fa-trash"></span> 
                 </button>
                 <div slot="body">
@@ -39,6 +34,7 @@
 
 <script>
 import Popover from '../components/Popover'
+import RenamePopover from '../components/RenamePopover'
 
 export default {
     data() {
@@ -49,7 +45,8 @@ export default {
     props: ['assembly'],
 
     components: {
-        Popover
+        Popover,
+        RenamePopover
     },
 
     methods: {

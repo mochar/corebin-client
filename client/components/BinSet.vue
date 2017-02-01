@@ -4,19 +4,13 @@
 
     <div class="card-block" style="padding: .15rem 1rem .5rem;">
         <div class="btn-group">
+            <rename-popover 
+                @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
+                :url="`a/${binSet.assembly}/bs/${binSet.id}`">
+            </rename-popover>
             <popover :options="{placement: 'bottom'}">
                 <button slot="button" class="btn btn-secondary btn-sm btn-header"
-                        style="border-right: 0">
-                    <span class="fa fa-fw fa-pencil"></span>
-                </button>
-                <div slot="body">
-                    <input placeholder="Bin-set name">
-                    <button class="btn btn-secondary btn-sm">Rename</button>
-                </div>
-            </popover>
-            <popover :options="{placement: 'bottom'}">
-                <button slot="button" class="btn btn-secondary btn-sm btn-header"
-                        style="border-right: 0">
+                        style="border-right: 0; border-left: 0">
                     <span class="fa fa-fw fa-trash"></span> 
                 </button>
                 <div slot="body">
@@ -57,12 +51,14 @@
 
 <script>
 import Popover from '../components/Popover'
+import RenamePopover from '../components/RenamePopover'
 
 export default {
     props: ['binSet'],
 
     components: {
-        Popover
+        Popover,
+        RenamePopover
     },
 
     methods: {

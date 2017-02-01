@@ -79,8 +79,17 @@ const mutations = {
     APPEND_BIN(state, bin) {
         state.bins.push(bin)
     },
-    RENAME_BIN_SET(state, name) {
-        state.binSet.name = name
+    RENAME_BIN_SET(state, { binSet, name }) {
+        const index = state.binSets.findIndex(bs => bs.id === binSet.id)
+        let bs = Object.assign({}, binSet)
+        bs.name = name
+        Vue.set(state.binSets, index, bs)
+    },
+    RENAME_ASSEMBLY(state, { assembly, name }) {
+        const index = state.assemblies.findIndex(a => a.id === assembly.id)
+        let a = Object.assign({}, assembly)
+        a.name = name
+        Vue.set(state.assemblies, index, a)
     },
     PUSH_REFINE_BIN(state, { bin, contigs }) {
         state.refineBins.push(bin)
