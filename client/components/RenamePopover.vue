@@ -1,7 +1,7 @@
 <template>
 <popover>
-    <button slot="button" class="btn btn-secondary btn-sm btn-header">
-        <span class="fa fa-fw fa-pencil"></span>
+    <button slot="button" :class="`btn btn-secondary btn-sm ${this.btnClasses}`">
+        <span class="fa fa-pencil"></span>
     </button>
 
     <div slot="body">
@@ -24,7 +24,13 @@ export default {
         }
     },
 
-    props: ['url'],
+    props: {
+        url: String,
+        btnClasses: {
+            type: String,
+            default: ''
+        }
+    },
 
     components: {
         Popover

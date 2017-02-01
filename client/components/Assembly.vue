@@ -7,6 +7,7 @@
     <div class="card-block" style="padding: .15rem 1rem;">
         <div class="btn-group">
             <rename-popover 
+                btn-classes="btn-header"
                 @done="name => { $store.commit('RENAME_ASSEMBLY', { assembly, name }) }"
                 :url="`a/${assembly.id}`">
             </rename-popover>

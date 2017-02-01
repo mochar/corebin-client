@@ -5,6 +5,7 @@
     <div class="card-block" style="padding: .15rem 1rem .5rem;">
         <div class="btn-group">
             <rename-popover 
+                btn-classes="btn-header"
                 @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
                 :url="`a/${binSet.assembly}/bs/${binSet.id}`">
             </rename-popover>

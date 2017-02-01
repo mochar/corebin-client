@@ -111,9 +111,16 @@
                 <bar-column :percentage="(bin.gc * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <bar-column :percentage="(bin.contamination * 100).toFixed(2)" :color="bin.color"></bar-column>
                 <bar-column :percentage="(bin.completeness * 100).toFixed(2)" :color="bin.color"></bar-column>
-                <td>
-                    <button class="btn btn-secondary btn-block btn-sm" @click.stop="refine(bin)">
-                        Refine
+                <td class="btn-group justify-content-center" style="width: 100%">
+                    <rename-popover 
+                        @done="name => { $store.commit('RENAME_BIN', { bin, name }) }"
+                        :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
+                    </rename-popover>
+                    <button class="btn btn-secondary btn-sm" style="border-left: 0">
+                        <span class="fa fa-trash"></span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" @click.stop="refine(bin)">
+                        <span class="fa fa-wrench"></span>
                     </button>
                 </td>
             </tr>
@@ -126,6 +133,7 @@
 import Popover from '../components/Popover'
 import BarColumn from '../components/BarColumn'
 import SortHead from '../components/SortHead'
+import RenamePopover from '../components/RenamePopover'
 
 export default {
     data() {
@@ -146,7 +154,8 @@ export default {
     components: {
         Popover,
         BarColumn,
-        SortHead
+        SortHead,
+        RenamePopover
     },
 
     methods: {
