@@ -94,9 +94,11 @@ const mutations = {
         state.contigs = contigs
     },
     SET_REFINE_BIN_SET(state, binSet) {
-        state.refineBinSet = binSet
-        state.refineBins = []
-        state.contigs = []
+        if (!state.refineBinSet || state.refineBinSet.id !== binSet.id) {
+            state.refineBinSet = binSet
+            state.refineBins = []
+            state.contigs = []
+        }
     }
 }
 
