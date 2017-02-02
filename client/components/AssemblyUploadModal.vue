@@ -23,7 +23,7 @@
             <div class="form-check">
                 <label class="form-check-label">
                 <input type="checkbox" name="fourmers" class="form-check-input">
-                    Calculate tetranucleotide frequencies
+                    Calculate contig tetranucleotide frequencies
                 </label>
             </div>
             
