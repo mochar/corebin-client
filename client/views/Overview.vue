@@ -116,10 +116,14 @@
                         @done="name => { $store.commit('RENAME_BIN', { bin, name }) }"
                         :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
                     </rename-popover>
-                    <button class="btn btn-secondary btn-sm" style="border-left: 0">
+                    <delete-popover 
+                        @done="commitDeletion(bin)"
+                        :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
+                    </delete-popover>
+<!--                     <button class="btn btn-secondary btn-sm" style="border-left: 0">
                         <span class="fa fa-trash"></span>
                     </button>
-                    <button class="btn btn-secondary btn-sm" @click.stop="refine(bin)">
+ -->                    <button class="btn btn-secondary btn-sm" @click.stop="refine(bin)">
                         <span class="fa fa-wrench"></span>
                     </button>
                 </td>
@@ -134,6 +138,7 @@ import Popover from '../components/Popover'
 import BarColumn from '../components/BarColumn'
 import SortHead from '../components/SortHead'
 import RenamePopover from '../components/RenamePopover'
+import DeletePopover from '../components/DeletePopover'
 
 export default {
     data() {
@@ -155,7 +160,8 @@ export default {
         Popover,
         BarColumn,
         SortHead,
-        RenamePopover
+        RenamePopover,
+        DeletePopover
     },
 
     methods: {
@@ -204,6 +210,10 @@ export default {
                 this.newBinSetName = ''
                 this.renaming = false
             })
+        },
+        commitDeletion(bin) {
+            this.$store.commit('REMOVE_BIN', bin)
+            this.$store.commit('REMOVE_REFINE_BIN', bin)
         }
     },
     

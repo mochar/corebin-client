@@ -114,6 +114,9 @@ const mutations = {
             state.refineBins = []
             state.contigs = []
         }
+    },
+    REMOVE_BIN(state, bin) {
+        state.bins = state.bins.filter(b => b.id !== bin.id)
     }
 }
 
