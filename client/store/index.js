@@ -194,7 +194,11 @@ const actions = {
                 commit('SET_ASSEMBLY_JOB', null)
                 const location = jqXHR.getResponseHeader('Location')
                 $.getJSON(location, assembly => commit('APPEND_ASSEMBLIES', assembly))
-            } 
+            } else {
+                let updatedJob = Object.assign({}, job)
+                updatedJob.meta = data
+                commit('SET_ASSEMBLY_JOB', updatedJob)
+            }
         })
     },
     CANCEL_ASSEMBLY_JOB({ commit, state }) {
