@@ -1,5 +1,5 @@
 <template>
-<div id="bins">
+<div id="bins" v-if="binSet">
     <div class="card-header" id="bins-header">
         <div class="row">
             <div class="col-6">
@@ -120,10 +120,7 @@
                         @done="commitDeletion(bin)"
                         :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
                     </delete-popover>
-<!--                     <button class="btn btn-secondary btn-sm" style="border-left: 0">
-                        <span class="fa fa-trash"></span>
-                    </button>
- -->                    <button class="btn btn-secondary btn-sm" @click.stop="refine(bin)">
+                    <button class="btn btn-secondary btn-sm" @click.stop="refine(bin)">
                         <span class="fa fa-wrench"></span>
                     </button>
                 </td>

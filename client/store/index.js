@@ -117,6 +117,10 @@ const mutations = {
     },
     REMOVE_BIN(state, bin) {
         state.bins = state.bins.filter(b => b.id !== bin.id)
+    },
+    REMOVE_BIN_SET(state, binSet) {
+        const index = state.binSets.findIndex(bs => bs.id === binSet.id)
+        state.binSets.splice(index, 1)
     }
 }
 
