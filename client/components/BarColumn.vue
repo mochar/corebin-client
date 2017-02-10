@@ -19,7 +19,7 @@ export default {
 
     computed: {
         labelText() {
-            if (this.label) return this.label
+            if (this.label !== undefined) return this.label
             if (this.percentage !== null) return `${this.percentage.toFixed(2)}%`
             return 'NA'
         }

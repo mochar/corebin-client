@@ -46,7 +46,7 @@
 
         <div v-if="!selected.length" class="row" id="table-head">
             <sort-head
-                class="col-2"
+                class="col"
                 label="Bin"
                 name="name"
                 :by="sortBy"
@@ -54,15 +54,23 @@
                 @sort="sort('name')">
             </sort-head>
             <sort-head
-                class="col-2"
-                label="Size (bp)"
+                class="col"
+                label="# contigs"
                 name="size"
                 :by="sortBy"
                 :order="sortOrder"
                 @sort="sort('size')">
             </sort-head>
             <sort-head
-                class="col-2"
+                class="col"
+                label="Size (Mbp)"
+                name="mbp"
+                :by="sortBy"
+                :order="sortOrder"
+                @sort="sort('mbp')">
+            </sort-head>
+            <sort-head
+                class="col"
                 label="GC"
                 name="gc"
                 :by="sortBy"
@@ -70,7 +78,7 @@
                 @sort="sort('gc')">
             </sort-head>
             <sort-head
-                class="col-2"
+                class="col"
                 label="Contamination"
                 name="contamination"
                 :by="sortBy"
@@ -78,14 +86,14 @@
                 @sort="sort('contamination')">
             </sort-head>
             <sort-head
-                class="col-2"
+                class="col"
                 label="Completeness"
                 name="completeness"
                 :by="sortBy"
                 :order="sortOrder"
                 @sort="sort('completeness')">
             </sort-head>
-            <div class="col-2">
+            <div class="col">
             </div>
         </div>
 
@@ -108,6 +116,7 @@
             <tr v-for="bin in sortedBins" @click="selectBin(bin.id)" :style="binStyle(bin.id)">
                 <td class="align-middle">{{bin.name}}</td>
                 <bar-column :percentage="sizeToPercentage(bin.size)" :color="bin.color" :label="bin.size"></bar-column>
+                <bar-column :percentage="mbpToPercentage(bin.mbp)" :color="bin.color" :label="bin.mbp.toFixed(2)"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.gc)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.contamination)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
@@ -164,6 +173,9 @@ export default {
     methods: {
         sizeToPercentage(size) {
             return ((size - this.minSize) * 100) / (this.maxSize - this.minSize)
+        },
+        mbpToPercentage(mbp) {
+            return ((mbp - this.minMbp) * 100) / (this.maxMbp - this.minMbp)
         },
         proportionToPercentage(size) {
             return size !== null ? size * 100 : null
@@ -232,6 +244,12 @@ export default {
         },
         minSize() {
             return Math.min(...this.bins.map(bin => bin.size))
+        },
+        maxMbp() {
+            return Math.max(...this.bins.map(bin => bin.mbp))
+        },
+        minMbp() {
+            return Math.min(...this.bins.map(bin => bin.mbp))
         },
         sortedBins() {
             return this.bins.sort((a, b) => {
