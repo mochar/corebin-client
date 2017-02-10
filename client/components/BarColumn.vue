@@ -1,7 +1,9 @@
 <template>
 <td class="align-middle">
-    <div :style="{'background-color': color, 'height': `${percentage}%`}"></div>
-    <span class="text-center">
+    <div v-if="labelText !== 'NA'" 
+         :style="{'background-color': color, 'height': `${percentage}%`}">
+    </div>
+    <span class="text-center" :class="{ 'text-muted': labelText === 'NA' }">
         {{ labelText }}
     </span>
 </td>
@@ -9,11 +11,17 @@
 
 <script>
 export default {
-    props: ['percentage', 'color', 'label'],
+    props: {
+        percentage: Number,
+        color: String,
+        label: [String, Number]
+    },
 
     computed: {
         labelText() {
-            return this.label ? this.label : `${this.percentage}%`
+            if (this.label) return this.label
+            if (this.percentage !== null) return `${this.percentage.toFixed(2)}%`
+            return 'NA'
         }
     }
 }

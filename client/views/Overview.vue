@@ -108,9 +108,9 @@
             <tr v-for="bin in sortedBins" @click="selectBin(bin.id)" :style="binStyle(bin.id)">
                 <td class="align-middle">{{bin.name}}</td>
                 <bar-column :percentage="sizeToPercentage(bin.size)" :color="bin.color" :label="bin.size"></bar-column>
-                <bar-column :percentage="(bin.gc * 100).toFixed(2)" :color="bin.color"></bar-column>
-                <bar-column :percentage="(bin.contamination * 100).toFixed(2)" :color="bin.color"></bar-column>
-                <bar-column :percentage="(bin.completeness * 100).toFixed(2)" :color="bin.color"></bar-column>
+                <bar-column :percentage="proportionToPercentage(bin.gc)" :color="bin.color"></bar-column>
+                <bar-column :percentage="proportionToPercentage(bin.contamination)" :color="bin.color"></bar-column>
+                <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
                 <td class="btn-group justify-content-center" style="width: 100%">
                     <rename-popover 
                         @done="name => { $store.commit('RENAME_BIN', { bin, name }) }"
@@ -163,8 +163,10 @@ export default {
 
     methods: {
         sizeToPercentage(size) {
-            const percentage = ((size - this.minSize) * 100) / (this.maxSize - this.minSize)
-            return +percentage.toFixed(2)
+            return ((size - this.minSize) * 100) / (this.maxSize - this.minSize)
+        },
+        proportionToPercentage(size) {
+            return size !== null ? size * 100 : null
         },
         selectBin(binId) {
             const index = this.selected.indexOf(binId)
