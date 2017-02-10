@@ -201,9 +201,14 @@ export default {
                 $('#refine-modal').modal('show')
                 return
             }
-            if (bin) this.$store.dispatch('PUSH_REFINE_BIN', bin)
+            if (bin && !this.binIsInRefine(bin.id)) {
+                this.$store.dispatch('PUSH_REFINE_BIN', bin)
+            } 
             this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
             this.$router.push({ path: 'refine' })
+        },
+        binIsInRefine(binId) {
+            return this.$store.state.refineBins.map(b => b.id).includes(binId)
         },
         addBin() {
             this.adding = true
