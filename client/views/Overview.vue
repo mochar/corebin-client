@@ -155,10 +155,7 @@ export default {
             selected: [],
 
             newBinName: '',
-            adding: false, // true when adding bin
-
-            newBinSetName: '',
-            renaming: false // true when renaming bin set
+            adding: false // true when adding bin
         }
     },
 
@@ -213,13 +210,6 @@ export default {
             this.$store.dispatch('SUBMIT_BIN', this.newBinName).then(() => {
                 this.newBinName = ''
                 this.adding = false
-            })
-        },
-        renameBinSet() {
-            this.renaming = true
-            this.$store.dispatch('RENAME_BIN_SET', this.newBinSetName).then(() => {
-                this.newBinSetName = ''
-                this.renaming = false
             })
         },
         commitDeletion(bin) {
