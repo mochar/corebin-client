@@ -36,10 +36,6 @@
                 BIN-SETS
             </strong>
             <div style="position: absolute; right: 0; display: flex; top: 0">
-                <router-link tag="div" class="selection-button" to="/compare"
-                        :class="{ 'inactive-button': !binSets.length }">
-                    <span class="fa fa-balance-scale fa-lg text-muted"></span>
-                </router-link>
                 <div class="selection-button">
                     <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                           data-target="#bin-set-upload-modal">
@@ -60,6 +56,12 @@
                 v-for="job in binSetJobs"
                 :job="job">
             </job>
+
+            <router-link tag="strong" id="compare-link" class="text-muted" to="/compare"
+                    :class="{ 'inactive-button': !binSets.length }">
+                <span class="fa fa-balance-scale"></span>
+                COMPARE BIN-SETS
+            </router-link>
         </div>
     </div>
     
@@ -186,6 +188,19 @@ export default {
     text-align: center;
     display: block;
     text-decoration: underline;
+}
+
+#compare-link {
+    cursor: pointer;
+    text-decoration: underline;
+    text-align: center;
+    display: block;
+    margin-top: 1rem;
+    font-size: .9rem;
+}
+
+#compare-link:hover {
+    color: #444 !important;
 }
 </style>
 
