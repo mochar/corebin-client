@@ -46,12 +46,6 @@
                 >View
                 </a>
             </span>
-            <div style="opacity: .8">
-                <span v-for="bin in refineBins" style="font-size: .8rem; margin: 0 .5rem">
-                    <span class="fa fa-circle-o" :style="{ color: bin.color }"></span>
-                    {{ bin.name }}
-                </span>
-            </div>
         </div>
     </div>
 </div>
@@ -102,9 +96,6 @@ export default {
     computed: {
         refineBinSet() {
             return this.$store.state.refineBinSet
-        },
-        refineBins() {
-            return this.$store.state.refineBins
         }
     }
 }
