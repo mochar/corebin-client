@@ -107,24 +107,21 @@ input[type="file"] {
             transition: initial;
 }
 
-.btn-primary, .btn-success, .btn-danger {
-    border-width: 0 1px 2px 1px;
+.btn-primary:active, 
+.btn-success:active, 
+.btn-danger:active,
+.btn-secondary:active {
+    top: 1px;
 }
-.btn-secondary { border-width: 1px 1px 2px 1px }
-
-.btn-primary:active, .btn-success:active, .btn-danger:active {
-    border-width: 2px 1px 0 1px;
-}
-.btn-secondary:active { border-width: 2px 1px 1px 1px }
 
 .btn-primary { border-color: #01549b; }
-.btn-primary:hover { background-color: #0275d8; }
+.btn-primary:hover, .btn-primary:active { background-color: #0275d8; }
 .btn-success { border-color: #419641; }
-.btn-success:hover { background-color: #5cb85c; }
+.btn-success:hover, .btn-success:hover { background-color: #5cb85c; }
 .btn-danger { border-color: #c12e2a; }
-.btn-danger:hover { background-color: #d9534f; }
+.btn-danger:hover, .btn-danger:active { background-color: #d9534f; }
 .btn-secondary { border-color: #adadad; }
-.btn-secondary:hover { background-color: #fff;  }
+.btn-secondary:hover, .btn-secondary:active { background-color: #fff;  }
 
 .btn:focus {
     box-shadow: inherit;
