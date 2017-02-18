@@ -11,7 +11,7 @@
             <div class="form-group">
                 <input type="text" class="form-control form-control-sm" name="name" placeholder="Name">
             </div>
-            
+
             <div class="form-group">
                 <label for="contigs">Contigs</label>
                 <input type="file" name="contigs" class="form-control-file form-control-sm">
@@ -19,14 +19,14 @@
                     The contigs used for binning in fasta format.
                 </small>
             </div>
-            
+
             <div class="form-check">
                 <label class="form-check-label">
                 <input type="checkbox" name="fourmers" class="form-check-input">
                     Calculate contig tetranucleotide frequencies
                 </label>
             </div>
-            
+
             <div class="form-group">
                 <label for="coverage">Coverage</label>
                 <input type="file" name="coverage" class="form-control-file form-control-sm">
@@ -34,30 +34,30 @@
                     <router-link to="/help">How should this file look like?</router-link>
                 </small>
             </div>
-            
+
             <div class="form-group">
-                <label>Find essential genes</label>
+                <label>Identify marker genes</label>
                 <div class="form-check" style="margin-bottom: 0">
                     <label class="form-check-label">
                         <input type="checkbox" name="hmmer" class="form-check-input">
-                            Search contigs for essential genes
+                            Search contigs for single-copy marker genes
                     </label>
                 </div>
                 <small class="form-text text-muted">
-                    Allows for calculations of completeness and contamination per bin.
+                    Allows to determine the completeness and contamination per bin.
                 </small>
             </div>
         </div>
-        
-        <button 
-            class="btn btn-link btn-sm" 
+
+        <button
+            class="btn btn-link btn-sm"
             @click.prevent="hide">Cancel
         </button>
-        
+
         <button type="submit" class="btn btn-primary pull-right submit-button btn-sm" :disabled="loading">
             <span class="fa fa-refresh fa-spin" v-show="loading"></span>
             Upload
-        </button> 
+        </button>
     </form>
 
 </div>
@@ -75,7 +75,7 @@ export default {
             loading: false
         }
     },
-    
+
     methods: {
         ...mapActions({
             submitAssemblyAction: 'SUBMIT_ASSEMBLY'
