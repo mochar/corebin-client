@@ -30,7 +30,7 @@
             <small class="text-muted">Added {{ assembly.submitDate }}</small>
         </p>
     </div>
-</li>
+</div>
 </template>
 
 <script>

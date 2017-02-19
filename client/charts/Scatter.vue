@@ -6,17 +6,26 @@
                 <stop offset="100.0%" stop-color="#00f"></stop>
             </linearGradient>
         </defs>
-        <g id="legend" v-show="colorBy === 'gc' && showLegend">
-            <g class="axis" :transform="`translate(${width-30},10)`"></g>
-            <rect 
-                :width="20" 
-                :height="height / 8" 
-                :y="10" :x="width - 30" 
-                id="color-legend">
-            </rect>
+        <g id="legend" :transform="`translate(${width},0)`">
+            <g v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
+                <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
+                <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
+            </g>
+            <g v-show="colorBy === 'gc' && showLegend" 
+               :transform="`translate(0,${$store.state.refineBins.length * 30 + 50})`">
+                <text text-anchor="start" x="-30">GC</text>
+                <g class="axis" :transform="'translate(-30,10)'"></g>
+                <rect 
+                    :width="20" 
+                    :height="120" 
+                    :y="12" :x="-30" 
+                    id="color-legend">
+                </rect>
+            </g>
         </g>
         <g class="x axis" :transform="`translate(0,${height})`"></g>
         <g class="y axis" :transform="'translate(0,0)'"></g>
+        <g id="circles"></g>
     </svg>
 </template>
 
@@ -77,7 +86,7 @@ export default {
             this.svg.select('g.y').call(this.yAxis)
             this.svg.select('g#legend g.axis').call(this.legendAxis)
 
-            const circle = this.svg.selectAll('circle')
+            const circle = this.svg.select('g#circles').selectAll('circle')
                 .data(this.contigs, function c() { return c.id })
 
             circle.transition()
@@ -236,5 +245,10 @@ export default {
     fill: url(#gradient);
     opacity: .8;
     /*stroke: #000;*/
+}
+
+#legend circle {
+    stroke: black;
+    stroke-width: .5;
 }
 </style>
