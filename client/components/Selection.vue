@@ -3,7 +3,7 @@
     <div id="assemblies">
         <div v-if="showAssemblies">
             <strong class="selection-button" style="position: absolute; right: 0">
-                <span class="fa fa-plus fa-lg text-muted" data-toggle="modal" 
+                <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                       data-target="#assembly-upload-modal">
                 </span>
             </strong>
@@ -52,7 +52,7 @@
                 :binSet="bs">
             </bin-set>
 
-            <job 
+            <job
                 v-for="job in binSetJobs"
                 :job="job">
             </job>
@@ -64,14 +64,14 @@
             </router-link>
         </div>
     </div>
-    
+
     <div class="float-right" id="madeby">
         <div>
             <small><router-link to="/home"><span class="fa fa-home"></span> Home</router-link></small> |
             <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
         </div>
-        <small class="text-muted">Made by Mohammed Charrout</small> <br>
-        <small class="text-muted">Supervised by Lex Overmars</small>
+        <small class="text-muted">Developed by Mohammed Charrout</small> <br>
+        <small class="text-muted">Project-coordinator Lex Overmars</small>
     </div>
 </div>
 </template>
@@ -105,7 +105,7 @@ export default {
             this.cancelAssemblyJob().done(() => this.cancelling = false)
         }
     },
-    
+
     computed: {
         ...mapState([
             'assemblies',
@@ -116,11 +116,11 @@ export default {
             'binSetJobs'
         ])
     },
-    
+
     beforeMount() {
         // Fetch data from server
         this.$store.dispatch('GET_ASSEMBLIES').then(() => {
-            this.loading = false 
+            this.loading = false
         })
     }
 }
@@ -133,7 +133,7 @@ export default {
 }
 
 .btn-sm {
-    padding: .25rem .5rem; 
+    padding: .25rem .5rem;
 }
 
 #madeby {
