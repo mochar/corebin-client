@@ -2,51 +2,49 @@
 <div id="help" class="card card-block">
     <h2>CoReBIN <small class="text-muted">Comparison and Refinement of metagenomic binning</small></h2>
     <hr>
-        
+
     <h3 id="help-intro">Introduction</h3>
     <p>
-        CoReBIN is a user-friendly web-based tool to compare the results of different metagenomic binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.               
+        CoReBIN is a user-friendly web-based tool to compare the results of different metagenomic binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.
     </p>
-    
+
     <h3 id="help-ui">User interface</h3>
     <p>
     <img src="img/interface.png" style="margin:10px;">
-        <ol>
+    Within CoReBIN, four distinct views are available:
+        <ul>
             <li><b>Home:</b> Introduction and upload of metagenomic assemblies and bin-sets. </li>
-            <li><b>Overview:</b> Summary of the selected (selection using dropdown in 6) metagenomic assembly (contig lengths, GC% of contigs). In addition, the characteristics of the uploaded bin-sets can be inspected here. </li>
             <li><b>Compare:</b> Visually compare two different binning results.</li>
             <li><b>Refine:</b> Visual refinement of bins using GC%, coverage, tetranucleotide frequencies. </li>
-            <li><b>Help:</b> Documentation on usage, file formats and demo data.</li>
-            <li><b>Assembly selection:</b> Select your metagenomic assembly of interest (upload in Home-panel).</li>
-            <li><b>Binset selection:</b> Select your binset assembly of interest (upload in Home-panel).</li>
-        </ol>
-    </p>           
-    
-    <h3 id="help-uploading">Uploading your data</h3>
-    
+            <li><b>Help:</b> Documentation of usage, file formats and demo data.</li>
+        </ul>
+    </p>
+
+    <h3>Uploading your data</h3>
+
     <p>
     Users can upload their own data in the Home-panel. The following data is needed to analyse your metagenomic bins using CoReBIN:
         <ul>
         <li>Metagenomic assembly</li>
-        <li>Coverage data <i>not required</i></li>             
+        <li>Coverage data <i>not required</i></li>
         <li>Metagenomic bins</li> (i.e. metagenomic binning results)
         </ul>
     First upload your metagenomic assembly and corresponding coverage data (if available) in the "1. Upload assembly"-box (this might take a while, be patient!) and subsequently upload your metagenomic bin set in the "2. Upload bin set".-box </br>Details on file format are given below.
     </p>
-    
+
     <h4>1. Metagenomic assembly and Coverage data</h4>
-    
+
     <h5>Metagenomic assembly</h5>
     <p>
         Fasta format. The headers have to correspond to the contig IDs used in the coverage table and the contig IDs used in the binning table(s). We have limited the upload of metagenomic assemblies to files up to xxx mb, larger metagenomic assemblies can not be analyzed using CoReBIN.
     </p>
-    
+
     <img src="img/upload.png" style="float:right;margin:15px;">
-    
-                
+
+
     <h5>Coverage data</h5>
     <p>
-        You can add a file containing coverage information when uploading a metagenomic assembly. Sequencing coverage describes the average number of reads that align to, or "cover," your metagenomic assembly. You can determine the coverage by mapping your reads to your assembly using tools such as <a href="http://bio-bwa.sourceforge.net/">BWA</a> and <a href="http://bowtie-bio.sourceforge.net/bowtie2/">Bowtie2</a>. Differential coverage information is utilized by many metagenomic binning methods and can be very useful to refine bins.  
+        You can add a file containing coverage information when uploading a metagenomic assembly. Sequencing coverage describes the average number of reads that align to, or "cover," your metagenomic assembly. You can determine the coverage by mapping your reads to your assembly using tools such as <a href="http://bio-bwa.sourceforge.net/">BWA</a> and <a href="http://bowtie-bio.sourceforge.net/bowtie2/">Bowtie2</a>. Differential coverage information is utilized by many metagenomic binning methods and can be very useful to refine bins.
         </br></br>
         The input file should be a tab separated file with on each line a contigID followed by the coverage in one or more samples, i.e. if you have coverage data on one sample you have one additional column, if you have two different coverages you will need two additional columns. </br></br>
         ContigID1 <i>&lt;tab&gt;</i> Coverage_sample1  <i>&lt;tab&gt;</i>  Coverage_sample2  </br>
@@ -57,22 +55,22 @@
         </br>
         It is important that the contig IDs are exact matches with the ones in the fasta headers of the assembly.
         </br>
-    </p>	
-        
-    
+    </p>
+
+
     <h4>2. Metagenomic bins</h4>
-    <p>	
+    <p>
         ContigID1 <i>&lt;tab&gt;</i> BinId </br>
         ContigID4 <i>&lt;tab&gt;</i> BinId </br>
         ContigID2 <i>&lt;tab&gt;</i> BinId </br>
         ...<i>&lt;tab&gt;</i> ... </br>
         ...<i>&lt;tab&gt;</i> ... </br>
     </br>
-    Again, it is important that the contig IDs are exact matches with the ones in the assembly. Unbinned contigs can be left out in this table and no specific ordering is required.          
+    Again, it is important that the contig IDs are exact matches with the ones in the assembly. Unbinned contigs can be left out in this table and no specific ordering is required.
     </br>
     </p>
-    
-    
+
+
     <h3>Metagenomic binning</h3>
     <p>
     Recently published metagenomic binning programs and methods:
@@ -84,16 +82,16 @@
         <li><a href="http://claczny.github.io/VizBin/">VizBin</a>: Laczny, Cedric C., et al. "VizBin-an application for reference-independent visualization and human-augmented binning of metagenomic data." <i>Microbiome</i> 3.1 (2015): 1.</li>
         <li><a href="https://github.com/younglululu/COCACOLA">COCACOLA</a>: Lu, Yang Young, et al. "COCACOLA: binning metagenomic contigs using sequence COmposition, read CoverAge, CO-alignment, and paired-end read LinkAge." <i>Bioinformatics</i> (2016): btw290.</li>
         </ul>
-    Most of these methods use differential coverage information. All programs will return a fasta file for each bin that they produce. 
+    Most of these methods use differential coverage information. All programs will return a fasta file for each bin that they produce.
     </p>
-    
+
     <h3>Demo data-set</h3>
     <p>
     A simulated dataset of short sequences consisting of three different samples, each containing 10.000.000  paired-end 100 nt reads, was created using the supplied error model for Illumina GA IIx with TrueSeq SBS Kit v5-GA using GemSim (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22336055" target="_blank">McElroy, Luciani & Thomas, 2012</a>). Reads were derived from a set of 10 reference genomes and chosen with probability proportional to the species abundance and genome size (see table below).
     </p>
     <p>
-    Subsequently, the simulated reads were co-assembled using MEGAHIT (<a href="http://www.ncbi.nlm.nih.gov/pubmed/25609793" target="_blank">Li et al, 2015</a>). Coverage for the three different samples was determined using bowtie2 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22388286" target="_blank">Langmead & Salzberg, 2012</a>). The assembly and differential coverage table were then used as input for two different binning programs (default parameters): MaxBin 2.0 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/26515820" target="_blank">Wu, Simmons and Singer, 2015</a>) and MetaBAT (<a href="https://peerj.com/articles/1165/" target="_blank">Kang et al, 2015</a>). 
-    
+    Subsequently, the simulated reads were co-assembled using MEGAHIT (<a href="http://www.ncbi.nlm.nih.gov/pubmed/25609793" target="_blank">Li et al, 2015</a>). Coverage for the three different samples was determined using bowtie2 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22388286" target="_blank">Langmead & Salzberg, 2012</a>). The assembly and differential coverage table were then used as input for two different binning programs (default parameters): MaxBin 2.0 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/26515820" target="_blank">Wu, Simmons and Singer, 2015</a>) and MetaBAT (<a href="https://peerj.com/articles/1165/" target="_blank">Kang et al, 2015</a>).
+
     <table style="border-spacing: 10px; border-collapse: separate;">
         <tr style="font-weight: bolder;">
             <td>Organism</td>
@@ -183,21 +181,21 @@
             <td>0.16</td>
             <td>0.13</td>
         </tr>
-    </table>          
-    
-    
-    </p>  
-    
-    <h3>Demo data files</h3> 
+    </table>
+
+
+    </p>
+
+    <h3 id="help_demo_files">Demo data files</h3>
     <p>
         <ul>
-            <li><a href="demo_data/demo_assembly.fa" rel="nofollow">Assembly (30 mb)</a></li>
-            <li><a href="demo_data/demo_differential_coverage.txt" rel="nofollow">Differential coverage table</a></li>
-            <li><a href="demo_data/demo_maxbin_defaul_results.txt" rel="nofollow">Binning result (MaxBin, default settings)</a></li>
-            <li><a href="demo_data/demo_metabat_default_results.txt" rel="nofollow">Binning result (MetaBAT, default settings)</a></li>
+            <li><a href="static/demo_assembly.fa" rel="nofollow">Assembly (30 mb)</a></li>
+            <li><a href="static/demo_differential_coverage.txt" rel="nofollow">Differential coverage table</a></li>
+            <li><a href="static/demo_maxbin_defaul_results.txt" rel="nofollow">Binning result (MaxBin, default settings)</a></li>
+            <li><a href="static/demo_metabat_default_results.txt" rel="nofollow">Binning result (MetaBAT, default settings)</a></li>
 
         </ul>
-    </p>           
+    </p>
 </div>
 </div>
 </template>
