@@ -29,11 +29,6 @@
             </g>
         </g>
 
-        <g v-show="selected" :transform="`translate(${width/3},${height/3})`">
-            <rect id="info-rect" :width="width / 3" :height="height / 3"></rect>
-            <text>Bin 4</text>
-        </g>
-
         <defs>
             <path 
                 id="name-path" 
@@ -47,12 +42,14 @@
             </path>
         </defs>
 
-        <text id="name" font-size="30" v-show="visible">
-            <textPath xlink:href="#name-path">{{ name }}</textPath>
-        </text>
-        <text id="otherName" font-size="30" v-show="visible">
-            <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
-        </text>
+        <g v-show="visible">
+            <text id="name" font-size="30">
+                <textPath xlink:href="#name-path">{{ name }}</textPath>
+            </text>
+            <text id="otherName" font-size="30">
+                <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
+            </text>
+        </g>
     </svg>
 </div>
 </template>
