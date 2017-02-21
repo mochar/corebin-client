@@ -23,7 +23,7 @@
             <div class="form-check">
                 <label class="form-check-label">
                 <input type="checkbox" name="fourmers" class="form-check-input">
-                    Calculate contig tetranucleotide frequencies
+                    Calculate tetranucleotide frequencies
                 </label>
             </div>
 
@@ -31,7 +31,7 @@
                 <label for="coverage">Coverage</label>
                 <input type="file" name="coverage" class="form-control-file form-control-sm">
                 <small class="form-text text-muted">
-                    <router-link to="/help">How should this file look like?</router-link>
+                    <router-link to="/help">What should this file look like?</router-link>
                 </small>
             </div>
 
@@ -44,7 +44,7 @@
                     </label>
                 </div>
                 <small class="form-text text-muted">
-                    Allows to determine the completeness and contamination per bin.
+                    Assess the completeness and contamination of each bin.
                 </small>
             </div>
         </div>

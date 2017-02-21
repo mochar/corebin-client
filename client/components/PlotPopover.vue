@@ -7,18 +7,18 @@
 
     <div slot="body" style="width: 25rem; overflow-x: hidden">
         <h5>Plot parameters</h5>
-        
+
         <div class="row align-items-center" style="margin-bottom: .5rem">
             <div class="col-4">
-                <span>Horizontal axis</span>
+                <span>X axis</span>
             </div>
             <div class="col-4">
                 <select class="custom-select btn btn-secondary btn-xs" style="width: 100%" v-model="x">
                     <optgroup label="Sequence">
-                        <option value="gc">GC</option>
-                        <option value="length">Length</option>
+                        <option value="gc">GC%</option>
+                        <option value="length">Length (bp)</option>
                     </optgroup>
-                    <optgroup label="PCA" v-if="assembly.hasFourmerfreqs">
+                    <optgroup label="Tetranucleotides (PCA)" v-if="assembly.hasFourmerfreqs">
                         <option value="pc_1">PC 1</option>
                         <option value="pc_2">PC 2</option>
                         <option value="pc_3">PC 3</option>
@@ -40,7 +40,7 @@
 
         <div class="row align-items-center" style="margin-bottom: .5rem">
             <div class="col-4">
-                <span>Vertical axis</span>
+                <span>Y axis</span>
             </div>
             <div class="col-4">
                 <select class="custom-select btn btn-secondary btn-xs" style="width: 100%" v-model="y">
@@ -75,7 +75,7 @@
             <div class="col-4">
                 <select class="custom-select btn btn-secondary btn-xs" style="width: 100%" v-model="by">
                     <option value="binSet">Bin set</option>
-                    <option value="gc">GC</option>
+                    <option value="gc">GC%</option>
                 </select>
             </div>
             <div class="col-4">
@@ -104,10 +104,10 @@ export default {
     },
 
     props: [
-        'xData', 
-        'yData', 
-        'colorBy', 
-        'colorBinSet', 
+        'xData',
+        'yData',
+        'colorBy',
+        'colorBinSet',
         'showLegend',
         'xLog',
         'yLog'
