@@ -10,9 +10,9 @@
     <h4>Getting started</h4>
     <p>
         <ol>
-        <li>To <b>upload your metagenomic assembly (fasta format)</b>, click the <span class="fa fa-plus"></span>-icon at the top in the left side-bar. Next, enter a name, select your file and click "Upload assembly". It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
-        <li>Next you can <b>upload your metagenomic binning results</b> by clicking the "Analyze"-buttom in the left side-bar and subsequently clicking the <span class="fa fa-plus"></span>-icon. To do so, you need a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
-        <li>Now, <b>inspect your bins</b> by clicking the "Overview"-button. Click on the <span class="fa fa-wrench"></span>-icon to <b>refine individual bins</b>.</li>
+        <li>To <b>upload your metagenomic assembly (fasta format)</b>, click the <span class="fa fa-plus"></span> icon at the top in the left side-bar. Next, enter a name, select your file and click "Upload assembly". It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
+        <li>Next you can <b>upload your metagenomic binning results</b> by clicking the "Analyze"-buttom in the left side-bar and subsequently clicking the <span class="fa fa-plus"></span> icon. You need a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
+        <li>Now, <b>inspect your bins</b> by clicking the "Overview"-button. Click on the <span class="fa fa-wrench"></span> icon to <b>refine individual bins</b>.</li>
         </ol>
     </p>
 
