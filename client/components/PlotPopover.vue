@@ -10,7 +10,7 @@
 
         <div class="row align-items-center" style="margin-bottom: .5rem">
             <div class="col-4">
-                <span>X axis</span>
+                <span>X-axis</span>
             </div>
             <div class="col-4">
                 <select class="custom-select btn btn-secondary btn-xs" style="width: 100%" v-model="x">
@@ -40,15 +40,15 @@
 
         <div class="row align-items-center" style="margin-bottom: .5rem">
             <div class="col-4">
-                <span>Y axis</span>
+                <span>Y-axis</span>
             </div>
             <div class="col-4">
                 <select class="custom-select btn btn-secondary btn-xs" style="width: 100%" v-model="y">
                     <optgroup label="Sequence">
-                        <option value="gc">GC</option>
-                        <option value="length">Length</option>
+                        <option value="gc">GC%</option>
+                        <option value="length">Length (bp)</option>
                     </optgroup>
-                    <optgroup label="PCA" v-if="assembly.hasFourmerfreqs">
+                    <optgroup label="Tetranucleotides (PCA)" v-if="assembly.hasFourmerfreqs">
                         <option value="pc_1">PC 1</option>
                         <option value="pc_2">PC 2</option>
                         <option value="pc_3">PC 3</option>
