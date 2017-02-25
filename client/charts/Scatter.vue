@@ -11,7 +11,7 @@
                 <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
                 <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
             </g>
-            <g v-show="colorBy === 'gc' && showLegend" 
+            <g v-show="colorBy === 'gc'" 
                :transform="`translate(0,${$store.state.refineBins.length * 30 + 50})`">
                 <text text-anchor="start" x="-30">GC</text>
                 <g class="axis" :transform="'translate(-30,10)'"></g>
@@ -32,6 +32,7 @@
 <script>
 import { lasso } from 'd3-lasso'
 import * as d3 from 'd3'
+import { mapState } from 'vuex'
 
 export default {
     data() {
@@ -51,17 +52,6 @@ export default {
             sizeScale: null
         }
     },
-    
-    props: [
-        'contigs', 
-        'xData', 
-        'yData', 
-        'colorBy', 
-        'colorBinSet', 
-        'showLegend',
-        'xLog',
-        'yLog'
-    ],
     
     methods: {
         updatePlot() {
@@ -142,7 +132,8 @@ export default {
             this.lasso.selectedItems()
                 .classed('selected', true)
 
-            this.$emit('selected', this.lasso.selectedItems().data().map(c => c.id))
+            const selected = this.lasso.selectedItems().data().map(c => c.id)
+            this.$store.commit('SET_SELECTED_CONTIGS', selected)
         }
     },
 
@@ -181,7 +172,16 @@ export default {
     computed: {
         binSet() {
             return this.$store.state.binSet.id
-        }
+        },
+        ...mapState([
+            'xData',
+            'yData',
+            'xLog',
+            'yLog',
+            'colorBy',
+            'colorBinSet',
+            'contigs'
+        ])
     },
 
     watch: {
@@ -191,7 +191,19 @@ export default {
         colorBy() { this.updatePlot() },
         colorBinSet() { this.updatePlot() },
         xLog() { this.updatePlot() },
-        yLog() { this.updatePlot() }
+        yLog() { this.updatePlot() },
+        binSet(binSet) {
+            this.$store.commit('SET_PLOT_VALUE', { key: 'xData', value: 'gc' })
+            this.$store.commit('SET_PLOT_VALUE', { key: 'yData', value: 'length' })
+            this.$store.commit('SET_PLOT_VALUE', { key: 'xLog', value: false })
+            this.$store.commit('SET_PLOT_VALUE', { key: 'yLog', value: false })
+            this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value: binSet })
+        }
+    },
+
+    created() {
+        const binSet = this.$store.state.binSet.id
+        this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value: binSet })
     }
 }
 </script>

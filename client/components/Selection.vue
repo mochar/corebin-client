@@ -1,7 +1,7 @@
 <template>
 <div>
     <div id="assemblies">
-        <div v-if="showAssemblies">
+        <div v-if="$route.path === '/home'">
             <strong class="selection-button" style="position: absolute; right: 0">
                 <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                       data-target="#assembly-upload-modal">
@@ -26,12 +26,11 @@
 
             <job :job="assemblyJob" v-if="assemblyJob"></job>
         </div>
-        <div v-else>
-            <div class="selection-button" style="position: absolute; left: 0">
-                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"
-                      @click="showAssemblies = true">
-                </span>
-            </div>
+        
+        <div v-if="$route.path === '/overview' || $route.path === '/compare'">
+            <router-link tag="div" class="selection-button" style="position: absolute; left: 0" to="/home">
+                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
+            </router-link>
             <strong class="selection-title text-muted text-center">
                 BIN-SETS
             </strong>
@@ -63,6 +62,49 @@
                 COMPARE BIN-SETS
             </router-link>
         </div>
+        
+        <div v-if="$route.path === '/refine'">
+            <router-link tag="div" class="selection-button" style="position: absolute; left: 0" to="/overview">
+                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
+            </router-link>
+            <strong class="selection-title text-muted text-center">
+                REFINEMENT
+            </strong>
+            
+            <div class="card" style="border-width: 0 0 1px 0">
+                <div class="card-header" style="background: #F4F4F4">
+                    <ul class="nav nav-tabs card-header-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" 
+                                :class="{active: refinementTab === 'PlotTab'}"
+                                @click.prevent="refinementTab = 'PlotTab'">
+                                <span class="fa fa-line-chart"></span>
+                                Plot
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"
+                                :class="{active: refinementTab === 'RefineTab'}"
+                                @click.prevent="refinementTab = 'RefineTab'">
+                                <span class="fa fa-wrench"></span>
+                                Refine
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"
+                                :class="{active: refinementTab === 'BinsTab'}"
+                                @click.prevent="refinementTab = 'BinsTab'">
+                                <span class="fa fa-list"></span>
+                                Bins
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div id="tab-body">
+                    <component :is="refinementTab"></component>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="float-right" id="madeby">
@@ -81,19 +123,26 @@ import { mapState, mapActions } from 'vuex'
 import Assembly from '../components/Assembly'
 import BinSet from '../components/BinSet'
 import Job from '../components/Job'
+import PlotTab from '../components/PlotTab'
+import RefineTab from '../components/RefineTab'
+import BinsTab from '../components/BinsTab'
 
 export default {
     data() {
         return {
             cancelling: false,
-            showAssemblies: true
+            showAssemblies: true,
+            refinementTab: 'PlotTab'
         }
     },
 
     components: {
         Assembly,
         BinSet,
-        Job
+        Job,
+        PlotTab,
+        RefineTab,
+        BinsTab
     },
 
     methods: {
@@ -201,6 +250,12 @@ export default {
 
 #compare-link:hover {
     color: #444 !important;
+}
+
+#tab-body {
+    max-height: 80vh;
+    overflow-y: auto;
+    display: block;
 }
 </style>
 

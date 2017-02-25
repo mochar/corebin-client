@@ -17,11 +17,20 @@ const state = {
     refineBinSet: null,
     refineBins: [],
     contigs: [],
+    selectedContigs: [],
 
     // Jobs
     assemblyJob: null,
     binSetJobs: [],
     hmmerJobs: [],
+    
+    // Plot
+    xData: 'gc',
+    yData: 'length',
+    colorBy: 'binSet',
+    colorBinSet: null,
+    xLog: false,
+    yLog: false,
     
     // Other
     message: ''
@@ -121,6 +130,12 @@ const mutations = {
     REMOVE_BIN_SET(state, binSet) {
         const index = state.binSets.findIndex(bs => bs.id === binSet.id)
         state.binSets.splice(index, 1)
+    },
+    SET_PLOT_VALUE(state, { key, value }) {
+        state[key] = value
+    },
+    SET_SELECTED_CONTIGS(state, contigs) {
+        state.selectedContigs = contigs
     }
 }
 
