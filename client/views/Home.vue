@@ -4,18 +4,18 @@
     <hr>
 
     <p class="lead rounded" id="lead">
-        CoReBIN is a user-friendly web-based tool to compare the results of different binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.               
+        CoReBIN is a user-friendly web-based tool to compare the results of different binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.
     </p>
-    
+
     <h4>Getting started</h4>
     <p>
         <ol>
-        <li><b>Upload your metagenomic assembly (fasta format)</b> in the "1. Upload assembly"-box; enter a name, select your file and click "Save assembly". It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
-        <li>Next you can <b>upload your metagenomic binning results </b> in the "2. Upload bin set"-box. To do so, you need a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
-        <li>Now, <b>inspect your metagenomic assembly and bins</b> in the "Overview"-tab and <b>refine individual bins</b> in the "Refine"-tab.</li>
+        <li>To <b>upload your metagenomic assembly (fasta format)</b>, click the <span class="fa fa-plus"></span> icon at the top in the left side-bar. Next, enter a name, select your file and click "Upload assembly". It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
+        <li>Next you can <b>upload your metagenomic binning results</b> by clicking the "Analyze"-buttom in the left side-bar and subsequently clicking the <span class="fa fa-plus"></span> icon. You need a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
+        <li>Now, <b>inspect your bins</b> by clicking the "Overview"-button. Click on the <span class="fa fa-wrench"></span> icon to <b>refine individual bins</b>.</li>
         </ol>
-    </p>        
-    
+    </p>
+
     <h4>Input data</h4>
     <p>
         <ul>
@@ -25,7 +25,7 @@
         </ul>
         First want to try CoReBIN with demo-data? A simulated data-set is provided <a href="#help">here</a>).
     </p>
-    
+
     <h4>Metagenomic binning</h4>
     <p>
     Here are some suggestions of recently published metagenomic binning programs and methods:
@@ -36,7 +36,7 @@
         <li><a href="https://sourceforge.net/projects/maxbin/">MaxBin 2.0</a>: Wu, Yu-Wei, Blake A. Simmons, and Steven W. Singer. "MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets." <i>Bioinformatics</i> (2015): btv638.</li>
         <li><a href="http://claczny.github.io/VizBin/">VizBin</a>: Laczny, Cedric C., et al. "VizBin-an application for reference-independent visualization and human-augmented binning of metagenomic data." <i>Microbiome</i> 3.1 (2015): 1.</li>
         </ul>
-    </p>           
+    </p>
 </div>
 </template>
 

@@ -1,15 +1,15 @@
 <template>
 <div class="card-block">
     <div>
-        <span class="text-muted">Horizontal axis</span>
+        <span class="text-muted">X-axis</span>
         <div class="row align-items-center">
             <div class="col-6">
                 <select class="custom-select btn btn-secondary btn-xs col-6" v-model="xData">
                     <optgroup label="Sequence">
-                        <option value="gc">GC</option>
-                        <option value="length">Length</option>
+                        <option value="gc">GC%</option>
+                        <option value="length">Length (bp)</option>
                     </optgroup>
-                    <optgroup label="PCA" v-if="assembly.hasFourmerfreqs">
+                    <optgroup label="Tetranucleotides (PCA)" v-if="assembly.hasFourmerfreqs">
                         <option value="pc_1">PC 1</option>
                         <option value="pc_2">PC 2</option>
                         <option value="pc_3">PC 3</option>
@@ -30,15 +30,15 @@
     </div>
     
     <div style="margin-top: .5rem">
-        <span class="text-muted">Vertical axis</span>
+        <span class="text-muted">Y-axis</span>
         <div class="row align-items-center">
             <div class="col-6">
                 <select class="custom-select btn btn-secondary btn-xs col-6" v-model="yData">
                     <optgroup label="Sequence">
-                        <option value="gc">GC</option>
-                        <option value="length">Length</option>
+                        <option value="gc">GC%</option>
+                        <option value="length">Length (bp)</option>
                     </optgroup>
-                    <optgroup label="PCA" v-if="assembly.hasFourmerfreqs">
+                    <optgroup label="Tetranucleotides (PCA)" v-if="assembly.hasFourmerfreqs">
                         <option value="pc_1">PC 1</option>
                         <option value="pc_2">PC 2</option>
                         <option value="pc_3">PC 3</option>
@@ -64,7 +64,7 @@
             <div class="col-6">
                 <select class="custom-select btn btn-secondary btn-xs" v-model="colorBy">
                     <option value="binSet">Bin set</option>
-                    <option value="gc">GC</option>
+                    <option value="gc">GC%</option>
                 </select>
             </div>
             <div class="col-6" v-show="colorBy === 'binSet'">
