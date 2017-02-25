@@ -28,16 +28,21 @@
         </div>
         
         <div v-if="$route.path === '/overview' || $route.path === '/compare'">
-            <router-link tag="div" class="selection-button" style="position: absolute; left: 0" to="/home">
-                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
-            </router-link>
-            <strong class="selection-title text-muted text-center">
-                BIN-SETS
-            </strong>
-            <div style="position: absolute; right: 0; display: flex; top: 0">
+            <div class="navigation">
+                <router-link tag="div" class="selection-button" to="/home">
+                    <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
+                </router-link>
+                <div>
+                    <strong class="selection-title text-muted text-center" style="padding-bottom: 0">
+                        BIN-SETS
+                    </strong>
+                    <strong class="selection-sub text-muted text-center">
+                        {{ assembly.name }}
+                    </strong>
+                </div>
                 <div class="selection-button">
                     <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
-                          data-target="#bin-set-upload-modal">
+                        data-target="#bin-set-upload-modal">
                     </span>
                 </div>
             </div>
@@ -64,12 +69,20 @@
         </div>
         
         <div v-if="$route.path === '/refine'">
-            <router-link tag="div" class="selection-button" style="position: absolute; left: 0" to="/overview">
-                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
-            </router-link>
-            <strong class="selection-title text-muted text-center">
-                REFINEMENT
-            </strong>
+            <div class="navigation">
+                <router-link tag="div" class="selection-button" to="/overview">
+                    <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
+                </router-link>
+                <div>
+                    <strong class="selection-title text-muted text-center" style="padding-bottom: 0">
+                        REFINEMENT
+                    </strong>
+                    <strong class="selection-sub text-muted text-center">
+                        {{ binSet.name }}
+                    </strong>
+                </div>
+                <div></div>
+            </div>
             
             <div class="card" style="border-width: 0 0 1px 0">
                 <div class="card-header" style="background: #F4F4F4">
@@ -211,6 +224,14 @@ export default {
     padding: .5rem ;
 }
 
+.selection-sub {
+    display: block;
+    font-size: .9rem;
+    font-weight: 500;
+    opacity: .9;
+    margin: -.15rem;
+}
+
 .selection-button {
     cursor: pointer;
     font-size: 1.0rem;
@@ -256,6 +277,12 @@ export default {
     max-height: 80vh;
     overflow-y: auto;
     display: block;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>
 
