@@ -3,7 +3,7 @@ const pkg = require('../package')
 
 module.exports = {
   port: 4000,
-  title: 'corebin-client',
+  title: 'CoReBIN - Compare and Refine metagenomic bins',
   vendor: Object.keys(pkg.dependencies),
   babel: {
     babelrc: false,
