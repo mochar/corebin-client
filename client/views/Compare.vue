@@ -174,6 +174,7 @@ export default {
     watch: {
         assembly() {
             this.plotData = { bins1: [], bins2: [], matrix: [] }
+            this.binSet = null
             this.otherBinSet = null
             this.otherBins = []
             this.selectedBin = null
