@@ -28,7 +28,7 @@
         </div>
         
         <div v-if="$route.path === '/overview' || $route.path === '/compare'">
-            <div class="navigation">
+            <div class="navigation" style="padding-bottom: .75rem">
                 <router-link tag="div" class="selection-button" to="/home">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
                 </router-link>
