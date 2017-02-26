@@ -122,7 +122,7 @@
 
     <div class="float-right" id="madeby">
         <div>
-            <small><router-link to="/home"><span class="fa fa-home"></span> Home</router-link></small> |
+            <small><router-link to="/home"><img src="../img/logo.svg" id="logo-home" /> Home</router-link></small> |
             <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
         </div>
         <small class="text-muted">Developed by Mohammed Charrout</small> <br>
@@ -283,6 +283,10 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+#logo-home {
+    height: 1.5rem;
 }
 </style>
 
