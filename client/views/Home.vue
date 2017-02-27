@@ -1,7 +1,7 @@
 <template>
 <div class="card card-block" id="home">
     <h2>
-        <img src="../img/logo.svg" style="height: 5.5rem" /> CoReBIN 
+        <img src="../img/logo.svg" style="height: 5.5rem" /> CoReBIN
         <small class="text-muted">Comparison and Refinement of metagenomic bins</small>
     </h2>
 
@@ -12,8 +12,8 @@
     <h4>Getting started</h4>
     <p>
         <ol>
-        <li>To <b>upload your metagenomic assembly (fasta format)</b>, click the <span class="fa fa-plus"></span> icon at the top in the left side-bar. Next, enter a name, select your file and click "Upload assembly". It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
-        <li>Next you can <b>upload your metagenomic binning results</b> by clicking the "Analyze"-buttom in the left side-bar and subsequently clicking the <span class="fa fa-plus"></span> icon. You need a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
+        <li><b>Upload your metagenomic assembly (fasta format)</b>: click the <span class="fa fa-plus"></span> icon at the top in the left side-bar. Name your assembly and select your fasta-file. In order to assess completeness and contamination of your bins later on, tick the "Search contigs for single-copy marker genes"-box (this will increase processing time). It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
+        <li>Next you can <b>upload your metagenomic binning results</b> by clicking the "Analyze"-buttom in the left side-bar and subsequently clicking the <span class="fa fa-plus"></span> icon. Here you have to provide a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
         <li>Now, <b>inspect your bins</b> by clicking the "Overview"-button. Click on the <span class="fa fa-wrench"></span> icon to <b>refine individual bins</b>.</li>
         </ol>
     </p>
