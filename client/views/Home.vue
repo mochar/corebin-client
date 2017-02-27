@@ -18,14 +18,14 @@
         </ol>
     </p>
 
-    <h4>Input data</h4>
+    <h4>Which data do I need?</h4>
     <p>
         <ul>
             <li>Metagenomic assembly (fasta format; <a href="#help">see details</a>)</li>
             <li>Coverage table (<a href="#help">see details</a>) <i>not required</i></li>
             <li>One or more binning results (<a href="#help">see details</a>)</li>
         </ul>
-        First want to try CoReBIN with demo-data? A simulated data-set is provided <a href="#help">here</a>).
+        First want to try CoReBIN with demo-data? A simulated data-set is provided <a href="#help">here</a>.
     </p>
 
     <h4>Metagenomic binning</h4>
