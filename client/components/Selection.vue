@@ -1,7 +1,7 @@
 <template>
 <div>
     <div id="assemblies">
-        <div v-if="$route.path === '/home'">
+        <div v-if="showAssemblies && $route.path !== '/refine'">
             <strong class="selection-button" style="position: absolute; right: 0">
                 <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                       data-target="#assembly-upload-modal">
@@ -27,9 +27,9 @@
             <job :job="assemblyJob" v-if="assemblyJob"></job>
         </div>
         
-        <div v-if="$route.path === '/overview' || $route.path === '/compare'">
+        <div v-if="!showAssemblies && $route.path !== '/refine'">
             <div class="navigation" style="padding-bottom: .75rem">
-                <router-link tag="div" class="selection-button" to="/home">
+                <router-link tag="div" class="selection-button" to="/home" @click.native="showAssemblies = true">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
                 </router-link>
                 <div>
