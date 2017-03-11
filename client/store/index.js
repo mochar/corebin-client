@@ -258,6 +258,7 @@ const actions = {
         })
     },
     PUSH_REFINE_BIN({ commit, state }, bin) {
+        commit('SET_MESSAGE', 'Fetching data...')
         const payload = {
             fields: 'id,length,gc,name',
             bins: bin.id,
@@ -267,6 +268,7 @@ const actions = {
             items: state.assembly.size
         }
         return $.getJSON(`${ROOTURL}/a/${state.assembly.id}/c`, payload).then(data => {
+            commit('SET_MESSAGE', '')
             data.contigs.forEach(c => c.bin = bin.id)
             const contigs = data.contigs
             commit('PUSH_REFINE_BIN', { bin, contigs })
