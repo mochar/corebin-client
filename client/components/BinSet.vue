@@ -26,12 +26,12 @@
         <div style="margin-top: .5rem" v-if="refineBinSet && refineBinSet.id == binSet.id">
             <span class="text-muted">
                 <span class="fa fa-wrench"></span>
-                Refinement in progress...
+                <span>Refinement in progress...</span>
                 <a 
                     href="#" 
                     v-show="$route.path !== '/refine'"
-                    class="float-right text-muted" 
-                    style="text-decoration: underline"
+                    class="text-muted" 
+                    style="text-decoration: underline; position: absolute; right: 1rem"
                    @click.prevent="viewRefine"
                 >View
                 </a>
