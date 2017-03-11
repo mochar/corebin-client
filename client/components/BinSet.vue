@@ -1,35 +1,25 @@
 <template>
-<div class="card bin-set">
+<router-link to="/overview" @click.native="select" tag="a" 
+    :class="{ 'selected-bin-set': $store.state.binSet.id == binSet.id }"
+    class="list-group-item list-group-item-action flex-column align-items-start bin-set">
     <span class="name">{{ binSet.name }}</span>
 
     <div class="card-block" style="padding: .15rem 1rem .5rem;">
         <div class="btn-group">
             <rename-popover 
                 btn-classes="btn-header"
+                text="Rename"
                 @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
                 :url="`a/${binSet.assembly}/bs/${binSet.id}`">
             </rename-popover>
-<!--             <popover :options="{placement: 'bottom'}">
-                <button slot="button" class="btn btn-secondary btn-sm btn-header"
-                        style="border-right: 0; border-left: 0">
-                    <span class="fa fa-fw fa-trash"></span> 
-                </button>
-                <div slot="body">
-                    <button class="btn btn-danger btn-sm">Delete bin-set</button>
-                </div>
-            </popover>
- -->
+
             <delete-popover 
                 btn-classes="btn-header"
+                text="Remove"
                 @done="commitDeletion"
+                style="border-right: 1px solid #adadad;"
                 :url="`a/${binSet.assembly}/bs/${binSet.id}`">
             </delete-popover>
-
-            <router-link class="btn btn-secondary btn-sm btn-header float-right"
-                    to="/overview" tag="button" @click.native="select">
-                <span class="fa fa-eye"></span>
-                Overview
-            </router-link>
         </div>
 
 
@@ -48,7 +38,7 @@
             </span>
         </div>
     </div>
-</div>
+</router-link>
 </template>
 
 <script>
@@ -106,5 +96,12 @@ export default {
     margin-bottom: 0;
     border-left: 0;
     border-right: 0;
+}
+
+.selected-bin-set {
+    -webkit-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
+    box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
+    background-color: #f7f7f9;
 }
 </style>

@@ -2,6 +2,7 @@
 <popover>
     <button slot="button" :class="`btn btn-secondary btn-sm ${this.btnClasses}`">
         <span class="fa fa-pencil"></span>
+        {{ text }}
     </button>
 
     <div slot="body">
@@ -27,6 +28,10 @@ export default {
     props: {
         url: String,
         btnClasses: {
+            type: String,
+            default: ''
+        },
+        text: {
             type: String,
             default: ''
         }

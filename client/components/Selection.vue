@@ -18,17 +18,19 @@
                 </a>
             </div>
 
-            <assembly
-                v-for="a in assemblies"
-                @selected="showAssemblies = false"
-                :assembly="a">
-            </assembly>
+            <div class="list-group">
+                <assembly
+                    v-for="a in assemblies"
+                    @selected="showAssemblies = false"
+                    :assembly="a">
+                </assembly>
+            </div>
 
             <job :job="assemblyJob" v-if="assemblyJob"></job>
         </div>
         
         <div v-if="!showAssemblies && $route.path !== '/refine'">
-            <div class="navigation" style="padding-bottom: .75rem">
+            <div class="navigation" style="padding-bottom: .5rem">
                 <router-link tag="div" class="selection-button" to="/home" @click.native="showAssemblies = true">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
                 </router-link>
