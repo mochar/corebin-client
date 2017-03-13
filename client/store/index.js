@@ -165,8 +165,6 @@ const actions = {
         }).then((data, status, xhr) => {
             const job = { location: xhr.getResponseHeader('Location'), meta: data }
             commit('SET_JOBS', [job])
-        }, (xhr, textStatus, errorThrown) => {
-            console.log('assembly failed')
         })
     },
     SUBMIT_BIN_SET({ commit }, { assembly, formData }) {

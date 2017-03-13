@@ -6,6 +6,11 @@
 
     <h5 class="modal-title">Assembly upload</h5>
 
+    <div class="alert alert-danger" id="alert" v-if="errorMessage">
+        <span class="fa fa-exclamation-triangle" style="margin-right: .25rem"></span>
+        {{ errorMessage }}
+    </div>
+
     <form name="assembly-form" method="post" enctype="multipart/form-data" @submit.prevent="submitAssembly">
         <div class="card-block">
             <div class="form-group">
@@ -72,7 +77,8 @@ import { mapActions } from 'vuex'
 export default {
     data() {
         return {
-            loading: false
+            loading: false,
+            errorMessage: null
         }
     },
 
@@ -83,15 +89,27 @@ export default {
         submitAssembly(event) {
             this.loading = true
             const formData = new FormData(event.srcElement)
-            this.submitAssemblyAction({ formData }).done(() => {
+            this.submitAssemblyAction({ formData }).then(() => {
                 this.loading = false
                 event.srcElement.reset()
                 this.hide()
+            }, xhr => {
+                this.loading = false
+                this.errorMessage = xhr.responseJSON.message
             })
         },
         hide() {
+            this.errorMessage = null
+            event.srcElement.reset()
             $(this.$el).modal('hide')
         }
     }
 }
 </script>
+
+<style scoped>
+#alert {
+    padding: .25rem 1rem;
+    margin-top: 1rem;
+}
+</style>
