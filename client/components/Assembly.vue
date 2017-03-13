@@ -20,7 +20,7 @@
                     Remove
                 </button>
                 <div slot="body">
-                    <button class="btn btn-danger btn-sm">Delete assembly</button>
+                    <button class="btn btn-danger btn-sm" @click="setDeleted">Delete assembly</button>
                 </div>
             </popover>
         </div>
@@ -61,6 +61,16 @@ export default {
                 })
             }
             this.$emit('selected')
+        },
+        setDeleted() {
+            $.ajax({
+                url: `${ROOTURL}/a/${this.assembly.id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ deleted: true })
+            }).then(() => {
+                this.$store.commit('REMOVE_ASSEMBLY', this.assembly)
+            })
         }
     },
 

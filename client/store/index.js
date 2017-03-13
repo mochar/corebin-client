@@ -131,6 +131,10 @@ const mutations = {
         const index = state.binSets.findIndex(bs => bs.id === binSet.id)
         state.binSets.splice(index, 1)
     },
+    REMOVE_ASSEMBLY(state, assembly) {
+        const index = state.assemblies.findIndex(a => a.id === assembly.id)
+        state.assemblies.splice(index, 1)
+    },
     SET_PLOT_VALUE(state, { key, value }) {
         state[key] = value
     },
