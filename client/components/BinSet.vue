@@ -102,6 +102,13 @@ export default {
     -webkit-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
     box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
-    background-color: #f7f7f9;
+    background-color: white;
+}
+
+.list-group-item-action,
+.list-group-item-action:focus, 
+.list-group-item-action:hover,
+.list-group-item-action:active {
+    background-color: white;
 }
 </style>
