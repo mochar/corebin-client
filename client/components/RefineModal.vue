@@ -29,7 +29,7 @@ export default {
             $(this.$el).modal('hide')
         },
         continue_() {
-            const refineAssembly = this.$store.state.assemblies.filter(a => a.id === this.refineBinSet.id)[0]
+            const refineAssembly = this.$store.state.assemblies.filter(a => a.id === this.refineBinSet.assembly)[0]
             this.$store.commit('SET_MESSAGE', 'Fetching data')
             this.$store.dispatch('SELECT_ASSEMBLY', refineAssembly).then(() => {
                 this.$store.dispatch('SELECT_BIN_SET', this.refineBinSet).then(() => {

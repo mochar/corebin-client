@@ -192,7 +192,7 @@ export default {
         colorBinSet() { this.updatePlot() },
         xLog() { this.updatePlot() },
         yLog() { this.updatePlot() },
-        binSet(binSet) {
+        refineBinSet(binSet) {
             this.$store.commit('SET_PLOT_VALUE', { key: 'xData', value: 'gc' })
             this.$store.commit('SET_PLOT_VALUE', { key: 'yData', value: 'length' })
             this.$store.commit('SET_PLOT_VALUE', { key: 'xLog', value: false })
