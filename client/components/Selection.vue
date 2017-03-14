@@ -13,7 +13,8 @@
 
             <div v-if="assemblies.length === 0 && !assemblyJob">
                 <span class="text-muted empty-message">No assemblies.</span>
-                <a href="#" id="try-link" class="text-muted">
+                <a href="#" id="try-link" class="text-muted" data-toggle="modal"
+                    data-target="#demo-modal">
                     Try CoReBIN with demo data
                 </a>
             </div>

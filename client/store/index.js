@@ -53,7 +53,6 @@ const mutations = {
     APPEND_ASSEMBLIES(state, assembly) {
         assembly.submitDate = moment(assembly.submitDate).fromNow()
         state.assemblies.push(assembly)
-        if (state.assemblies.length === 1) state.assembly = assembly
     },
     SET_BIN_SETS(state, binSets) {
         state.binSets = binSets
@@ -154,6 +153,12 @@ const actions = {
         commit('SELECT_BIN_SET', binSet)
         return dispatch('GET_BINS')
     },
+    SELECT_ASSEMBLY_AND_FIRST_BIN_SET({ dispatch, state }, assembly) {
+        return dispatch('SELECT_ASSEMBLY', assembly).then(() => {
+            if (state.binSets.length === 0) return
+            return dispatch('SELECT_BIN_SET', state.binSets[0])
+        })
+    },
     SUBMIT_ASSEMBLY({ commit }, { formData }) {
         return $.post({
             url: `${ROOTURL}/a`,
@@ -191,15 +196,11 @@ const actions = {
             commit('SET_JOBS', respJobs[0].jobs)
             commit('SET_ASSEMBLIES', respAssemblies[0].assemblies)
             commit('SET_MESSAGE', '')
-            // if (respAssemblies[0].assemblies.length) {
-            //     dispatch('SELECT_ASSEMBLY', respAssemblies[0].assemblies[0])
-            // } else {
-            //     commit('SET_MESSAGE', '')
-            // }
         })
     },
     GET_BIN_SETS({ commit, state }) {
         return $.getJSON(`${ROOTURL}/a/${state.assembly.id}/bs`).then(data => {
+            commit('SELECT_BIN_SET', null)
             commit('SET_BIN_SETS', data.binSets)
             commit('SET_MESSAGE', '')
         })
@@ -211,13 +212,17 @@ const actions = {
             commit('SET_MESSAGE', '')
         })
     },
-    CHECK_ASSEMBLY_JOB({ commit, state }) {
+    CHECK_ASSEMBLY_JOB({ commit, state, dispatch }) {
         const job = state.assemblyJob
         $.getJSON(job.location, (data, textStatus, jqXHR) => {
             if (jqXHR.status == 201) {
                 commit('SET_ASSEMBLY_JOB', null)
                 const location = jqXHR.getResponseHeader('Location')
-                $.getJSON(location, assembly => commit('APPEND_ASSEMBLIES', assembly))
+                $.getJSON(location, assembly => {
+                    commit('APPEND_ASSEMBLIES', assembly)
+                    if (state.assemblies.length === 1) 
+                        dispatch('SELECT_ASSEMBLY_AND_FIRST_BIN_SET', assembly)
+                })
             } else {
                 let updatedJob = Object.assign({}, job)
                 updatedJob.meta = data

@@ -100,7 +100,6 @@ export default {
         },
         hide() {
             this.errorMessage = null
-            event.srcElement.reset()
             $(this.$el).modal('hide')
         }
     }

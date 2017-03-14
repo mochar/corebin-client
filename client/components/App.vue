@@ -23,6 +23,7 @@
     <assembly-upload-modal></assembly-upload-modal>
     <bin-set-upload-modal></bin-set-upload-modal>
     <refine-modal></refine-modal>
+    <demo-request-modal></demo-request-modal>
 </div>
 </template>
 
@@ -33,13 +34,15 @@ import Selection from '../components/Selection'
 import AssemblyUploadModal from '../components/AssemblyUploadModal'
 import BinSetUploadModal from '../components/BinSetUploadModal'
 import RefineModal from '../components/RefineModal'
+import DemoRequestModal from '../components/DemoRequestModal'
 
 export default {
     components: {
         Selection,
         AssemblyUploadModal,
         BinSetUploadModal,
-        RefineModal
+        RefineModal,
+        DemoRequestModal
     },
 
     methods: {

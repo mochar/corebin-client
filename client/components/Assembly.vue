@@ -1,5 +1,5 @@
 <template>
-<router-link to="/overview" tag="a" @click.native="select" 
+<a href="#" @click.prevent="select" 
     class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="name-block">
         <span class="name">{{ assembly.name }}</span>
@@ -29,7 +29,7 @@
             <small class="text-muted">Added {{ assembly.submitDate }}</small>
         </p>
     </div>
-</router-link>
+</a>
 </template>
 
 <script>
@@ -52,12 +52,12 @@ export default {
     methods: {
         select() {
             const currentAssembly = this.$store.state.assembly
+            if (currentAssembly && currentAssembly.id === this.assembly.id) {
+                if (this.binSets.length > 0) this.$router.push({ path: 'overview' })
+            }
             if (!currentAssembly || currentAssembly.id !== this.assembly.id) {
-                this.$store.dispatch('SELECT_ASSEMBLY', this.assembly).then(() => {
-                    if (this.binSets.length === 0) return
-                    this.$store.dispatch('SELECT_BIN_SET', this.binSets[0]).then(() => {
-                        this.$router.push({ path: 'overview' })
-                    })
+                this.$store.dispatch('SELECT_ASSEMBLY_AND_FIRST_BIN_SET', this.assembly).then(() => {
+                    if (this.binSets.length > 0) this.$router.push({ path: 'overview' })
                 })
             }
             this.$emit('selected')
