@@ -2,7 +2,8 @@
 <div>
     <div id="assemblies">
         <div v-if="showAssemblies && $route.path !== '/refine'">
-            <strong class="selection-button" style="position: absolute; right: 0">
+            <strong class="selection-button" style="position: absolute; right: 0"
+                    :class="{ 'selection-button-disabled': assemblyJob }">
                 <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                       data-target="#assembly-upload-modal">
                 </span>
@@ -245,6 +246,10 @@ export default {
 .selection-button > span.fa {
     padding: .5rem;
     line-height: initial;
+}
+.selection-button-disabled {
+    cursor: not-allowed;
+    opacity: .5;
 }
 
 .inactive-button {
