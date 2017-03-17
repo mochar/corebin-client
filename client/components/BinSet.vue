@@ -1,6 +1,6 @@
 <template>
 <router-link to="/overview" @click.native="select" tag="a" 
-    :class="{ 'selected-bin-set': $store.state.binSet.id == binSet.id }"
+    :class="{ 'selected-bin-set': selectedClass }"
     class="list-group-item list-group-item-action flex-column align-items-start bin-set">
     <span class="name">{{ binSet.name }}</span>
 
@@ -86,6 +86,10 @@ export default {
     computed: {
         refineBinSet() {
             return this.$store.state.refineBinSet
+        },
+        selectedClass() {
+            return this.$store.state.binSet.id == this.binSet.id &&
+                   this.$route.path === '/overview'
         }
     }
 }
