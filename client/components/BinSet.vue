@@ -103,9 +103,9 @@ export default {
 }
 
 .selected-bin-set {
-    -webkit-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
-    box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,1);
+    -moz-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,1);
+    box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,1);
     background-color: white;
 }
 
