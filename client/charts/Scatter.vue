@@ -7,20 +7,19 @@
             </linearGradient>
         </defs>
         <g id="legend" :transform="`translate(${width},0)`">
-            <g v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
-                <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
-                <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
-            </g>
-            <g v-show="colorBy === 'gc'" 
-               :transform="`translate(0,${$store.state.refineBins.length * 30 + 50})`">
+            <g v-if="colorBy === 'gc'" transform="translate(0, 20)">
                 <text text-anchor="start" x="-30">GC</text>
-                <g class="axis" :transform="'translate(-30,10)'"></g>
+                <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g>
                 <rect 
                     :width="20" 
                     :height="120" 
                     :y="12" :x="-30" 
                     id="color-legend">
                 </rect>
+            </g>
+            <g v-else v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
+                <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
+                <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
             </g>
         </g>
         <g class="x axis" :transform="`translate(0,${height})`"></g>
@@ -74,14 +73,10 @@ export default {
 
             this.svg.select('g.x').call(this.xAxis)
             this.svg.select('g.y').call(this.yAxis)
-            this.svg.select('g#legend g.axis').call(this.legendAxis)
+            this.svg.select('g#legend-axis').call(this.legendAxis)
 
             const circle = this.svg.select('g#circles').selectAll('circle')
-                .data(this.contigs, function c() { return c.id })
-
-            circle.transition()
-                .attr('cx', contig => this.x(contig[this.xData]))
-                .attr('cy', contig => this.y(contig[this.yData]))
+                .data(this.contigs, contig => contig.id)
 
             circle.exit().transition()
                 .attr('r', 0)
@@ -92,13 +87,16 @@ export default {
                 .attr('r', 0)
                 .attr('cx', contig => this.x(contig[this.xData]))
                 .attr('cy', contig => this.y(contig[this.yData]))
+                .style('opacity', .5)
+
+            circleEnter.merge(circle).transition()
+                .attr('r', contig => this.sizeScale(contig.length))
+                .attr('cx', contig => this.x(contig[this.xData]))
+                .attr('cy', contig => this.y(contig[this.yData]))
                 .attr('fill', contig => {
                     if (this.colorBy === 'gc') return this.colorScale(contig.gc)
                     return contig[`color_${this.colorBinSet}`]
                 })
-                .style('opacity', .5)
-            circleEnter.transition()
-                .attr('r', contig => this.sizeScale(contig.length))
 
             this.lasso.items(circleEnter)
         },
