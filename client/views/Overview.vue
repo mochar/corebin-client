@@ -3,7 +3,7 @@
     <div class="card-header" id="bins-header">
         <div class="row">
             <div class="col-6">
-                <span class="name" style="margin-left: 0">{{ binSet.name }}</span>
+                <!--<span class="name" style="margin-left: 0">{{ binSet.name }}</span>-->
             </div>
 
             <div class="dropdown col-6">
@@ -19,7 +19,7 @@
                         <button 
                             slot="button" 
                             :disabled="adding"
-                            class="btn btn-primary btn-sm btn-header">
+                            class="btn btn-link btn-sm btn-header">
                             <span v-if="adding" class="fa fa-refresh fa-spin"></span>
                             <span class="fa fa-plus" v-else></span>
                             Add bin
@@ -36,7 +36,7 @@
                         </div>
                     </popover>
 
-                    <button class="btn btn-success btn-sm btn-header" @click="refine()">
+                    <button class="btn btn-success btn-sm btn-header thicc" @click="refine()">
                         <span class="fa fa-wrench"></span>
                         Refine bins
                     </button>
@@ -344,5 +344,10 @@ export default {
 
 #table-head span, #table-head strong {
     cursor: pointer;
+}
+
+.thicc {
+    font-weight: 500;
+    letter-spacing: .025rem;
 }
 </style>

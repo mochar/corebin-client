@@ -74,6 +74,7 @@ export default {
 @import "../../node_modules/webui-popover/dist/jquery.webui-popover.min.css";
 @import "../../node_modules/font-awesome/css/font-awesome.min.css";
 @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 
 html {
     height: 100%;
@@ -83,6 +84,10 @@ body {
     font-size: 14px;
     background-color: #eee;
     height: 100%;
+}
+
+body, button, input, optgroup, select, textarea {
+    font-family: 'Roboto', sans-serif;
 }
 
 * {
@@ -128,6 +133,10 @@ input[type="file"] {
 
 .btn:focus {
     box-shadow: inherit;
+}
+
+a:active, .btn-link:active {
+    color: #333;
 }
 
 .btn-sm {
