@@ -155,6 +155,10 @@ a:active, .btn-link:active {
     color: #31708f !important;
 }
 
+.vue-color__compact {
+    box-shadow: 0 0 0 0 !important;
+}
+
 #app {
 }
 

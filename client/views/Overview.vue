@@ -3,7 +3,6 @@
     <div class="card-header" id="bins-header">
         <div class="row">
             <div class="col-6">
-                <!--<span class="name" style="margin-left: 0">{{ binSet.name }}</span>-->
             </div>
 
             <div class="dropdown col-6">
@@ -121,15 +120,13 @@
                 <bar-column :percentage="proportionToPercentage(bin.contamination)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
                 <td class="btn-group justify-content-center" style="width: 100%">
-                    <rename-popover 
-                        @done="name => { $store.commit('RENAME_BIN', { bin, name }) }"
-                        :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
-                    </rename-popover>
+                    <edit-bin-popover :bin="bin"></edit-bin-popover>
                     <delete-popover 
+                        btnClasses="btn-bin"
                         @done="commitDeletion(bin)"
                         :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
                     </delete-popover>
-                    <button class="btn btn-secondary btn-sm" @click.stop="refine(bin)">
+                    <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine(bin)">
                         <span class="fa fa-wrench"></span>
                     </button>
                 </td>
@@ -143,8 +140,8 @@
 import Popover from '../components/Popover'
 import BarColumn from '../components/BarColumn'
 import SortHead from '../components/SortHead'
-import RenamePopover from '../components/RenamePopover'
 import DeletePopover from '../components/DeletePopover'
+import EditBinPopover from '../components/EditBinPopover'
 
 export default {
     data() {
@@ -163,8 +160,8 @@ export default {
         Popover,
         BarColumn,
         SortHead,
-        RenamePopover,
-        DeletePopover
+        DeletePopover,
+        EditBinPopover
     },
 
     methods: {
@@ -349,5 +346,14 @@ export default {
 .thicc {
     font-weight: 500;
     letter-spacing: .025rem;
+}
+
+.btn-bin {
+    border: 0;
+    color: #333;
+}
+.btn-bin:hover {
+    background-color: #eee;
+    color: black;
 }
 </style>

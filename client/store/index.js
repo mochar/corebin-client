@@ -105,6 +105,15 @@ const mutations = {
         a.name = name
         Vue.set(state.assemblies, index, a)
     },
+    EDIT_BIN(state, { bin, name, color }) {
+        bin.name = name
+        bin.color = color
+        const contigs = state.contigs.map(contig => {
+            if (contig.bin == bin.id) contig[`color_${bin.binSetId}`] = color
+            return contig
+        })
+        state.contigs = contigs
+    },
     PUSH_REFINE_BIN(state, { bin, contigs }) {
         state.refineBins.push(bin)
         state.contigs.push(...contigs)
