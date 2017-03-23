@@ -98,7 +98,7 @@ export default {
                     return contig[`color_${this.colorBinSet}`]
                 })
 
-            this.lasso.items(circleEnter)
+            this.lasso.items(circleEnter.merge(circle))
         },
         zoomed() {
             this.svg.select('g.x')
