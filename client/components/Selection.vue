@@ -74,9 +74,9 @@
         
         <div v-if="$route.path === '/refine'">
             <div class="navigation">
-                <router-link tag="div" class="selection-button" to="/overview">
+                <div class="selection-button" @click="$router.go(-1)">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
-                </router-link>
+                </div>
                 <div>
                     <strong class="selection-title text-muted text-center" style="padding-bottom: 0">
                         REFINEMENT
