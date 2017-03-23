@@ -272,6 +272,9 @@ export default {
     text-decoration: underline;
     cursor: pointer;
 }
+.info-link:hover {
+    text-shadow: 0px 0px 8px black !important;
+}
 </style>
 
 <style scoped>
