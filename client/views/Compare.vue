@@ -72,6 +72,7 @@
             :binsMap="binsMap"
             :visible="showPlot"
             @binSelected="selectBin"
+            @refine="refineBin"
         ></chord>
         <span id="message" v-show="otherBins.length === 0" class="text-muted">
             <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
@@ -141,13 +142,32 @@ export default {
                 this.unselectedSet = null
                 this.selectedBin = null
             }
+        },
+        refineBin() {
+            const bin = this.selectedBin
+            const binSet = this.selectedSet
+            if (this.refineBinSet && this.refineBinSet.id !== binSet.id) {
+                this.$store.commit('SET_POTENTIAL_REFINE_BIN', bin)
+                this.$store.commit('SET_POTENTIAL_REFINE_SET', binSet)
+                $('#refine-modal').modal('show')
+                return
+            }
+            const binInRefine = this.$store.state.refineBins.map(b => b.id).includes(bin.id)
+            if (bin && !binInRefine) {
+                this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
+                    this.$store.dispatch('PUSH_REFINE_BIN', bin)
+                })
+            } 
+            this.$store.commit('SET_REFINE_BIN_SET', binSet)
+            this.$router.push({ path: 'refine' })
         }
     },
 
     computed: {
         ...mapState([
             'assembly',
-            'binSets'
+            'binSets',
+            'refineBinSet'
         ]),
         name() {
             return this.binSet ? this.binSet.name : ''

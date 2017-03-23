@@ -178,7 +178,8 @@ export default {
             'yLog',
             'colorBy',
             'colorBinSet',
-            'contigs'
+            'contigs',
+            'refineBinSet'
         ])
     },
 
@@ -190,11 +191,12 @@ export default {
         colorBinSet() { this.updatePlot() },
         xLog() { this.updatePlot() },
         yLog() { this.updatePlot() },
-        refineBinSet(binSet) {
+        refineBinSet() {
             this.$store.commit('SET_PLOT_VALUE', { key: 'xData', value: 'gc' })
             this.$store.commit('SET_PLOT_VALUE', { key: 'yData', value: 'length' })
             this.$store.commit('SET_PLOT_VALUE', { key: 'xLog', value: false })
             this.$store.commit('SET_PLOT_VALUE', { key: 'yLog', value: false })
+            const binSet = this.$store.state.binSet.id
             this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value: binSet })
         }
     },

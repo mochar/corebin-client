@@ -18,6 +18,8 @@ const state = {
     refineBins: [],
     contigs: [],
     selectedContigs: [],
+    potentialRefineBin: null,
+    potentialRefineSet: null,
 
     // Jobs
     assemblyJob: null,
@@ -124,6 +126,12 @@ const mutations = {
     },
     SET_CONTIGS(state, contigs) {
         state.contigs = contigs
+    },
+    SET_POTENTIAL_REFINE_BIN(state, bin) {
+        state.potentialRefineBin = bin
+    },
+    SET_POTENTIAL_REFINE_SET(state, binSet) {
+        state.potentialRefineSet = binSet
     },
     SET_REFINE_BIN_SET(state, binSet) {
         if (!state.refineBinSet || state.refineBinSet.id !== binSet.id) {

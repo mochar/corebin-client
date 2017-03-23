@@ -46,11 +46,15 @@
         </g>
         <g :transform="`translate(10,${height/3})`">
             <text class="info-head">Compare</text>
-            <text y="20" class="info-link">- Visualize {{ unselectedBinSet.name }} distribution</text>
+            <text y="20" class="info-link" @click="">
+                - Visualize {{ unselectedBinSet.name }} distribution
+            </text>
         </g>
         <g :transform="`translate(10,${height/2.25})`">
             <text class="info-head">Refine</text>
-            <text y="20" class="info-link">- Open refinement plot</text>
+            <text y="20" class="info-link" @click="$emit('refine')">
+                - Open refinement plot
+            </text>
         </g>
     </g>
 

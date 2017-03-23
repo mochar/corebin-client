@@ -30,6 +30,7 @@ export default {
         },
         continue_() {
             const refineAssembly = this.$store.state.assemblies.filter(a => a.id === this.refineBinSet.assembly)[0]
+            this.$store.commit('SET_POTENTIAL_REFINE_BIN', null)
             this.$store.commit('SET_MESSAGE', 'Fetching data')
             this.$store.dispatch('SELECT_ASSEMBLY', refineAssembly).then(() => {
                 this.$store.dispatch('SELECT_BIN_SET', this.refineBinSet).then(() => {
@@ -40,15 +41,25 @@ export default {
             this.hide()
         },
         switch_() {
-            this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
-            this.$router.push({ path: 'refine' })
-            this.hide()
+            this.$store.dispatch('SELECT_BIN_SET', this.binSet).then(() => {
+                this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
+                if (this.bin) {
+                    this.$store.dispatch('PUSH_REFINE_BIN', this.bin)
+                    this.$store.commit('SET_POTENTIAL_REFINE_BIN', null)
+                    this.$store.commit('SET_POTENTIAL_REFINE_SET', null)
+                }
+                this.$router.push({ path: 'refine' })
+                this.hide()
+            })
         }
     },
 
     computed: {
         binSet() {
-            return this.$store.state.binSet
+            return this.$store.state.potentialRefineSet
+        },
+        bin() {
+            return this.$store.state.potentialRefineBin
         },
         refineBinSet() {
             return this.$store.state.refineBinSet
