@@ -99,7 +99,7 @@
                 <bar-column :percentage="proportionToPercentage(bin.contamination)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
                 <td class="btn-group justify-content-center" style="width: 100%">
-                    <edit-bin-popover :bin="bin" @done="commitDeletion(bin)"></edit-bin-popover>
+                    <edit-bin-popover :bin="bin" @deleted="commitDeletion(bin)"></edit-bin-popover>
                     <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine(bin)">
                         <span class="fa fa-wrench"></span>
                     </button>

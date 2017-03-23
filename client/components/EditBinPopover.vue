@@ -62,7 +62,6 @@ export default {
                 contentType: 'application/json',
                 data: JSON.stringify({ name, color })
             }).then(data => {
-                this.$emit('done', name)
                 this.loading = false
                 this.showColors = false
                 this.$store.commit('EDIT_BIN', { bin: this.bin, name, color })
@@ -76,7 +75,7 @@ export default {
                 url: `${ROOTURL}/a/${binSet.assembly}/bs/${binSet.id}/b/${this.bin.id}`,
                 method: 'DELETE'
             }).then(data => {
-                this.$emit('done')
+                this.$emit('deleted')
                 this.loading = false
                 $(this.$el).find('button').first().webuiPopover('hide')
             }, () => {
