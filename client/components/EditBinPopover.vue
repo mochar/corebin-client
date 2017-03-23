@@ -14,8 +14,13 @@
                 OK
             </button>
         </div>
-        <div v-if="showColors" class="colorpick-div d-flex justify-content-center">
-            <compact v-model="colors" @change-color="onColorChange"></compact>
+        <hr style="margin: .5rem 0"/>
+        <div class="colorpick-div d-flex justify-content-center">
+            <compact v-if="showColors" v-model="colors" @change-color="onColorChange"></compact>
+            <button v-else class="btn btn-outline-danger border-0 btn-sm" :disabled="loading"
+                    @click="delete_" style="font-weight: 500">
+                Remove bin
+            </button>
         </div>
     </div>
 </popover>
@@ -61,6 +66,21 @@ export default {
                 this.loading = false
                 this.showColors = false
                 this.$store.commit('EDIT_BIN', { bin: this.bin, name, color })
+                $(this.$el).find('button').first().webuiPopover('hide')
+            })
+        },
+        delete_() {
+            this.loading = true
+            const binSet = this.$store.state.binSet
+            $.ajax({
+                url: `${ROOTURL}/a/${binSet.assembly}/bs/${binSet.id}/b/${this.bin.id}`,
+                method: 'DELETE'
+            }).then(data => {
+                this.$emit('done')
+                this.loading = false
+                $(this.$el).find('button').first().webuiPopover('hide')
+            }, () => {
+                this.loading = false
                 $(this.$el).find('button').first().webuiPopover('hide')
             })
         }

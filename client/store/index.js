@@ -257,9 +257,9 @@ const actions = {
             })
         })
     },
-    SUBMIT_BIN({ commit, state }, name) {
+    SUBMIT_BIN({ commit, state }, data) {
         const url = `${ROOTURL}/a/${state.assembly.id}/bs/${state.binSet.id}/b`
-        return $.post(url, { name }).then(data => {
+        return $.post(url, data).then(data => {
             if (data.binSetId === state.binSet.id) commit('APPEND_BIN', data)
         })
     },

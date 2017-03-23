@@ -13,28 +13,7 @@
                         <span v-if="showUnbinned">Hide unbinned</span>
                         <span v-else>Show unbinned</span>
                     </button>
-
-                    <popover>
-                        <button 
-                            slot="button" 
-                            :disabled="adding"
-                            class="btn btn-link btn-sm btn-header">
-                            <span v-if="adding" class="fa fa-refresh fa-spin"></span>
-                            <span class="fa fa-plus" v-else></span>
-                            Add bin
-                        </button>
-                        <div slot="body">
-                            <input placeholder="Bin name" v-model="newBinName">
-                            <button 
-                                class="btn btn-primary btn-sm" 
-                                @click="addBin"
-                                :disabled="adding">
-                                <span v-show="adding" class="fa fa-refresh fa-spin"></span>
-                                Add
-                            </button>
-                        </div>
-                    </popover>
-
+                    <add-bin-popover></add-bin-popover>
                     <button class="btn btn-success btn-sm btn-header thicc" @click="refine()">
                         <span class="fa fa-wrench"></span>
                         Refine bins
@@ -120,12 +99,7 @@
                 <bar-column :percentage="proportionToPercentage(bin.contamination)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
                 <td class="btn-group justify-content-center" style="width: 100%">
-                    <edit-bin-popover :bin="bin"></edit-bin-popover>
-                    <delete-popover 
-                        btnClasses="btn-bin"
-                        @done="commitDeletion(bin)"
-                        :url="`a/${binSet.assembly}/bs/${binSet.id}/b/${bin.id}`">
-                    </delete-popover>
+                    <edit-bin-popover :bin="bin" @done="commitDeletion(bin)"></edit-bin-popover>
                     <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine(bin)">
                         <span class="fa fa-wrench"></span>
                     </button>
@@ -140,8 +114,8 @@
 import Popover from '../components/Popover'
 import BarColumn from '../components/BarColumn'
 import SortHead from '../components/SortHead'
-import DeletePopover from '../components/DeletePopover'
 import EditBinPopover from '../components/EditBinPopover'
+import AddBinPopover from '../components/AddBinPopover'
 
 export default {
     data() {
@@ -149,10 +123,7 @@ export default {
             sortBy: 'size',
             sortOrder: 'desc',
             showUnbinned: false,
-            selected: [],
-
-            newBinName: '',
-            adding: false // true when adding bin
+            selected: []
         }
     },
 
@@ -160,8 +131,8 @@ export default {
         Popover,
         BarColumn,
         SortHead,
-        DeletePopover,
-        EditBinPopover
+        EditBinPopover,
+        AddBinPopover
     },
 
     methods: {
@@ -206,13 +177,6 @@ export default {
         },
         binIsInRefine(binId) {
             return this.$store.state.refineBins.map(b => b.id).includes(binId)
-        },
-        addBin() {
-            this.adding = true
-            this.$store.dispatch('SUBMIT_BIN', this.newBinName).then(() => {
-                this.newBinName = ''
-                this.adding = false
-            })
         },
         commitDeletion(bin) {
             this.$store.commit('REMOVE_BIN', bin)
@@ -274,33 +238,8 @@ export default {
     font-size: small;
 }
 
-.bin-set-name {
-    margin: 0;
-}
-
-.bin-set-name::before {
-    content: "bin set "
-}
-
-.info-card {
-    border-left-width: 3px;
-}
-
 .name-block {
     padding: 0;
-}
-
-.action-buttons {
-    opacity: .1;
-    transition: opacity .15s ease-in-out;
-}
-
-.action-buttons .btn {
-    padding: .5rem .75rem;
-}
-
-.info-card:hover .action-buttons {
-    opacity: 1;
 }
 
 #bins {
@@ -312,7 +251,7 @@ export default {
 }
 
 #bins td {
-    width: calc(100% / 6);
+    width: calc(100% / 7);
 }
 
 #bins-header {
@@ -351,6 +290,7 @@ export default {
 .btn-bin {
     border: 0;
     color: #333;
+    background: transparent;
 }
 .btn-bin:hover {
     background-color: #eee;
