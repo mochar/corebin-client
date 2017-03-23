@@ -1,57 +1,81 @@
 <template>
-<div>
-    <svg :width="width" :height="height" style="width: 100%">
-        <g :transform="`translate(${width/2},${height/2})`">
-            <transition-group name="flip" tag="g" class="groups">
-                <path
-                    v-for="group in chordData.groups"
-                    :key="group.index"
-                    :style="{ 
-                        stroke: '#000000', 
-                        fill: binsMap.get(group.data).color
-                    }"
-                    :d="arc.startAngle(group.startAngle).endAngle(group.endAngle)()"
-                    @mouseover="hoveredBin = group.data"
-                    @mouseout="hoveredBin = null"
-                    @click="selectBin(group.data)">
-                </path>
-            </transition-group>
-            <g class="ribbons">
-                <ribbon
-                    v-for="ribb in chordData.ribbons"
-                    :ribbon="ribb"
-                    :selectedBin="selected ? selected.id : null"
-                    :hoveredBin="hoveredBin"
-                    :binsMap="binsMap"
-                    :rgb="rgb"
-                    :d="ribbon({source: ribb.source, target: ribb.target})">
-                </ribbon>
-            </g>
-        </g>
-
-        <defs>
-            <path 
-                id="name-path" 
-                :d="nameArc.startAngle(toRad(60)).endAngle(toRad(120))()"
-                :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
+<svg :width="width" :height="height">
+    <g :transform="`translate(${width/2},${height/2})`">
+        <transition-group name="flip" tag="g" class="groups">
+            <path
+                v-for="group in chordData.groups"
+                :key="group.index"
+                :style="{ 
+                    stroke: '#000000', 
+                    fill: binsMap.get(group.data).color
+                }"
+                :d="arc.startAngle(group.startAngle).endAngle(group.endAngle)()"
+                @mouseover="hoveredBin = group.data"
+                @mouseout="hoveredBin = null"
+                @click="selectBin(group.data)">
             </path>
-            <path 
-                id="other-name-path" 
-                :d="nameArc.startAngle(toRad(240)).endAngle(toRad(300))()"
-                :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
-            </path>
-        </defs>
-
-        <g v-show="visible">
-            <text id="name" font-size="30">
-                <textPath xlink:href="#name-path">{{ name }}</textPath>
-            </text>
-            <text id="otherName" font-size="30">
-                <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
-            </text>
+        </transition-group>
+        <g class="ribbons">
+            <ribbon
+                v-for="ribb in chordData.ribbons"
+                :ribbon="ribb"
+                :selectedBin="selected ? selected.id : null"
+                :hoveredBin="hoveredBin"
+                :binsMap="binsMap"
+                :rgb="rgb"
+                :d="ribbon({source: ribb.source, target: ribb.target})">
+            </ribbon>
         </g>
-    </svg>
-</div>
+    </g>
+
+    <g :transform="`translate(${width/4},${height/4})`" id="info" v-if="selected">
+        <text x="10" y="30" id="info-title">Selected bin: {{ selected.name }} ({{ selectedBinSet.name }})</text>
+        <g :transform="`translate(10,${height/10})`">
+            <text class="info-head">Size</text>
+            <text y="20">-# contigs</text>
+            <text y="20" x="150">: {{ selected.size }}</text>
+            <text y="40">-# bp</text>
+            <text y="40" x="150">: {{ selected.mbp.toFixed(3) }} Mb</text>
+        </g>
+        <g :transform="`translate(10,${height/5})`">
+            <text class="info-head">Completeness</text>
+            <text y="20">- contamination</text>
+            <text y="20" x="150">: {{ selected.contamination.toFixed(3) }}%</text>
+            <text y="40">- completeness</text>
+            <text y="40" x="150">: {{ selected.completeness.toFixed(3) }}%</text>
+        </g>
+        <g :transform="`translate(10,${height/3})`">
+            <text class="info-head">Compare</text>
+            <text y="20" class="info-link">- Visualize {{ unselectedBinSet.name }} distribution</text>
+        </g>
+        <g :transform="`translate(10,${height/2.25})`">
+            <text class="info-head">Refine</text>
+            <text y="20" class="info-link">- Open refinement plot</text>
+        </g>
+    </g>
+
+    <defs>
+        <path 
+            id="name-path" 
+            :d="nameArc.startAngle(toRad(60)).endAngle(toRad(120))()"
+            :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
+        </path>
+        <path 
+            id="other-name-path" 
+            :d="nameArc.startAngle(toRad(240)).endAngle(toRad(300))()"
+            :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
+        </path>
+    </defs>
+
+    <g v-show="visible">
+        <text id="name" font-size="30">
+            <textPath xlink:href="#name-path">{{ name }}</textPath>
+        </text>
+        <text id="otherName" font-size="30">
+            <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
+        </text>
+    </g>
+</svg>
 </template>
 
 <script>
@@ -155,6 +179,8 @@ export default {
         'bins', 
         'otherBins', 
         'selected',
+        'selectedBinSet',
+        'unselectedBinSet',
         'connected',
         'binsMap',
         'visible'
@@ -162,9 +188,7 @@ export default {
     
     methods: {
         updatePlot() {
-            this.width = parseInt(d3.select(this.$el).style('width'), 10)
-            this.height = this.width * .9
-
+            this.resize()
             const outerRadius = Math.min(this.width, this.height) * 0.5 - 40
             const outerRadiusLg = outerRadius * 1.01
             const outerRadiusSm = outerRadius * .98
@@ -176,6 +200,11 @@ export default {
             this.ribbon.radius(innerRadius - 5)
             this.nameArc.innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
             this.chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
+        },
+        resize() {
+            this.height = $(this.$el).parent().height()
+            this.width = $(this.$el).parent().width()
+
         },
         selectBin(binId) {
             const selected = this.selected && this.selected.id === binId ? null : binId
@@ -200,8 +229,7 @@ export default {
     },
     
     mounted() {
-        this.width = parseInt(d3.select(this.$el).style('width'), 10)
-        this.height = this.width * .9
+        $(window).resize(this.updatePlot)
         this.updatePlot()
     }
 }
@@ -220,7 +248,34 @@ export default {
   transition: transform .2s;
 }
 
-#info-rect {
-    opacity: .7;
+#info {
+    font-size: 1.2rem;
+}
+
+#info text {
+    fill: white;
+    text-shadow: 1px 1px 8px black;
+}
+
+#info-title {
+    font-size: larger;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.info-head {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.info-link {
+    text-decoration: underline;
+    cursor: pointer;
+}
+</style>
+
+<style scoped>
+svg {
+    display: block;
 }
 </style>

@@ -66,10 +66,12 @@
             :bins="bins"
             :otherBins="otherBins"
             :selected="selectedBin"
+            :selectedBinSet="selectedSet"
+            :unselectedBinSet="unselectedSet"
             :connected="connectedBins"
             :binsMap="binsMap"
             :visible="showPlot"
-            @binSelected="bin => { selectedBin = bin }"
+            @binSelected="selectBin"
         ></chord>
         <span id="message" v-show="otherBins.length === 0" class="text-muted">
             <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
@@ -96,6 +98,8 @@ export default {
             by: 'count',
             loading: false,
             selectedBin: null,
+            selectedSet: null,
+            unselectedSet: null,
             showPlot: false
         }
     },
@@ -126,6 +130,17 @@ export default {
             this.binSet = this.binSet ? this.binSet : this.binSets[0]
             const otherBinSet = this.binSets[this.binSets.length === 1 ? 0 : 1]
             this.otherBinSet = this.otherBinSet ? this.otherBinSet : otherBinSet
+        },
+        selectBin(bin) {
+            if (bin) {
+                this.selectedSet = bin.binSetId == this.binSet.id ? this.binSet : this.otherBinSet
+                this.unselectedSet = bin.binSetId == this.binSet.id ? this.otherBinSet : this.binSet
+                this.selectedBin = bin
+            } else {
+                this.selectedSet = null
+                this.unselectedSet = null
+                this.selectedBin = null
+            }
         }
     },
 
@@ -198,6 +213,8 @@ export default {
 #compare {
     min-height: 100vh;
     border-right: 0;
+    display: flex;
+    align-items: stretch;
 }
 
 #scale-icon {
@@ -211,7 +228,8 @@ export default {
 }
 
 #chord {
-    padding: 0 .5rem;
+    /*padding: 0 .5rem;*/
+    flex: 1;
 }
 
 #plot-btn {
