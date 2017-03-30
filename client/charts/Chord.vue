@@ -1,82 +1,76 @@
 <template>
 <svg :width="width" :height="height">
     <g :transform="`translate(${width/2},${height/2})`">
-        <transition-group name="flip" tag="g" class="groups">
-            <path
-                v-for="group in chordData.groups"
-                :key="group.index"
-                :style="{ 
-                    stroke: '#000000', 
-                    fill: binsMap.get(group.data).color
-                }"
-                :d="arc.startAngle(group.startAngle).endAngle(group.endAngle)()"
-                @mouseover="hoveredBin = group.data"
-                @mouseout="hoveredBin = null"
-                @click="selectBin(group.data)">
-            </path>
-        </transition-group>
-        <g class="ribbons">
-            <ribbon
-                v-for="ribb in chordData.ribbons"
-                :ribbon="ribb"
-                :selectedBin="selected ? selected.id : null"
-                :hoveredBin="hoveredBin"
-                :binsMap="binsMap"
-                :rgb="rgb"
-                :d="ribbon({source: ribb.source, target: ribb.target})">
-            </ribbon>
-        </g>
+        <g class="groups"></g>
+        <g class="ribbons"></g>
     </g>
 
-    <g :transform="`translate(${width/4},${height/4})`" id="info" v-if="selected">
-        <text x="10" y="30" id="info-title">Selected bin: {{ selected.name }} ({{ selectedBinSet.name }})</text>
+    <!--<g fill="none" pointer-events="none">
+        <rect x="0" y="0" :height="height" :width="width/2" 
+            @mouseover="sideHovered(otherBinSet.id)"
+            @mouseout="sideHovered(null)">
+        </rect>
+        <rect :x="width/2" y="0" :height="height" :width="width/2" 
+            @mouseover="sideHovered(binSet.id)"
+            @mouseout="sideHovered(null)">
+        </rect>
+    </g>-->
+
+    <g :transform="`translate(${width/4},${height/4})`" id="info"  v-if="activeBin">
+        <text  x="10" y="30" id="info-title">Bin: {{ activeBin.name }} ({{ activeSet.name }})</text>
         <g :transform="`translate(10,${height/10})`">
             <text class="info-head">Size</text>
             <text y="20">-# contigs</text>
-            <text y="20" x="150">: {{ selected.size }}</text>
+            <text y="20" x="150">: {{ activeBin.size }}</text>
             <text y="40">-# bp</text>
-            <text y="40" x="150">: {{ selected.mbp.toFixed(3) }} Mb</text>
+            <text y="40" x="150">: {{ activeBin.mbp.toFixed(3) }} Mb</text>
         </g>
         <g :transform="`translate(10,${height/5})`">
             <text class="info-head">Completeness</text>
             <text y="20">- contamination</text>
-            <text y="20" x="150">: {{ selected.contamination.toFixed(3) }}%</text>
+            <text y="20" x="150">: {{ activeBin.contamination.toFixed(3) }}%</text>
             <text y="40">- completeness</text>
-            <text y="40" x="150">: {{ selected.completeness.toFixed(3) }}%</text>
+            <text y="40" x="150">: {{ activeBin.completeness.toFixed(3) }}%</text>
         </g>
-        <g :transform="`translate(10,${height/3})`">
-            <text class="info-head">Compare</text>
-            <text y="20" class="info-link" @click="">
-                - Visualize {{ unselectedBinSet.name }} distribution
-            </text>
-        </g>
-        <g :transform="`translate(10,${height/2.25})`">
-            <text class="info-head">Refine</text>
-            <text y="20" class="info-link" @click="$emit('refine')">
-                - Open refinement plot
-            </text>
-        </g>
+        <transition name="fade" mode="out-in">
+            <g id="transition-g" v-if="showChordActions">
+                <g :transform="`translate(10,${height/3})`">
+                    <text class="info-head">Compare</text>
+                    <text y="20" class="info-link" @click="">
+                        - Visualize {{ unselectedBinSet.name }} distribution
+                    </text>
+                </g>
+                <g :transform="`translate(10,${height/2.25})`">
+                    <text class="info-head">Refine</text>
+                    <text y="20" class="info-link" @click="$emit('refine')">
+                        - Open refinement plot
+                    </text>
+                </g>
+            </g>
+        </transition>
     </g>
 
     <defs>
         <path 
             id="name-path" 
-            :d="nameArc.startAngle(toRad(60)).endAngle(toRad(120))()"
             :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
         </path>
         <path 
             id="other-name-path" 
-            :d="nameArc.startAngle(toRad(240)).endAngle(toRad(300))()"
             :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
         </path>
+        <filter x="0" y="0" width="1" height="1" id="solid">
+            <feFlood flood-color="black" flood-opacity=".2" />
+            <feComposite in="SourceGraphic"/>
+        </filter>
     </defs>
 
-    <g v-show="visible">
+    <g>
         <text id="name" font-size="30">
-            <textPath xlink:href="#name-path">{{ name }}</textPath>
+            <textPath xlink:href="#name-path"></textPath>
         </text>
         <text id="otherName" font-size="30">
-            <textPath xlink:href="#other-name-path">{{ otherName }}</textPath>
+            <textPath xlink:href="#other-name-path"></textPath>
         </text>
     </g>
 </svg>
@@ -84,7 +78,6 @@
 
 <script>
 import * as d3 from 'd3'
-import Ribbon from './Ribbon'
 
 let toRad = (degree) => degree * (Math.PI / 180)
     
@@ -114,7 +107,7 @@ let chord = function(bins1, bins2, matrix) {
             endAngle -= (0.01 / 2)
         }
         let data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
-        return { startAngle, endAngle, data, index: i }
+        return { startAngle, endAngle, data, index: i, _endAngle: endAngle }
     })
     
     // Create scales for each bin: value -> angle
@@ -163,23 +156,21 @@ export default {
         return {
             width: 100,
             height: 100,
+            svg: null,
             nameArc: d3.arc().innerRadius(0).outerRadius(0),
             arc: d3.arc().innerRadius(0).outerRadius(0),
-            ribbon: d3.ribbon().radius(0),
+            ribbon: d3.ribbon(),
             hoveredBin: null,
             chordData: {groups: [], ribbons: []},
-            labelScale: d3.scaleBand()
+            labelScale: d3.scaleBand(),
+            outerRadius: null,
+            innerRadius: null,
+            hoverBinSet: null
         }
-    },
-
-    components: {
-        Ribbon
     },
     
     props: [
         'plotData', 
-        'name', 
-        'otherName', 
         'bins', 
         'otherBins', 
         'selected',
@@ -187,34 +178,109 @@ export default {
         'unselectedBinSet',
         'connected',
         'binsMap',
-        'visible'
+        'binSet',
+        'otherBinSet'
     ],
     
     methods: {
         updatePlot() {
             this.resize()
-            const outerRadius = Math.min(this.width, this.height) * 0.5 - 40
-            const outerRadiusLg = outerRadius * 1.01
-            const outerRadiusSm = outerRadius * .98
-            const innerRadius = outerRadius - 30
-            const innerRadiusLg = innerRadius * .99
-            const innerRadiusSm = innerRadius * 1.02
             
-            this.arc.innerRadius(innerRadius).outerRadius(outerRadius)
-            this.ribbon.radius(innerRadius - 5)
+            this.outerRadius = Math.min(this.width, this.height) * 0.5 - 40
+            const outerRadiusLg = this.outerRadius * 1.01
+            const outerRadiusSm = this.outerRadius * .98
+            this.innerRadius = this.outerRadius - 30
+            const innerRadiusLg = this.innerRadius * .99
+            const innerRadiusSm = this.innerRadius * 1.02
+            
+            this.arc.innerRadius(this.innerRadius).outerRadius(this.outerRadius)
             this.nameArc.innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
             this.chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
+
+
+            this.updateGroups()
+            this.updateRibbons()
+            this.svg.select('#name > textPath').text(this.binSet && this.binSet.name)
+            this.svg.select('#otherName > textPath').text(this.otherBinSet && this.otherBinSet.name)
+            this.svg.select('#name-path').attr('d', this.nameArc({startAngle: toRad(60), endAngle: toRad(120)}))
+            this.svg.select('#other-name-path').attr('d', this.nameArc({startAngle: toRad(240), endAngle: toRad(300)}))
+        },
+        updateRibbons() {
+            const ribbon = this.svg.select('g.ribbons').selectAll('.ribbon')
+                .data(this.chordData.ribbons, ribbon => `${ribbon.source.data}_${ribbon.target.data}`)
+            ribbon.exit().remove()
+            ribbon.enter().append('path')
+                .classed('ribbon', true)
+              .merge(ribbon)
+                .attr('d', this.generateRibbon)
+                .style('fill', ribbon => {
+                    const bin = this.activeBin && this.activeBin.id
+                    let color = '#bbb'
+                    if (ribbon.target.data === bin) {
+                        color = this.binsMap.get(ribbon.source.data).color
+                    } else if(ribbon.source.data === bin) {
+                        color = this.binsMap.get(ribbon.target.data).color
+                    } 
+                    return color
+                })
+                .style('stroke', function() { 
+                    return d3.rgb(d3.select(this).style('fill')).darker()
+                })
+        },
+        updateGroups() {
+            const group = this.svg.select('g.groups').selectAll('.group')
+                .data(this.chordData.groups, group => `${group.index}-${group.data}`)
+            group.exit()
+                .transition()
+                .attrTween('d', g => this.arcTween(g, group.startAngle))
+                .remove()
+            group.enter().append('path')
+                .classed('group', true)
+                .attr('stroke', '#000000')
+                .on('click', group => this.selectBin(group.data))
+                .on('mouseover', group => this.hoveredBin = this.binsMap.get(group.data))
+                .on('mouseout', () => this.hoveredBin = null)
+              .merge(group)
+                .attr('fill', group => this.binsMap.get(group.data).color)
+                .attr('d', this.arc)
+                // .transition()
+                // .duration(350)
+                // .attrTween('d', g => this.arcTween(g, g.endAngle))
         },
         resize() {
             this.height = $(this.$el).parent().height()
             this.width = $(this.$el).parent().width()
-
         },
         selectBin(binId) {
             const selected = this.selected && this.selected.id === binId ? null : binId
             this.$emit('binSelected', selected ? this.binsMap.get(binId) : null)
         },
-        toRad,
+        generateRibbon(ribbon) {
+            ribbon.source.radius = ribbon.target.radius = this.innerRadius - 5
+            if (this.binsMap.get(ribbon.source.data).binSetId == this.hoverBinSet)
+                ribbon.target.radius = this.innerRadius - 15
+            else if (this.binsMap.get(ribbon.target.data).binSetId == this.hoverBinSet)
+                ribbon.source.radius = this.innerRadius - 15
+            return this.ribbon(ribbon)
+        },
+        sideHovered(binSetId) {
+            this.hoverBinSet = binSetId
+            this.svg.selectAll('.ribbon')
+                .transition()
+                .duration(100)
+                .ease(d3.easeLinear)
+                .attr('d', this.generateRibbon)
+        },
+        arcTween(group, newAngle) {
+            // const interpolate = d3.interpolate(group.startAngle, newAngle)
+            group.endAngle = group.startAngle
+            const interpolate = d3.interpolate(group.endAngle, newAngle)
+            return t => {
+                group.endAngle = interpolate(t)
+                return this.arc(group)
+            }
+        },
+        toRad   ,
         rgb: d3.rgb
     },
     
@@ -223,18 +289,40 @@ export default {
             // True if the selected bin belongs to the left bin set. Otherwise false.
             // This also means that the value is false when there is no bin selected.
             return this.selected && this.plotData.bins1.indexOf(this.selected.id) > -1
+        },
+        activeBin() {
+            return this.hoveredBin || this.selected
+        },
+        activeSet() {
+            if (!this.activeBin) return null
+            return this.binSet.id == this.activeBin.binSetId ? this.binSet : this.otherBinSet
+        },
+        showChordActions() {
+            return this.selected && (!this.hoveredBin || this.hoveredBin.id == this.selected.id)
         }
     },
 
     watch: {
         plotData() {
             this.updatePlot()
+        },
+        hoveredBin() {
+            this.updateRibbons()
+        },
+        connected() {
+            // const connectedIds = this.connected.map(b => b.id)
+            // this.svg.select('g.groups').selectAll('.group')
+            //     .filter(group => connectedIds.includes(group.data))
+            //     .transition()
+            //     .duration(1000)
+            //     .attrTween('d', g => this.arcTween(g, g.endAngle + .2))
         }
     },
     
     mounted() {
+        this.svg = d3.select(this.$el)
+        this.resize()
         $(window).resize(this.updatePlot)
-        this.updatePlot()
     }
 }
 </script>
@@ -248,17 +336,14 @@ export default {
     cursor: pointer;
 }
 
-.flip-move {
-  transition: transform .2s;
-}
-
 #info {
     font-size: 1.2rem;
 }
 
-#info text {
+#info > text, #info g:not(#transition-g) {
     fill: white;
     text-shadow: 1px 1px 8px black;
+    filter: url(#solid);
 }
 
 #info-title {

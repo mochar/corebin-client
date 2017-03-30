@@ -4,28 +4,10 @@
         <form class="form-inline justify-content-center">
             <div class="form-group">
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" 
+                    <button class="btn btn-link compare-btn dropdown-toggle" data-toggle="dropdown" 
                             style="font-size: .9rem; border-right: 0">
                         <strong>Bin-set left</strong>
-                        {{ name }}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a
-                            v-for="bs in binSets"
-                            class="dropdown-item"
-                            href="#"
-                            @click.prevent="binSet = bs"
-                        >{{ bs.name }}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" 
-                            style="font-size: .9rem; border-right: 0">
-                        <strong>Bin-set right</strong>
-                        {{ otherName }}
+                        {{ otherBinSet ? otherBinSet.name : '' }}
                     </button>
                     <div class="dropdown-menu">
                         <a
@@ -40,7 +22,25 @@
             </div>
             <div class="form-group">
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
+                    <button class="btn btn-link compare-btn dropdown-toggle" data-toggle="dropdown" 
+                            style="font-size: .9rem; border-right: 0">
+                        <strong>Bin-set right</strong>
+                        {{ binSet ? binSet.name : '' }}
+                    </button>
+                    <div class="dropdown-menu">
+                        <a
+                            v-for="bs in binSets"
+                            class="dropdown-item"
+                            href="#"
+                            @click.prevent="binSet = bs"
+                        >{{ bs.name }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="dropdown">
+                    <button class="btn btn-link compare-btn dropdown-toggle" data-toggle="dropdown"
                             style="font-size: .9rem; border-right: 0">
                         <strong>Similarity by</strong>
                         {{ byName }}
@@ -51,7 +51,7 @@
                     </div>
                 </div>
             </div>
-            <button class="btn btn-primary float-right" @click="plot" :disabled="loading" id="plot-btn">
+            <button class="btn btn-outline-primary float-right" @click="plot" :disabled="loading" id="plot-btn">
                 <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
                 PLOT
             </button>
@@ -61,8 +61,6 @@
     <div id="chord">
         <chord 
             :plotData="plotData" 
-            :name="name" 
-            :otherName="otherName"
             :bins="bins"
             :otherBins="otherBins"
             :selected="selectedBin"
@@ -70,13 +68,13 @@
             :unselectedBinSet="unselectedSet"
             :connected="connectedBins"
             :binsMap="binsMap"
-            :visible="showPlot"
+            :binSet="binSet"
+            :otherBinSet="otherBinSet"
             @binSelected="selectBin"
             @refine="refineBin"
         ></chord>
         <span id="message" v-show="otherBins.length === 0" class="text-muted">
             <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
-            <!-- Select the bin sets to compare and click on the Plot button -->
             <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
         </span>
     </div>
@@ -100,8 +98,7 @@ export default {
             loading: false,
             selectedBin: null,
             selectedSet: null,
-            unselectedSet: null,
-            showPlot: false
+            unselectedSet: null
         }
     },
     
@@ -122,7 +119,6 @@ export default {
                     this.bins = respBins[0].bins
                     this.otherBins = respOtherBins[0].bins
                     this.plotData = respMatrix[0]
-                    this.showPlot = true
                     this.loading = false
                 }
             )
@@ -169,20 +165,11 @@ export default {
             'binSets',
             'refineBinSet'
         ]),
-        name() {
-            return this.binSet ? this.binSet.name : ''
-        },
-        otherName() {
-            return this.otherBinSet ? this.otherBinSet.name : ''
-        },
         byName() {
             return this.by === 'count' ? 'shared contigs' : 'basepairs'
         },
         binsMap() {
             return d3Map([...this.bins, ...this.otherBins], bin => bin.id)
-        },
-        binSets() {
-            return this.$store.state.binSets
         },
         connectedBins() {
             if (!this.selectedBin) return []
@@ -253,9 +240,15 @@ export default {
 }
 
 #plot-btn {
+    margin-left: .5rem;
+    font-weight: 500;
     font-size: .9rem;
-    letter-spacing: .025rem;
+    letter-spacing: .05rem;
     border-top-width: 1px;
+}
+
+.compare-btn, .compare-btn:hover, .compare-btn:focus {
+    color: #333;
 }
 </style>
 
