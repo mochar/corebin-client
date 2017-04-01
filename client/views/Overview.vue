@@ -1,25 +1,18 @@
 <template>
 <div id="bins" v-if="binSet">
     <div class="card-header" id="bins-header">
-        <div class="row">
-            <div class="col-6">
-            </div>
-
-            <div class="dropdown col-6">
-                <div class="float-right">
-                    <button 
-                        class="btn btn-link btn-sm btn-header" 
-                        @click="showUnbinned = !showUnbinned">
-                        <span v-if="showUnbinned">Hide unbinned</span>
-                        <span v-else>Show unbinned</span>
-                    </button>
-                    <add-bin-popover></add-bin-popover>
-                    <button class="btn btn-success btn-sm btn-header thicc" @click="refine()">
-                        <span class="fa fa-wrench"></span>
-                        Refine bins
-                    </button>
-                </div>
-            </div>
+        <div class="d-flex justify-content-end">
+            <button 
+                class="btn btn-link btn-sm btn-header" 
+                @click="showUnbinned = !showUnbinned">
+                <span v-if="showUnbinned">Hide unbinned</span>
+                <span v-else>Show unbinned</span>
+            </button>
+            <add-bin-popover></add-bin-popover>
+            <button class="btn btn-success btn-sm btn-header thicc" @click="refine()">
+                <span class="fa fa-wrench"></span>
+                Refine bins
+            </button>
         </div>
 
         <div v-if="!selected.length" class="row" id="table-head">
