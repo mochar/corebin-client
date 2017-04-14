@@ -4,7 +4,8 @@
 
     <bar id="bar-plot" :bars="bars"></bar>
 
-    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#refine-modal">
+    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#refine-modal"
+            :disabled="!contigs.length">
         Refine selected contigs
     </button>
 </div>

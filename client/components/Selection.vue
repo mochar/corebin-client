@@ -12,12 +12,16 @@
                 ASSEMBLIES
             </strong>
 
-            <div v-if="assemblies.length === 0 && !assemblyJob">
+            <div v-if="assemblies.length === 0 && !assemblyJob && !loading">
                 <span class="text-muted empty-message">No assemblies.</span>
                 <a href="#" id="try-link" class="text-muted" data-toggle="modal"
                     data-target="#demo-modal">
                     Try CoReBIN with demo data
                 </a>
+            </div>
+
+            <div class="d-flex justify-content-center" style="margin-top: 1rem" v-if="loading">
+                <span class="fa fa-refresh fa-spin fa-2x text-muted"></span>
             </div>
 
             <div class="list-group">
@@ -149,7 +153,8 @@ export default {
         return {
             cancelling: false,
             showAssemblies: true,
-            refinementTab: 'PlotTab'
+            refinementTab: 'PlotTab',
+            loading: true
         }
     },
 
@@ -305,5 +310,9 @@ export default {
 
 .list-group-item {
     padding: 0;
+}
+
+.nav-link:not(.active) {
+    color: #636c72 !important;
 }
 </style>
