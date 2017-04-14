@@ -145,7 +145,7 @@ export default {
             if (this.refineBinSet && this.refineBinSet.id !== binSet.id) {
                 this.$store.commit('SET_POTENTIAL_REFINE_BIN', bin)
                 this.$store.commit('SET_POTENTIAL_REFINE_SET', binSet)
-                $('#refine-modal').modal('show')
+                $('#open-refine-modal').modal('show')
                 return
             }
             const binInRefine = this.$store.state.refineBins.map(b => b.id).includes(bin.id)

@@ -1,31 +1,32 @@
 <template>
-    <svg :width="width" :height="height">
-        <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0.0%" stop-color="#f00"></stop>
-                <stop offset="100.0%" stop-color="#00f"></stop>
-            </linearGradient>
-        </defs>
-        <g id="legend" :transform="`translate(${width},0)`">
-            <g v-if="colorBy === 'gc'" transform="translate(0, 20)">
-                <text text-anchor="start" x="-30">GC</text>
-                <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g>
-                <rect 
-                    :width="20" 
-                    :height="120" 
-                    :y="12" :x="-30" 
-                    id="color-legend">
-                </rect>
-            </g>
-            <g v-else v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
-                <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
-                <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
-            </g>
+<svg :width="width" :height="height">
+    <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0.0%" stop-color="#f00"></stop>
+            <stop offset="100.0%" stop-color="#00f"></stop>
+        </linearGradient>
+    </defs>
+    <g id="legend" :transform="`translate(${width},0)`">
+        <g v-if="colorBy === 'gc'" transform="translate(0, 20)">
+            <text text-anchor="start" x="-30">GC</text>
+            <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g>
+            <rect 
+                :width="20" 
+                :height="120" 
+                :y="12" :x="-30" 
+                id="color-legend">
+            </rect>
         </g>
-        <g class="x axis" :transform="`translate(0,${height})`"></g>
-        <g class="y axis" :transform="'translate(0,0)'"></g>
-        <g id="circles"></g>
-    </svg>
+        <g v-else v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
+            <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
+            <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
+        </g>
+    </g>
+    <g class="x axis" :transform="`translate(0,${height})`"></g>
+    <g class="y axis" :transform="'translate(0,0)'"></g>
+    <polygon id="hull"></polygon>
+    <g id="circles"></g>
+</svg>
 </template>
 
 <script>
@@ -48,7 +49,8 @@ export default {
             height: 100,
             width: 100,
             colorScale: null,
-            sizeScale: null
+            sizeScale: null,
+            hull: null
         }
     },
     
@@ -107,6 +109,7 @@ export default {
                 .call(this.yAxis.scale(d3.event.transform.rescaleY(this.y)))
             this.svg.selectAll('circle.dot')
                 .attr('transform', d3.event.transform)
+            this.hull.attr('transform', d3.event.transform)
         },
         lassoStarted() {
             this.lasso.items()
@@ -130,8 +133,14 @@ export default {
             this.lasso.selectedItems()
                 .classed('selected', true)
 
-            const selected = this.lasso.selectedItems().data().map(c => c.id)
+            const selected = this.lasso.selectedItems().data()
             this.$store.commit('SET_SELECTED_CONTIGS', selected)
+
+            // Update convex hull
+            const dots = selected
+                .map(d => [this.x(d[this.xData]), this.y(d[this.yData])])
+            const hullPoints = d3.polygonHull(dots) || []
+            this.hull.attr('points', hullPoints.join(' '))
         }
     },
 
@@ -139,6 +148,7 @@ export default {
         this.width = $(this.$el).parent().width()
         this.height = $(this.$el).parent().height()
         this.svg = d3.select(this.$el)
+        this.hull = this.svg.select('polygon#hull')
 
         this.colorScale = d3.scaleLinear()
             .domain([0.3, 0.7])
@@ -224,22 +234,22 @@ export default {
 }
 
 .lasso path {
-    stroke: rgb(80,80,80);
-    stroke-width:2px;
+    stroke: rgb(80, 80, 80);
+    stroke-width: 2px;
 }
 
 .lasso .drawn {
-    fill-opacity:.05 ;
+    fill-opacity: .05;
 }
 
 .lasso .loop_close {
-    fill:none;
+    fill: none;
     stroke-dasharray: 4,4;
 }
 
 .lasso .origin {
-    fill:#3399FF;
-    fill-opacity:.5;
+    fill: #3399FF;
+    fill-opacity: .5;
 }
 
 .not_possible {
@@ -262,5 +272,13 @@ export default {
 #legend circle {
     stroke: black;
     stroke-width: .5;
+}
+
+polygon#hull {
+    fill: #ccc;
+    stroke: #ccc;
+    opacity: .5;
+    stroke-width: 12px;
+    stroke-linejoin: round;
 }
 </style>

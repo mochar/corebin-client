@@ -161,7 +161,7 @@ export default {
             if (this.refineBinSet && this.refineBinSet.id !== this.binSet.id) {
                 this.$store.commit('SET_POTENTIAL_REFINE_BIN', bin)
                 this.$store.commit('SET_POTENTIAL_REFINE_SET', this.binSet)
-                $('#refine-modal').modal('show')
+                $('#open-refine-modal').modal('show')
                 return
             }
             if (bin && !this.binIsInRefine(bin.id)) {

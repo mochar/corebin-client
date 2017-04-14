@@ -4,15 +4,24 @@
 <div class="modal-content">
 <div class="modal-body">
 
-    <h5 class="modal-title">You are already refining {{ refineBinSet && refineBinSet.name }}</h5>
+    <h5 class="modal-title">Refine</h5>
 
-    <div class="float-right" style="margin-top: 1rem">
+    <div class="card-block">
+        <div class="align-items-center">
+            <span>Move {{ selectedContigs.length }} contigs to bin </span>
+            <select class="btn btn-secondary btn-xs" v-model="toBin">
+                <option v-for="bin in bins" :value="bin">{{ bin.name }}</option>
+            </select>
+        </div>
+        <small>Move to unbinned if you wish to delete the contigs.</small>
+    </div>
+
+    <div class="d-flex justify-content-between" style="margin-top: 1rem">
         <button class="btn btn-link btn-sm" @click="hide">Cancel</button>
 
-        <button class="btn btn-link btn-sm" @click="continue_">Continue to refine page</button>
-        
-        <button class="btn btn-primary btn-sm submit-button" @click="switch_">
-            Switch to {{ binSet && binSet.name }}
+        <button class="btn btn-primary btn-sm submit-button" :disabled="loading || !toBin" @click="refine">
+            <span v-show="loading" class="fa fa-refresh fa-spin"></span>
+            Confirm
         </button> 
     </div>
 
@@ -23,46 +32,76 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
+    data() {
+        return {
+            loading: false,
+            toBin: null
+        }
+    },
+
     methods: {
         hide() {
             $(this.$el).modal('hide')
         },
-        continue_() {
-            const refineAssembly = this.$store.state.assemblies.filter(a => a.id === this.refineBinSet.assembly)[0]
-            this.$store.commit('SET_POTENTIAL_REFINE_BIN', null)
-            this.$store.commit('SET_MESSAGE', 'Fetching data')
-            this.$store.dispatch('SELECT_ASSEMBLY', refineAssembly).then(() => {
-                this.$store.dispatch('SELECT_BIN_SET', this.refineBinSet).then(() => {
-                    this.$store.commit('SET_MESSAGE', '')
+        refine() {
+            this.loading = true
+            const selectedContigs = this.selectedContigs
+                .filter(c => c.bin != this.toBin.id)
+                .map(c => c.id)
+            const data = { action: 'move', contigs: selectedContigs, to_bin: this.toBin.id }
+            $.ajax({
+                url: `${ROOTURL}/a/${this.assembly.id}/bs/${this.binSet.id}`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).then(() => {
+                let contigs = $.extend(true, [], this.$store.state.contigs) // deep-copy
+
+                // First, update the bin attr of the selected contigs
+                contigs.forEach(contig => {
+                    if (selectedContigs.indexOf(contig.id) > -1) {
+                        contig.bin = this.toBin.id
+                        contig[`color_${this.binSet.id}`] = this.toBin.color
+                    } 
                 })
+                // Then, unselect all contigs as these have now been moved
+                this.$store.commit('SET_SELECTED_CONTIGS', [])
+                // Then, filter out the contigs which have been moved to an unselected bin
+                const selectedBins = this.$store.state.refineBins.map(bin => bin.id)
+                contigs = contigs.filter(contig => {
+                    return selectedBins.indexOf(contig.bin) > -1
+                })
+                // Then, commit to store
+                this.$store.commit('SET_CONTIGS', contigs)
+                // Finally, update refetch bins
+                this.$store.dispatch('GET_BINS').then(() => this.loading = false)
+                
+                this.done()
+            }, () => {
+                this.done()
             })
-            this.$router.push({ path: 'refine' })
-            this.hide()
         },
-        switch_() {
-            this.$store.dispatch('SELECT_BIN_SET', this.binSet).then(() => {
-                this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
-                if (this.bin) {
-                    this.$store.dispatch('PUSH_REFINE_BIN', this.bin)
-                    this.$store.commit('SET_POTENTIAL_REFINE_BIN', null)
-                    this.$store.commit('SET_POTENTIAL_REFINE_SET', null)
-                }
-                this.$router.push({ path: 'refine' })
-                this.hide()
-            })
+        done() {
+            this.loading = false
+            this.hide()
         }
     },
-
+    
     computed: {
+        ...mapState([
+            'selectedContigs',
+            'binSet',
+            'bins',
+            'assembly'
+        ])
+    },
+
+    watch: {
         binSet() {
-            return this.$store.state.potentialRefineSet
-        },
-        bin() {
-            return this.$store.state.potentialRefineBin
-        },
-        refineBinSet() {
-            return this.$store.state.refineBinSet
+            this.toBin = this.bins[0]
         }
     }
 }
