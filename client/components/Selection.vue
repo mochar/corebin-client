@@ -15,25 +15,30 @@
                 ASSEMBLIES
             </strong>
 
-            <div v-if="assemblies.length === 0 && !assemblyJob && !loading">
-                <span class="text-muted empty-message">No assemblies.</span>
-                <a href="#" id="try-link" class="text-muted" data-toggle="modal"
-                    data-target="#demo-modal">
-                    Try CoReBIN with demo data
-                </a>
-            </div>
+            <transition name="fade" mode="out-in">
+                <div class="d-flex justify-content-center" style="margin-top: 1rem"
+                    v-if="loading" key="loading">
+                    <span class="fa fa-refresh fa-spin fa-2x text-muted"></span>
+                </div>
 
-            <div class="d-flex justify-content-center" style="margin-top: 1rem" v-if="loading">
-                <span class="fa fa-refresh fa-spin fa-2x text-muted"></span>
-            </div>
+                <div v-if="!loading" key="notloading">
+                    <div v-if="assemblies.length === 0 && !assemblyJob">
+                        <span class="text-muted empty-message">No assemblies.</span>
+                        <a href="#" id="try-link" class="text-muted" data-toggle="modal"
+                            data-target="#demo-modal">
+                            Try CoReBIN with demo data
+                        </a>
+                    </div>
 
-            <div id="assembly-list" class="list-group">
-                <assembly
-                    v-for="a in assemblies"
-                    @selected="showAssemblies = false"
-                    :assembly="a">
-                </assembly>
-            </div>
+                    <div id="assembly-list" class="list-group">
+                        <assembly
+                            v-for="a in assemblies"
+                            @selected="showAssemblies = false"
+                            :assembly="a">
+                        </assembly>
+                    </div>
+                </div>
+            </transition>
 
             <job :job="assemblyJob" v-if="assemblyJob"></job>
         </div>
@@ -323,10 +328,10 @@ export default {
 
 /* Animation */
 .slide-fade-enter-active {
-  transition: all .05s ease;
+  transition: all .06s ease;
 }
 .slide-fade-leave-active {
-  transition: all .05s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all .06s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .slide-fade-enter, .slide-fade-leave-to {
   transform: translateX(10px);
