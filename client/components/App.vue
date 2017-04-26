@@ -133,6 +133,9 @@ input[type="file"] {
 }
 .btn:active { top: 1px !important; }
 .btn:focus { box-shadow: inherit; }
+.btn:focus:hover:not(:active) {
+    top: 0px !important;
+}
 
 a:active, .btn-link:active {
     color: #333;
