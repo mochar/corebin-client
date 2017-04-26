@@ -306,12 +306,17 @@ export default {
     height: 1.5rem;
 }
 
-#bin-sets > .bin-set:first-child {
+#bin-sets > .bin-set:first-child,
+#assembly-list > .assembly:first-child {
     box-shadow: inset 0px 1px 1px 0px #eee;
 }
-
-#assembly-list .assembly:first-child {
-    box-shadow: inset 0px 1px 1px 0px #eee;
+#bin-sets > .bin-set:last-child,
+#assembly-list > .assembly:last-child {
+    box-shadow: inset 0px -1px 1px 0px #eee;
+}
+#bin-sets > .bin-set:first-child:last-child,
+#assembly-list > .assembly:first-child:last-child {
+    box-shadow: inset 0px 1px 1px 0px #eee, inset 0px -1px 1px 0px #eee;
 }
 </style>
 
