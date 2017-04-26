@@ -225,7 +225,7 @@ export default {
 <style>
 .name {
     font-size: 1.3rem;
-    margin-left: 1rem;
+    margin-left: .5rem;
 }
 
 .name::before {
@@ -234,7 +234,7 @@ export default {
 }
 
 .name-block {
-    padding: 0;
+    padding: .25rem 0;
 }
 
 #bins {

@@ -1,5 +1,9 @@
 <template>
-<div></div>
+<svg :width="`${width + margin.left + margin.right}`" :height="`${height + margin.top + margin.bottom}`">
+    <g :transform="`translate(${margin.left}, ${margin.top})`">
+        <g class="x axis hist-axis" :transform="`translate(0,${height})`"></g>
+    </g>
+</svg>
 </template>
 
 <script>
@@ -9,6 +13,8 @@ export default {
     data() {
         return {
             svg: null,
+            width: 10,
+            height: 10,
             margin: {top: 0, right: 8, bottom: 18, left: 5}
         }
     },
@@ -32,10 +38,7 @@ export default {
     
     methods: {
         updatePlot() {
-            let width = parseInt(d3.select(this.$el).style('width'), 10)
-            width = width - this.margin.left - this.margin.right
-            let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
-            height = height - this.margin.top - this.margin.bottom
+            this.resize()
                 
             let bins = this.plotData.bins
             let data = this.plotData.hist
@@ -44,8 +47,8 @@ export default {
             let format = this.format ? d3.formatPrefix(',.0', 1e3) : d3.format('')
             
             // Setup x and y
-            let x = d3.scalePoint().range([0, width]).domain(bins)
-            let y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data)])
+            let x = d3.scalePoint().range([0, this.width]).domain(bins)
+            let y = d3.scaleLinear().range([this.height, 0]).domain([0, d3.max(data)])
             let xAxis = d3.axisBottom(x).tickFormat(format)
             this.svg.select('.x').call(xAxis)
             
@@ -59,34 +62,32 @@ export default {
                 .attr('class', 'bar')
                 .attr('fill', this.color)
                 .attr('x', (d, i) => x(bins[i]))
-                .attr('y', height)
-                .attr('width', width / data.length -1)
+                .attr('y', this.height)
+                .attr('width', this.width / data.length -1)
                 .attr('height', 0)
             rect.transition()
-                .attr('height', d => height - y(d))
+                .attr('height', d => this.height - y(d))
                 .attr('y', d => y(d))
             rect.append('title')
                 .text(d => d)
+        },
+        resize() {
+            this.width = $(this.$el).parent().width()
+            this.width -= this.margin.left - this.margin.right
+            this.height = this.width / 4 - this.margin.top - this.margin.bottom
         }
     },
     
     mounted() {
-        let width = parseInt(d3.select(this.$el).style('width'), 10)
-        width = width - this.margin.left - this.margin.right
-        let height = parseInt(d3.select(this.$el).style('width'), 10) * 0.8
-        height = height - this.margin.top - this.margin.bottom
-
-        this.svg = d3.select(this.$el).append('svg')
-                .attr('width', width + this.margin.left + this.margin.right)
-                .attr('height', height + this.margin.top + this.margin.bottom)
-            .append('g')
-                .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')')
-        
-        this.svg.append('g')
-            .attr('class', 'x axis hist-axis')
-            .attr('transform', 'translate(0,' + height + ')')
-            
+        this.resize()
+        this.svg = d3.select(this.$el).select('g')
         this.updatePlot()
+    },
+
+    watch: {
+        plotData() {
+            this.updatePlot()
+        }
     }
 }
 </script>
@@ -96,8 +97,11 @@ export default {
     shape-rendering: crispEdges;
     stroke: rgba(0, 0, 0, 0.1);
 }
+</style>
 
-.bar:hover {
-    fill: brown;
+<style scoped>
+svg {
+    display: block;
+    width: 100%;
 }
 </style>

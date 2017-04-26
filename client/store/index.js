@@ -49,7 +49,10 @@ const mutations = {
         state.bin = bin
     },
     SET_ASSEMBLIES(state, assemblies) {
-        assemblies.forEach(a => a.submitDate = moment(a.submitDate).fromNow())
+        assemblies.forEach(a => {
+            a.submitDate = moment(a.submitDate).fromNow()
+            a.plotData = null
+        })
         state.assemblies = assemblies
     },
     APPEND_ASSEMBLIES(state, assembly) {
@@ -156,6 +159,10 @@ const mutations = {
     },
     SET_SELECTED_CONTIGS(state, contigs) {
         state.selectedContigs = contigs
+    },
+    SET_ASSEMBLY_PLOT(state, { assembly, data }) {
+        const index = state.assemblies.findIndex(a => a.id === assembly.id)
+        state.assemblies[index].plotData = data
     }
 }
 
@@ -212,7 +219,15 @@ const actions = {
         ).then((respJobs, respAssemblies) => {
             commit('SET_JOBS', respJobs[0].jobs)
             commit('SET_ASSEMBLIES', respAssemblies[0].assemblies)
+            for (let assembly of respAssemblies[0].assemblies) {
+                dispatch('GET_ASSEMBLY_PLOT', { assembly })
+            }
             commit('SET_MESSAGE', '')
+        })
+    },
+    GET_ASSEMBLY_PLOT({ commit }, { assembly }) {
+        $.getJSON(`${ROOTURL}/a/${assembly.id}/c/plot`).then(data => {
+            commit('SET_ASSEMBLY_PLOT', { assembly, data })
         })
     },
     GET_BIN_SETS({ commit, state }) {

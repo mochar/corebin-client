@@ -161,6 +161,15 @@ a:active, .btn-link:active {
     color: #31708f !important;
 }
 
+.text-danger-hover:hover {
+    color: #d9534f !important;
+    font-weight: 500;
+}
+.text-primary-hover:hover {
+    color: #31708f !important;
+    font-weight: 500;
+}
+
 .vue-color__compact {
     box-shadow: 0 0 0 0 !important;
 }
@@ -209,7 +218,7 @@ a:active, .btn-link:active {
     border-right: 1px solid #ccc;
     height: 100vh;
     background-color: #F4F4F4;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 #right {

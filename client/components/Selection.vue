@@ -224,11 +224,6 @@ export default {
     padding: 1rem;
 }
 
-#assemblies .assembly + .assembly,
-#assemblies .bin-set + .bin-set {
-    border-top: 0;
-}
-
 #add-assembly-button {
     color: #666;
     border: 0;
@@ -324,6 +319,11 @@ export default {
 #bin-sets > .bin-set:first-child:last-child,
 #assembly-list > .assembly:first-child:last-child {
     box-shadow: inset 0px 1px 1px 0px #eee, inset 0px -1px 1px 0px #eee;
+}
+
+#assembly-list {
+    overflow-y: auto;
+    height: 85vh;
 }
 
 /* Animation */

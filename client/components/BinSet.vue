@@ -33,14 +33,14 @@
         </div>
 
         <rename-popover 
-            btn-classes="action-btn"
+            btn-classes="action-btn text-primary-hover"
             text="Rename"
             @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
             :url="`a/${binSet.assembly}/bs/${binSet.id}`">
         </rename-popover>
 
         <delete-popover 
-            btn-classes="action-btn"
+            btn-classes="action-btn text-danger-hover"
             text="Remove"
             @done="commitDeletion"
             :url="`a/${binSet.assembly}/bs/${binSet.id}`">
