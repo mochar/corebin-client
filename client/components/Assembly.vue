@@ -1,6 +1,6 @@
 <template>
 <a href="#" @click.prevent="select" 
-    class="list-group-item list-group-item-action flex-column align-items-start">
+    class="assembly list-group-item list-group-item-action flex-column align-items-start">
     <div class="name-block">
         <span class="name">{{ assembly.name }}</span>
     </div>
@@ -86,14 +86,6 @@ export default {
     }
 }
 </script>
-
-<style>
-.assembly {
-    margin-bottom: 0;
-    border-left: 0;
-    border-right: 0;
-}
-</style>
 
 <style scoped>
 .list-group-item {

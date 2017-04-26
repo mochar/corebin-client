@@ -69,6 +69,10 @@ export default {
             if (this.assemblyJob) this.checkAssemblyJob()
             this.checkBinSetJobs()
         }, 5000)
+    },
+
+    mounted() {
+        $('[data-toggle="tooltip"]').tooltip()
     }
 }
 </script>

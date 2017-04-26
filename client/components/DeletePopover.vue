@@ -8,7 +8,7 @@
 
     <div slot="body">
         <button class="btn btn-danger btn-sm" @click="delete_" :disabled="loading">
-            Delete this?!
+            Remove
         </button>
     </div>
 </popover>

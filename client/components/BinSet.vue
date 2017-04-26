@@ -2,41 +2,49 @@
 <router-link to="/overview" @click.native="select" tag="a" 
     :class="{ 'selected-bin-set': selectedClass }"
     class="list-group-item list-group-item-action flex-column align-items-start bin-set">
-    <span class="name">{{ binSet.name }}</span>
+
+    <div class="name-div w-100 d-flex justify-content-between align-items-baseline">
+        <span class="name">{{ binSet.name }}</span>
+        <span class="fa fa-eye fa-lg fa-fw" v-if="isSelected"></span>
+    </div>
 
     <div class="card-block" style="padding: .15rem 1rem .5rem;">
-        <div class="btn-group">
-            <rename-popover 
-                btn-classes="btn-header"
-                text="Rename"
-                @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
-                :url="`a/${binSet.assembly}/bs/${binSet.id}`">
-            </rename-popover>
-
-            <delete-popover 
-                btn-classes="btn-header"
-                text="Remove"
-                @done="commitDeletion"
-                style="border-right: 1px solid #adadad;"
-                :url="`a/${binSet.assembly}/bs/${binSet.id}`">
-            </delete-popover>
-        </div>
-
-
-        <div style="margin-top: .5rem" v-if="refineBinSet && refineBinSet.id == binSet.id">
-            <span class="text-muted">
+        <div style="margin-top: .5rem" class="text-muted d-flex justify-content-between" 
+            v-if="refineBinSet && refineBinSet.id == binSet.id">
+            <div>
                 <span class="fa fa-wrench"></span>
                 <span>Refinement in progress...</span>
-                <a 
-                    href="#" 
-                    v-show="$route.path !== '/refine'"
-                    class="text-muted" 
-                    style="text-decoration: underline; position: absolute; right: 1rem"
-                   @click.prevent="viewRefine"
-                >View
-                </a>
-            </span>
+            </div>
+            <a 
+                href="#" 
+                v-show="$route.path !== '/refine'"
+                class="text-muted bin-set-action" 
+                style="text-decoration: underline; position: absolute; right: 1rem"
+                @click.prevent="viewRefine"
+            >View
+            </a>
         </div>
+    </div>
+
+    <div class="bin-set-bar text-muted d-flex justify-content-around">
+        <div>
+            <span class="fa fa-list fa-fw"></span>
+            {{ binSet.bins.length }}
+        </div>
+
+        <rename-popover 
+            btn-classes="action-btn"
+            text="Rename"
+            @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
+            :url="`a/${binSet.assembly}/bs/${binSet.id}`">
+        </rename-popover>
+
+        <delete-popover 
+            btn-classes="action-btn"
+            text="Remove"
+            @done="commitDeletion"
+            :url="`a/${binSet.assembly}/bs/${binSet.id}`">
+        </delete-popover>
     </div>
 </router-link>
 </template>
@@ -87,9 +95,11 @@ export default {
         refineBinSet() {
             return this.$store.state.refineBinSet
         },
+        isSelected() {
+            return this.$store.state.binSet.id == this.binSet.id
+        },
         selectedClass() {
-            return this.$store.state.binSet.id == this.binSet.id &&
-                   this.$route.path === '/overview'
+            return this.isSelected && this.$route.path === '/overview'
         }
     }
 }
@@ -100,13 +110,9 @@ export default {
     margin-bottom: 0;
     border-left: 0;
     border-right: 0;
-}
-
-.selected-bin-set {
-    -webkit-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,1);
-    -moz-box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,1);
-    box-shadow: inset 0px 0px 1px 0px rgba(0,0,0,1);
-    background-color: white;
+    border-color: #bbb;
+    border-color: #ddd;
+    padding-top: .5rem !important;
 }
 
 .list-group-item-action,
@@ -114,5 +120,25 @@ export default {
 .list-group-item-action:hover,
 .list-group-item-action:active {
     background-color: white;
+}
+
+.bin-set-bar {
+    /*background: #eee;*/
+    width: 100%;
+    padding: .15rem 0;
+    /*border-top: 1px solid #ddd;*/
+}
+
+.name-div {
+    padding-right: 1rem;
+}
+
+.bin-set-action:hover {
+    color: #333;
+}
+
+.action-btn {
+    border: 0;
+    color: #444;
 }
 </style>

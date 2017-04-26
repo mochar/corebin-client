@@ -3,7 +3,9 @@
     <div id="assemblies">
         <div v-if="showAssemblies && $route.path !== '/refine'">
             <strong class="selection-button" style="position: absolute; right: 0"
-                    :class="{ 'selection-button-disabled': assemblyJob }">
+                    :class="{ 'selection-button-disabled': assemblyJob }"
+                    data-toggle="tooltip" data-placement="bottom"
+                    title="Upload assembly">
                 <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                       data-target="#assembly-upload-modal">
                 </span>
@@ -24,7 +26,7 @@
                 <span class="fa fa-refresh fa-spin fa-2x text-muted"></span>
             </div>
 
-            <div class="list-group">
+            <div id="assembly-list" class="list-group">
                 <assembly
                     v-for="a in assemblies"
                     @selected="showAssemblies = false"
@@ -48,7 +50,7 @@
                         {{ assembly.name }}
                     </strong>
                 </div>
-                <div class="selection-button">
+                <div class="selection-button" data-toggle="tooltip" data-placement="bottom" title="Upload bin-set">
                     <span class="fa fa-plus fa-lg text-muted" data-toggle="modal"
                         data-target="#bin-set-upload-modal">
                     </span>
@@ -59,10 +61,12 @@
                 <span class="text-muted empty-message">No bin-sets.</span>
             </div>
 
-            <bin-set
-                v-for="bs in binSets"
-                :binSet="bs">
-            </bin-set>
+            <div id="bin-sets">
+                <bin-set
+                    v-for="bs in binSets"
+                    :binSet="bs">
+                </bin-set>
+            </div>
 
             <job
                 v-for="job in binSetJobs"
@@ -300,6 +304,14 @@ export default {
 
 #logo-home {
     height: 1.5rem;
+}
+
+#bin-sets > .bin-set:first-child {
+    box-shadow: inset 0px 1px 1px 0px #eee;
+}
+
+#assembly-list .assembly:first-child {
+    box-shadow: inset 0px 1px 1px 0px #eee;
 }
 </style>
 
