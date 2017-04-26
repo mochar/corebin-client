@@ -323,27 +323,15 @@ export default {
 
 /* Animation */
 .slide-fade-enter-active {
-  transition: all .1s ease;
+  transition: all .05s ease;
 }
 .slide-fade-leave-active {
-  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all .05s cubic-bezier(1.0, 0.5, 0.8, 1.0);
 }
 .slide-fade-enter, .slide-fade-leave-to {
   transform: translateX(10px);
   opacity: 0;
 }
-/*.slide-fade-enter {
-  opacity: 0;
-  transform: translateX(10px);
-}
-.slide-fader-enter-to {
-  opacity: 1;
-  transform: translateX(0px);
-}
-.slide-fade-leave-to {
-  opacity: 0;
-  transform: translateX(10px);
-}*/
 </style>
 
 <style scoped>
