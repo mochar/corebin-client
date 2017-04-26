@@ -1,7 +1,8 @@
 <template>
 <div>
     <div id="assemblies">
-        <div v-if="showAssemblies && $route.path !== '/refine'">
+        <transition name="slide-fade" mode="out-in">
+        <div v-if="showAssemblies && $route.path !== '/refine'" key="assemblies">
             <strong class="selection-button" style="position: absolute; right: 0"
                     :class="{ 'selection-button-disabled': assemblyJob }"
                     data-toggle="tooltip" data-placement="bottom"
@@ -37,7 +38,7 @@
             <job :job="assemblyJob" v-if="assemblyJob"></job>
         </div>
         
-        <div v-if="!showAssemblies && $route.path !== '/refine'">
+        <div v-if="!showAssemblies && $route.path !== '/refine'" key="bin-sets">
             <div class="navigation" style="padding-bottom: .5rem">
                 <router-link tag="div" class="selection-button" to="/home" @click.native="showAssemblies = true">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
@@ -80,7 +81,7 @@
             </router-link>
         </div>
         
-        <div v-if="$route.path === '/refine'">
+        <div v-if="$route.path === '/refine'" key="refine">
             <div class="navigation">
                 <div class="selection-button" @click="$router.go(-1)">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
@@ -130,6 +131,7 @@
                 </div>
             </div>
         </div>
+        </transition>
     </div>
 
     <div class="float-right" id="madeby">
@@ -318,6 +320,30 @@ export default {
 #assembly-list > .assembly:first-child:last-child {
     box-shadow: inset 0px 1px 1px 0px #eee, inset 0px -1px 1px 0px #eee;
 }
+
+/* Animation */
+.slide-fade-enter-active {
+  transition: all .1s ease;
+}
+.slide-fade-leave-active {
+  transition: all .1s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
+}
+/*.slide-fade-enter {
+  opacity: 0;
+  transform: translateX(10px);
+}
+.slide-fader-enter-to {
+  opacity: 1;
+  transform: translateX(0px);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(10px);
+}*/
 </style>
 
 <style scoped>

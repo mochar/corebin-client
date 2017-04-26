@@ -12,11 +12,11 @@
             <selection></selection>
         </div>
         <div class="col-9" id="right">
-            <transition name="fade" mode="out-in">
+            <!--<transition name="fade" mode="out-in">-->
                 <keep-alive>
                     <router-view></router-view>
                 </keep-alive>
-            </transition>
+            <!--</transition>-->
         </div>
     </div>
 
@@ -209,6 +209,7 @@ a:active, .btn-link:active {
     border-right: 1px solid #ccc;
     height: 100vh;
     background-color: #F4F4F4;
+    overflow: hidden;
 }
 
 #right {
