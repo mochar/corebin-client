@@ -57,6 +57,7 @@ const mutations = {
     },
     APPEND_ASSEMBLIES(state, assembly) {
         assembly.submitDate = moment(assembly.submitDate).fromNow()
+        assembly.plotData = null
         state.assemblies.push(assembly)
     },
     SET_BIN_SETS(state, binSets) {
@@ -252,6 +253,7 @@ const actions = {
                 const location = jqXHR.getResponseHeader('Location')
                 $.getJSON(location, assembly => {
                     commit('APPEND_ASSEMBLIES', assembly)
+                    dispatch('GET_ASSEMBLY_PLOT', { assembly })
                     if (state.assemblies.length === 1) 
                         dispatch('SELECT_ASSEMBLY_AND_FIRST_BIN_SET', assembly)
                 })
