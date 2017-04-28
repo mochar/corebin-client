@@ -33,7 +33,7 @@
                     <div id="assembly-list" class="list-group">
                         <assembly
                             v-for="a in assemblies"
-                            @selected="showAssemblies = false"
+                            @selected="assemblySelected"
                             :assembly="a">
                         </assembly>
 
@@ -63,21 +63,29 @@
                 </div>
             </div>
 
-            <div v-if="binSets.length === 0 && binSetJobs.length === 0">
-                <span class="text-muted empty-message">No bin-sets.</span>
-            </div>
+            <transition name="fade" mode="out-in">
+                <div class="d-flex justify-content-center" style="margin-top: 1rem"
+                    v-if="binSetsLoading" key="loading">
+                    <span class="fa fa-refresh fa-spin fa-2x text-muted"></span>
+                </div>
 
-            <div id="bin-sets">
-                <bin-set
-                    v-for="bs in binSets"
-                    :binSet="bs">
-                </bin-set>
-            </div>
+                <div v-else key="notloading">
+                    <div v-if="binSets.length === 0 && binSetJobs.length === 0">
+                        <span class="text-muted empty-message">No bin-sets.</span>
+                    </div>
 
-            <job
-                v-for="job in binSetJobs"
-                :job="job">
-            </job>
+                    <div id="bin-sets" v-else>
+                        <bin-set
+                            v-for="bs in binSets"
+                            :binSet="bs">
+                        </bin-set>
+                        <job
+                            v-for="job in binSetJobs"
+                            :job="job">
+                        </job>
+                    </div>
+                </div>
+            </transition>
 
             <router-link tag="strong" id="compare-link" class="text-muted" to="/compare"
                     :class="{ 'inactive-button': !binSets.length }">
@@ -165,7 +173,8 @@ export default {
             cancelling: false,
             showAssemblies: true,
             refinementTab: 'PlotTab',
-            loading: true
+            loading: true,
+            binSetsLoading: true
         }
     },
 
@@ -185,6 +194,12 @@ export default {
         cancelJob() {
             this.cancelling = true
             this.cancelAssemblyJob().done(() => this.cancelling = false)
+        },
+        assemblySelected(binSetsRequest) {
+            this.showAssemblies = false
+            this.binSetsLoading = true
+            if (binSetsRequest) binSetsRequest.then(() => this.binSetsLoading = false)
+            else this.binSetsLoading = false
         }
     },
 
@@ -324,6 +339,10 @@ export default {
 #assembly-list {
     overflow-y: auto;
     height: 85vh;
+}
+
+#bin-sets > .bin-set:not(:first-child) {
+    border-top: 0;
 }
 
 /* Animation */
