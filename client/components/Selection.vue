@@ -36,11 +36,11 @@
                             @selected="showAssemblies = false"
                             :assembly="a">
                         </assembly>
+
+                        <job :job="assemblyJob" v-if="assemblyJob"></job>
                     </div>
                 </div>
             </transition>
-
-            <job :job="assemblyJob" v-if="assemblyJob"></job>
         </div>
         
         <div v-if="!showAssemblies && $route.path !== '/refine'" key="bin-sets">
