@@ -147,6 +147,7 @@ a:active, .btn-link:active {
 
 .fw-500 {
     font-weight: 500;
+    letter-spacing: .025rem;
 }
 
 .btn-sm {

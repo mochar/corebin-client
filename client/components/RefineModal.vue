@@ -56,7 +56,7 @@
     <div class="d-flex justify-content-between" style="margin-top: 1rem">
         <button class="btn btn-link btn-sm" @click="hide">Cancel</button>
 
-        <button class="btn btn-primary btn-sm submit-button" :disabled="loading || !toBin" @click="refine">
+        <button class="btn btn-primary btn-sm submit-button fw-500" :disabled="loading || !toBin" @click="refine">
             <span v-show="loading" class="fa fa-refresh fa-spin"></span>
             Confirm
         </button> 

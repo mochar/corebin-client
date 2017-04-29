@@ -43,5 +43,6 @@ td > div {
 
 td > span {
     display: block;
+    position: relative;
 }
 </style>

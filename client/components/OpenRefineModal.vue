@@ -11,7 +11,7 @@
 
         <button class="btn btn-link btn-sm" @click="continue_">Continue to refine page</button>
         
-        <button class="btn btn-primary btn-sm submit-button" @click="switch_">
+        <button class="btn btn-primary btn-sm submit-button fw-500" @click="switch_" :disabled="loading">
             Switch to {{ binSet && binSet.name }}
         </button> 
     </div>
@@ -24,6 +24,12 @@
 
 <script>
 export default {
+    data() {
+        return {
+            loading: false
+        }
+    },
+
     methods: {
         hide() {
             $(this.$el).modal('hide')
@@ -41,7 +47,9 @@ export default {
             this.hide()
         },
         switch_() {
+            this.loading = true
             this.$store.dispatch('SELECT_BIN_SET', this.binSet).then(() => {
+                this.loading = false
                 this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
                 if (this.bin) {
                     this.$store.dispatch('PUSH_REFINE_BIN', this.bin)
