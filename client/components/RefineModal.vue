@@ -6,14 +6,51 @@
 
     <h5 class="modal-title">Refine</h5>
 
-    <div class="card-block">
-        <div class="align-items-center">
+    <div class="card-block d-flex flex-column justify-content-center">
+        <div class="d-flex align-items-center">
             <span>Move {{ selectedContigs.length }} contigs to bin </span>
-            <select class="btn btn-secondary btn-xs" v-model="toBin">
+            <select class="btn btn-secondary btn-xs m-2" v-model="toBin">
                 <option v-for="bin in bins" :value="bin">{{ bin.name }}</option>
             </select>
         </div>
-        <small>Move to unbinned if you wish to delete the contigs.</small>
+        <small class="text-muted">Move to unbinned if you wish to delete the contigs.</small>
+
+        <transition name="fade">
+            <div v-if="toBin && assembly.genesSearched" 
+                class="d-flex flex-column justify-content-center m-1"
+                style="border-top: 1px dashed #ddd">
+                <button class="btn btn-sm btn-link" :disabled="assessLoading" 
+                        style="margin: 1rem 0" @click="assess">
+                    <span class="fa fa-refresh fa-spin" v-if="assessLoading"></span>
+                    Assess contamination and completeness
+                </button>
+
+                <div v-if="assessement">
+                    <div class="d-flex align-items-end">
+                        <span class="fw-500 w-100 text-center" style="font-size: smaller">
+                            CONTAMINATION
+                        </span>
+                        <span class="fw-500 w-100 text-center" style="font-size: smaller">
+                            COMPLETENESS
+                        </span>
+                    </div>
+                    <div v-for="d in assessement">
+                        <small>{{ d.bin.name }}</small>
+                        <div class="d-flex">
+                            <div class="w-100 text-center" v-for="x in ['contamination', 'completeness']">
+                                <span>{{ (d.before[x] * 100).toFixed(2) }}%</span>
+                                <span class="fa fa-long-arrow-right"></span>
+                                <span>{{ (d.after[x] * 100).toFixed(2) }}%</span>
+                                <span class="fa fa-long-arrow-up text-success fw-500 float-right" 
+                                    v-if="d.after[x] - d.before[x] > 0"></span>
+                                <span class="fa fa-long-arrow-down text-danger fw-500 float-right" 
+                                    v-if="d.after[x] - d.before[x] < 0"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
     </div>
 
     <div class="d-flex justify-content-between" style="margin-top: 1rem">
@@ -38,7 +75,9 @@ export default {
     data() {
         return {
             loading: false,
-            toBin: null
+            toBin: null,
+            assessLoading: false,
+            assessement: null
         }
     },
 
@@ -46,11 +85,23 @@ export default {
         hide() {
             $(this.$el).modal('hide')
         },
+        assess() {
+            this.assessLoading = true
+            const binSet = this.binSet
+            const data = { contigs: this.selectedContigsIds, to_bin: this.toBin.id }
+            $.ajax({
+                url: `${ROOTURL}/a/${binSet.assembly}/bs/${binSet.id}/assess`,
+                method: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(data)
+            }).then(data => {
+                this.assessLoading = false
+                this.assessement = data.bins
+            })
+        },
         refine() {
             this.loading = true
-            const selectedContigs = this.selectedContigs
-                .filter(c => c.bin != this.toBin.id)
-                .map(c => c.id)
+            const selectedContigs = this.selectedContigsIds
             const data = { action: 'move', contigs: selectedContigs, to_bin: this.toBin.id }
             $.ajax({
                 url: `${ROOTURL}/a/${this.assembly.id}/bs/${this.binSet.id}`,
@@ -96,7 +147,12 @@ export default {
             'binSet',
             'bins',
             'assembly'
-        ])
+        ]),
+        selectedContigsIds() {
+            return this.selectedContigs
+                .filter(c => c.bin != this.toBin.id)
+                .map(c => c.id)
+        }
     },
 
     watch: {

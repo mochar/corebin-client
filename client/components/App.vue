@@ -131,7 +131,7 @@ input[type="file"] {
 .btn-secondary { border-color: #adadad; }
 .btn-secondary:hover, .btn-secondary:active { background-color: #fff;  }
 
-.btn:hover {
+.btn:hover:not(:disabled) {
     top: -1px;
     box-shadow: 0px 1px 1px 0px #eee;
 }
@@ -143,6 +143,10 @@ input[type="file"] {
 
 a:active, .btn-link:active {
     color: #333;
+}
+
+.fw-500 {
+    font-weight: 500;
 }
 
 .btn-sm {
