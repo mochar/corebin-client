@@ -15,7 +15,7 @@ export default {
             svg: null,
             width: 10,
             height: 10,
-            margin: {top: 0, right: 8, bottom: 18, left: 5}
+            margin: {top: 0, right: 100, bottom: 18, left: 5}
         }
     },
     
@@ -33,6 +33,10 @@ export default {
         color: {
             type: String,
             default: 'steelblue'
+        },
+        size: {
+            type: Number,
+            default: 4
         }
     },
     
@@ -74,7 +78,7 @@ export default {
         resize() {
             this.width = $(this.$el).parent().width()
             this.width -= this.margin.left - this.margin.right
-            this.height = this.width / 4 - this.margin.top - this.margin.bottom
+            this.height = this.width / this.size - this.margin.top - this.margin.bottom
         }
     },
     
