@@ -25,6 +25,7 @@
     <open-refine-modal></open-refine-modal>
     <demo-request-modal></demo-request-modal>
     <refine-modal></refine-modal>
+    <assembly-modal></assembly-modal>
 </div>
 </template>
 
@@ -37,6 +38,7 @@ import BinSetUploadModal from '../components/BinSetUploadModal'
 import OpenRefineModal from '../components/OpenRefineModal'
 import DemoRequestModal from '../components/DemoRequestModal'
 import RefineModal from '../components/RefineModal'
+import AssemblyModal from '../components/AssemblyModal'
 
 export default {
     components: {
@@ -45,7 +47,8 @@ export default {
         BinSetUploadModal,
         OpenRefineModal,
         DemoRequestModal,
-        RefineModal
+        RefineModal,
+        AssemblyModal
     },
 
     methods: {

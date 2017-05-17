@@ -31,12 +31,7 @@
                     </div>
 
                     <div id="assembly-list" class="list-group">
-                        <assembly
-                            v-for="a in assemblies"
-                            @selected="assemblySelected"
-                            :assembly="a">
-                        </assembly>
-
+                        <assembly v-for="a in assemblies" :assembly="a"></assembly>
                         <job :job="assemblyJob" v-if="assemblyJob"></job>
                     </div>
                 </div>
@@ -45,7 +40,7 @@
         
         <div v-if="!showAssemblies && $route.path !== '/refine'" key="bin-sets">
             <div class="navigation" style="padding-bottom: .5rem">
-                <router-link tag="div" class="selection-button" to="/home" @click.native="showAssemblies = true">
+                <router-link tag="div" class="selection-button" to="/home" @click.native="$store.commit('SHOW_ASSEMBLIES', true)">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
                 </router-link>
                 <div>
@@ -171,10 +166,8 @@ export default {
     data() {
         return {
             cancelling: false,
-            showAssemblies: true,
             refinementTab: 'PlotTab',
-            loading: true,
-            binSetsLoading: true
+            loading: true
         }
     },
 
@@ -194,12 +187,6 @@ export default {
         cancelJob() {
             this.cancelling = true
             this.cancelAssemblyJob().done(() => this.cancelling = false)
-        },
-        assemblySelected(binSetsRequest) {
-            this.showAssemblies = false
-            this.binSetsLoading = true
-            if (binSetsRequest) binSetsRequest.then(() => this.binSetsLoading = false)
-            else this.binSetsLoading = false
         }
     },
 
@@ -210,7 +197,9 @@ export default {
             'binSets',
             'binSet',
             'assemblyJob',
-            'binSetJobs'
+            'binSetJobs',
+            'showAssemblies',
+            'binSetsLoading'
         ])
     },
 

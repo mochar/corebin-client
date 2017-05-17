@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
+import router from '../router'
 
 Vue.use(Vuex)
 
@@ -33,9 +34,14 @@ const state = {
     colorBinSet: null,
     xLog: false,
     yLog: false,
-    
+
+    // Sidebar
+    showAssemblies: true,
+    binSetsLoading: false,
+
     // Other
-    message: ''
+    message: '',
+    viewAssembly: null
 }
 
 const mutations = {
@@ -164,6 +170,15 @@ const mutations = {
     SET_ASSEMBLY_PLOT(state, { assembly, data }) {
         const index = state.assemblies.findIndex(a => a.id === assembly.id)
         state.assemblies[index].plotData = data
+    },
+    SET_VIEW_ASSEMBLY(state, assembly) {
+        state.viewAssembly = assembly
+    },
+    SHOW_ASSEMBLIES(state, show) {
+        state.showAssemblies = show
+    },
+    BIN_SETS_LOADING(state, loading) {
+        state.binSetsLoading = loading
     }
 }
 
@@ -183,6 +198,19 @@ const actions = {
             if (state.binSets.length === 0) return
             return dispatch('SELECT_BIN_SET', state.binSets[0])
         })
+    },
+    SELECT_ASSEMBLY_CAREFULLY({ commit, dispatch, state}, assembly) {
+        commit('SHOW_ASSEMBLIES', false)
+        const currentAssembly = state.assembly
+        if (currentAssembly && currentAssembly.id === assembly.id) {
+            if (state.binSets.length > 0) router.push({ path: 'overview' })
+        }
+        if (!currentAssembly || currentAssembly.id !== assembly.id) {
+            commit('BIN_SETS_LOADING', true)
+            dispatch('SELECT_ASSEMBLY_AND_FIRST_BIN_SET', assembly).then(() => {
+                if (state.binSets.length > 0) router.push({ path: 'overview' })
+            }).then(() => commit('BIN_SETS_LOADING', false))
+        }
     },
     SUBMIT_ASSEMBLY({ commit }, { formData }) {
         return $.post({
