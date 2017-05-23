@@ -9,7 +9,7 @@
                 <span v-else>Show unbinned</span>
             </button>
             <add-bin-popover></add-bin-popover>
-            <button class="btn btn-success btn-sm btn-header thicc" @click="refine()">
+            <button class="btn btn-sm btn-header" id="refine-button" @click="refine()">
                 <span class="fa fa-wrench"></span>
                 Refine bins
             </button>
@@ -290,5 +290,13 @@ export default {
 .btn-bin:hover {
     background-color: #eee;
     color: black;
+}
+
+#refine-button {
+    background: white;
+    font-weight: 500;
+    color: #478e47;
+    border: 1px solid #52a552;
+    letter-spacing: .03rem;
 }
 </style>

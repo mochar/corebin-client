@@ -46,7 +46,7 @@
             Remove
         </button>
 
-        <button class="btn btn-primary float-right submit-button btn-sm" :disabled="viewDisabled"
+        <button class="btn btn-primary float-right submit-button btn-sm fw-500" :disabled="viewDisabled"
             @click="view">
             View
         </button>
