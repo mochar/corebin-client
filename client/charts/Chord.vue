@@ -16,7 +16,7 @@
         </rect>
     </g>-->
 
-    <g :transform="`translate(${width/4},${height/4})`" id="info"  v-if="activeBin">
+    <g :transform="`translate(${width/3},${height/3})`" id="info"  v-if="activeBin">
         <text  x="10" y="30" id="info-title">Bin: {{ activeBin.name }} ({{ activeSet.name }})</text>
         <g :transform="`translate(10,${height/10})`">
             <text class="info-head">Size</text>
@@ -34,13 +34,7 @@
         </g>
         <transition name="fade" mode="out-in">
             <g id="transition-g" v-if="showChordActions">
-                <g :transform="`translate(10,${height/3})`">
-                    <text class="info-head">Compare</text>
-                    <text y="20" class="info-link" @click="">
-                        - Visualize {{ unselectedBinSet.name }} distribution
-                    </text>
-                </g>
-                <g :transform="`translate(10,${height/2.25})`">
+                <g :transform="`translate(10,${height/3.25})`">
                     <text class="info-head">Refine</text>
                     <text y="20" class="info-link" @click="$emit('refine')">
                         - Open refinement plot
@@ -343,6 +337,10 @@ export default {
 #info > text, #info g:not(#transition-g) {
     fill: white;
     text-shadow: 1px 1px 8px black;
+    /*filter: url(#solid);*/
+}
+
+#info {
     filter: url(#solid);
 }
 
