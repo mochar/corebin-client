@@ -66,11 +66,31 @@
             </div>
         </div>
     </div>
+
+    <div style="margin-top: .75rem">
+        <span class="text-muted">
+            <span class="fa fa-download"></span>
+            Export
+        </span>
+        <div class="row align-items-center">
+            <div class="col-6">
+                <button class="btn btn-secondary btn-sm w-100" @click="showExportModal">
+                    As PNG
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
 </template>
 
 <script>
 export default {
+    methods: {
+        showExportModal() {
+            $('#refine-export-modal').modal('show')
+        }
+    },
+
     computed: {
         assembly() {
             return this.$store.state.assembly

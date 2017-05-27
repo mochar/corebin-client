@@ -26,6 +26,7 @@
     <demo-request-modal></demo-request-modal>
     <refine-modal></refine-modal>
     <assembly-modal></assembly-modal>
+    <refine-export-modal></refine-export-modal>
 </div>
 </template>
 
@@ -39,6 +40,7 @@ import OpenRefineModal from '../components/OpenRefineModal'
 import DemoRequestModal from '../components/DemoRequestModal'
 import RefineModal from '../components/RefineModal'
 import AssemblyModal from '../components/AssemblyModal'
+import RefineExportModal from '../components/RefineExportModal'
 
 export default {
     components: {
@@ -48,7 +50,8 @@ export default {
         OpenRefineModal,
         DemoRequestModal,
         RefineModal,
-        AssemblyModal
+        AssemblyModal,
+        RefineExportModal
     },
 
     methods: {

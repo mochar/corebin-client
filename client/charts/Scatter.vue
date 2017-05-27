@@ -6,7 +6,7 @@
             <stop offset="100.0%" stop-color="#00f"></stop>
         </linearGradient>
     </defs>
-    <g id="legend" :transform="`translate(${width},0)`">
+    <g class="legend" :transform="`translate(${width},0)`">
         <g v-if="colorBy === 'gc'" transform="translate(0, 20)">
             <text text-anchor="start" x="-30">GC</text>
             <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g>
@@ -14,7 +14,7 @@
                 :width="20" 
                 :height="120" 
                 :y="12" :x="-30" 
-                id="color-legend">
+                class="color-legend">
             </rect>
         </g>
         <g v-else v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
@@ -263,13 +263,13 @@ export default {
     opacity: 1 !important;
 }
 
-#color-legend {
+.color-legend {
     fill: url(#gradient);
     opacity: .8;
     /*stroke: #000;*/
 }
 
-#legend circle {
+.legend circle {
     stroke: black;
     stroke-width: .5;
 }
