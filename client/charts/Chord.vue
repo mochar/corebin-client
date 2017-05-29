@@ -178,6 +178,7 @@ export default {
     
     methods: {
         updatePlot() {
+            console.log('chord update')
             this.resize()
             
             this.outerRadius = Math.min(this.width, this.height) * 0.5 - 40
@@ -242,8 +243,10 @@ export default {
                 // .attrTween('d', g => this.arcTween(g, g.endAngle))
         },
         resize() {
-            this.height = $(this.$el).parent().height()
-            this.width = $(this.$el).parent().width()
+            if (this.$route.path === '/compare') {
+                this.height = $(this.$el).parent().height()
+                this.width = $(this.$el).parent().width()
+            }
         },
         selectBin(binId) {
             const selected = this.selected && this.selected.id === binId ? null : binId
@@ -297,12 +300,6 @@ export default {
     },
 
     watch: {
-        plotData() {
-            this.updatePlot()
-        },
-        hoveredBin() {
-            this.updateRibbons()
-        },
         connected() {
             // const connectedIds = this.connected.map(b => b.id)
             // this.svg.select('g.groups').selectAll('.group')
@@ -310,7 +307,10 @@ export default {
             //     .transition()
             //     .duration(1000)
             //     .attrTween('d', g => this.arcTween(g, g.endAngle + .2))
-        }
+        },
+        '$route': 'updatePlot',
+        'plotData': 'updatePlot',
+        'hoveredBin': 'updateRibbons'
     },
     
     mounted() {

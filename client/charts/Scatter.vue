@@ -56,6 +56,8 @@ export default {
     
     methods: {
         updatePlot() {
+            this.resize()
+
             this.x = this.xLog ? d3.scaleLog() : d3.scaleLinear()
             this.x.domain([d3.min(this.contigs, c => c[this.xData]), d3.max(this.contigs, c => c[this.xData])])
                 .range([0, this.width])
@@ -102,6 +104,10 @@ export default {
 
             this.lasso.items(circleEnter.merge(circle))
         },
+        resize() {
+            this.height = $(this.$el).parent().height()
+            this.width = $(this.$el).parent().width()
+        },
         zoomed() {
             this.svg.select('g.x')
                 .call(this.xAxis.scale(d3.event.transform.rescaleX(this.x)))
@@ -145,8 +151,7 @@ export default {
     },
 
     mounted() {
-        this.width = $(this.$el).parent().width()
-        this.height = $(this.$el).parent().height()
+        this.resize()
         this.svg = d3.select(this.$el)
         this.hull = this.svg.select('polygon#hull')
 
@@ -175,6 +180,7 @@ export default {
         this.svg.call(this.zoom)
 
         this.updatePlot()
+        window.onresize = this.updatePlot
     },
 
     computed: {
@@ -194,13 +200,14 @@ export default {
     },
 
     watch: {
-        contigs() { this.updatePlot() },
-        xData() { this.updatePlot() },
-        yData() { this.updatePlot() },
-        colorBy() { this.updatePlot() },
-        colorBinSet() { this.updatePlot() },
-        xLog() { this.updatePlot() },
-        yLog() { this.updatePlot() },
+        '$route': 'updatePlot',
+        'contigs': 'updatePlot',
+        'xData': 'updatePlot',
+        'yData': 'updatePlot',
+        'colorBy': 'updatePlot',
+        'colorBinSet': 'updatePlot',
+        'xLog': 'updatePlot',
+        'yLog': 'updatePlot',
         refineBinSet() {
             this.$store.commit('SET_PLOT_VALUE', { key: 'xData', value: 'gc' })
             this.$store.commit('SET_PLOT_VALUE', { key: 'yData', value: 'length' })

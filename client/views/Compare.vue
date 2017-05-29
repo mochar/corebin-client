@@ -219,6 +219,7 @@ export default {
 
 #compare {
     min-height: 100vh;
+    max-height: 100vh;
     border-right: 0;
     display: flex;
     align-items: stretch;
@@ -237,6 +238,8 @@ export default {
 #chord {
     /*padding: 0 .5rem;*/
     flex: 1;
+    max-height: 100%;
+    min-height: 100%;
 }
 
 #plot-btn {
