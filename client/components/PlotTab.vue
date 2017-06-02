@@ -2,7 +2,7 @@
 <div class="card-block">
     <div>
         <div class="d-flex justify-content-between">
-            <span class="text-muted">X-axis</span>
+            <span>X-axis</span>
             <label class="form-check-label">
                 <input type="checkbox" class="form-check-input" v-model="xLog"> Log scale
             </label>
@@ -27,7 +27,7 @@
     
     <div style="margin-top: .75rem">
         <div class="d-flex justify-content-between">
-            <span class="text-muted">Y-axis</span>
+            <span>Y-axis</span>
             <label class="form-check-label">
                 <input type="checkbox" class="form-check-input" v-model="yLog"> Log scale
             </label>
@@ -51,7 +51,7 @@
     </div>
     
     <div style="margin-top: .75rem">
-        <span class="text-muted">Color by</span>
+        <span>Color by</span>
         <div class="row align-items-center">
             <div class="col-6">
                 <select class="custom-select btn btn-secondary btn-xs" v-model="colorBy">
@@ -68,7 +68,7 @@
     </div>
 
     <div style="margin-top: .75rem">
-        <span class="text-muted">
+        <span>
             <span class="fa fa-download"></span>
             Export
         </span>
