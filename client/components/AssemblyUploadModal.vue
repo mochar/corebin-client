@@ -52,6 +52,14 @@
                     Assess the completeness and contamination of each bin.
                 </small>
             </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control form-control-sm" name="email" placeholder="Email">
+                <small class="form-text text-muted">
+                    Send an email notification on completion.
+                </small>
+            </div>
         </div>
 
         <button
