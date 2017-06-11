@@ -93,6 +93,9 @@
                 <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
                 <td class="btn-group justify-content-center" style="width: 100%">
                     <edit-bin-popover :bin="bin" @deleted="commitDeletion(bin)"></edit-bin-popover>
+                    <button class="btn btn-secondary btn-sm btn-bin" @click.stop="exportFasta(bin)">
+                        <span class="fa fa-download"></span>
+                    </button>
                     <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine(bin)">
                         <span class="fa fa-wrench"></span>
                     </button>
@@ -176,6 +179,11 @@ export default {
         commitDeletion(bin) {
             this.$store.commit('REMOVE_BIN', bin)
             this.$store.commit('REMOVE_REFINE_BIN', bin)
+        },
+        exportFasta(bin) {
+            const assembly = this.$store.state.assembly.id
+            const url = `${ROOTURL}/a/${assembly}/bs/${bin.binSetId}/b/${bin.id}/export`
+            window.open(url)
         }
     },
     
