@@ -34,6 +34,7 @@ const state = {
     colorBinSet: null,
     xLog: false,
     yLog: false,
+    expand: false,
 
     // Sidebar
     showAssemblies: true,

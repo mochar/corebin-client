@@ -50,7 +50,8 @@ export default {
             width: 100,
             colorScale: null,
             sizeScale: null,
-            hull: null
+            hull: null,
+            zoomTransform: null
         }
     },
     
@@ -79,7 +80,7 @@ export default {
             this.svg.select('g.y').call(this.yAxis)
             this.svg.select('g#legend-axis').call(this.legendAxis)
 
-            const circle = this.svg.select('g#circles').selectAll('circle')
+            const circle = this.svg.selectAll('circle.dot')
                 .data(this.contigs, contig => contig.id)
 
             circle.exit().transition()
@@ -92,17 +93,19 @@ export default {
                 .attr('cx', contig => this.x(contig[this.xData]))
                 .attr('cy', contig => this.y(contig[this.yData]))
                 .style('opacity', .5)
+                .attr('transform', this.zoomTransform ? this.zoomTransform : null)
 
             circleEnter.merge(circle).transition()
-                .attr('r', contig => this.sizeScale(contig.length))
                 .attr('cx', contig => this.x(contig[this.xData]))
                 .attr('cy', contig => this.y(contig[this.yData]))
+                .attr('r', contig => this.sizeScale(contig.length))
                 .attr('fill', contig => {
                     if (this.colorBy === 'gc') return this.colorScale(contig.gc)
                     return contig[`color_${this.colorBinSet}`]
                 })
 
             this.lasso.items(circleEnter.merge(circle))
+            this.updateHull()
         },
         resize() {
             this.height = $(this.$el).parent().height()
@@ -116,18 +119,26 @@ export default {
             this.svg.selectAll('circle.dot')
                 .attr('transform', d3.event.transform)
             this.hull.attr('transform', d3.event.transform)
+            this.zoomTransform = d3.event.transform
         },
         lassoStarted() {
-            this.lasso.items()
+            let items = this.lasso.items()
                 .classed('not_possible', true)
-                .classed('selected', false)
+            if (!this.expand) {
+                this.$store.commit('SET_SELECTED_CONTIGS', [])
+                this.updateHull()
+                items.classed('selected', false)
+            }
         },
         lassoDrawing() {
             this.lasso.possibleItems()
                 .classed('not_possible', false)
                 .classed('possible', true)
 
-            this.lasso.notPossibleItems()
+            let notPossible = this.lasso.notPossibleItems()
+            if (this.expand) 
+                notPossible = notPossible.filter(c => this.selectedIds.includes(c.id))
+            notPossible
                 .classed('not_possible', true)
                 .classed('possible', false)
         },
@@ -139,14 +150,18 @@ export default {
             this.lasso.selectedItems()
                 .classed('selected', true)
 
-            const selected = this.lasso.selectedItems().data()
+            let selected = this.lasso.selectedItems().data()
+            selected = [...selected, ...this.selectedContigs]
+                .filter((elt, i, a) => i === a.findIndex(elt2 => elt.id === elt2.id))
             this.$store.commit('SET_SELECTED_CONTIGS', selected)
 
-            // Update convex hull
-            const dots = selected
+            this.updateHull()
+        },
+        updateHull() {
+            const dots = this.selectedContigs
                 .map(d => [this.x(d[this.xData]), this.y(d[this.yData])])
             const hullPoints = d3.polygonHull(dots) || []
-            this.hull.attr('points', hullPoints.join(' '))
+            this.hull.transition().attr('points', hullPoints.join(' '))
         }
     },
 
@@ -187,6 +202,9 @@ export default {
         binSet() {
             return this.$store.state.binSet.id
         },
+        selectedIds() {
+            return this.selectedContigs.map(c => c.id)
+        },
         ...mapState([
             'xData',
             'yData',
@@ -195,7 +213,9 @@ export default {
             'colorBy',
             'colorBinSet',
             'contigs',
-            'refineBinSet'
+            'refineBinSet',
+            'selectedContigs',
+            'expand'
         ])
     },
 

@@ -1,5 +1,6 @@
 <template>
 <div class="card-block">
+    <span class="fw-500" style="font-size: .8rem">PLOT PARAMETERS</span>
     <div>
         <div class="d-flex justify-content-between">
             <span>X-axis</span>
@@ -68,9 +69,19 @@
     </div>
 
     <div style="margin-top: .75rem">
+        <span class="fw-500" style="font-size: .8rem; margin-top: 2rem">SELECTION</span>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input class="form-check-input" type="checkbox" v-model="expand">
+                Expand selection
+            </label>
+        </div>
+    </div>
+
+    <div style="margin-top: .75rem">
         <span>
             <span class="fa fa-download"></span>
-            Export
+            <span class="fw-500" style="font-size: .8rem">EXPORT</span>
         </span>
         <div class="row align-items-center">
             <div class="col-6">
@@ -121,7 +132,11 @@ export default {
         colorBinSet: {
             get() { return this.$store.state.colorBinSet },
             set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value }) }
-        }
+        },
+        expand: {
+            get() { return this.$store.state.expand },
+            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'expand', value }) }
+        },
     }
 }
 </script>
