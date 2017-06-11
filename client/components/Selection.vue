@@ -2,7 +2,7 @@
 <div>
     <div id="assemblies">
         <transition name="slide-fade" mode="out-in">
-        <div v-if="showAssemblies && $route.path !== '/refine'" key="assemblies">
+        <div v-if="showAssemblies && !pageIsRefine && !pageIsHelp" key="assemblies">
             <strong class="selection-button" style="position: absolute; right: 0"
                     :class="{ 'selection-button-disabled': assemblyJob }"
                     data-toggle="tooltip" data-placement="bottom"
@@ -38,7 +38,7 @@
             </transition>
         </div>
         
-        <div v-if="!showAssemblies && $route.path !== '/refine'" key="bin-sets">
+        <div v-if="!showAssemblies && !pageIsRefine && !pageIsHelp" key="bin-sets">
             <div class="navigation" style="padding-bottom: .5rem">
                 <router-link tag="div" class="selection-button" to="/home" @click.native="$store.commit('SHOW_ASSEMBLIES', true)">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
@@ -89,7 +89,7 @@
             </router-link>
         </div>
         
-        <div v-if="$route.path === '/refine'" key="refine">
+        <div v-if="pageIsRefine" key="refine">
             <div class="navigation">
                 <div class="selection-button" @click="$router.go(-1)">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
@@ -139,6 +139,21 @@
                 </div>
             </div>
         </div>
+
+        <div v-if="pageIsHelp" key="help">
+            <div class="navigation">
+                <div class="selection-button" @click="$router.go(-1)">
+                    <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
+                </div>
+                <div>
+                    <strong class="selection-title text-muted text-center" style="padding-bottom: 0">
+                        HELP
+                    </strong>
+                </div>
+                <div></div>
+            </div>
+            <help-links></help-links>
+        </div>
         </transition>
     </div>
 
@@ -161,6 +176,7 @@ import Job from '../components/Job'
 import PlotTab from '../components/PlotTab'
 import RefineTab from '../components/RefineTab'
 import BinsTab from '../components/BinsTab'
+import HelpLinks from '../components/HelpLinks'
 
 export default {
     data() {
@@ -177,7 +193,8 @@ export default {
         Job,
         PlotTab,
         RefineTab,
-        BinsTab
+        BinsTab,
+        HelpLinks
     },
 
     methods: {
@@ -200,7 +217,13 @@ export default {
             'binSetJobs',
             'showAssemblies',
             'binSetsLoading'
-        ])
+        ]),
+        pageIsRefine() {
+            return this.$route.path === '/refine'
+        },
+        pageIsHelp() {
+            return this.$route.path === '/help'
+        }
     },
 
     beforeMount() {
