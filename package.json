@@ -40,7 +40,7 @@
     "webpack-hot-middleware": "^2.12.2",
     "bootstrap": "^4.0.0-alpha.6",
     "font-awesome": "^4.6.3",
-    "d3": "^4.7.4",
+    "d3": "latest",
     "d3-lasso": "latest",
     "moment": "latest",
     "webui-popover": "latest",
