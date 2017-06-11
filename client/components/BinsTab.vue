@@ -1,30 +1,51 @@
 <template>
-<table class="table table-hover">
-    <thead>
-        <th></th>
-        <th>Bin</th>
-        <th>Cont.</th>
-        <th>Comp.</th>
-    </thead>
-    <tbody>
-        <tr v-for="bin in $store.state.bins" @click="!loading && select(bin)"
-            :style="{ cursor: loading ? 'not-allowed' : 'pointer' }">
-            <td>
-                <span 
-                    class="fa" 
-                    :class="selectedIds.indexOf(bin.id) > -1 ? 'fa-square' : 'fa-square-o'"
-                    :style="{ color: bin.color, opacity: loading ? .5 : 1 }">
-                </span>
-            </td>
-            <td>{{ bin.name }}</td>
-            <td>{{ bin.contamination }}</td>
-            <td>{{ bin.completeness }}</td>
-        </tr>
-    </tbody>
-</table>
+<div style="padding: 1rem .5rem">
+    <div v-for="(bin, index) in $store.state.bins" 
+         @click="!loading && select(bin, index)"
+         :class="{ 'bin-selected': binsSelected[index] }" 
+         class="bin d-flex justify-content-between align-items-center"
+         :style="{ cursor: loading ? 'not-allowed' : 'pointer' }">
+        <div>
+            <span 
+                class="fa" 
+                :class="binsSelected[index] ? 'fa-square' : 'fa-square-o'"
+                :style="{ color: bin.color, opacity: loading ? .5 : 1 }">
+            </span>
+            <span>{{ bin.name }}</span>
+        </div>
+
+        <div>
+            <span class="text-muted">{{ bin.size }}</span>
+            <popover :options="{ placement: 'right', trigger: 'hover', delay: {hide:0} }">
+                <button slot="button" class="btn-link">
+                    <span class="fa fa-info"></span>
+                </button>
+                <div slot="body" class="d-flex">
+                    <div class="d-flex flex-column p-1">
+                        <span class="desc"># contigs</span>
+                        <span class="desc">Size (Mbp)</span>
+                        <span class="desc">GC</span>
+                        <span class="desc">Contamination</span>
+                        <span class="desc">Completeness</span>
+                    </div>
+
+                    <div class="d-flex flex-column p-1">
+                        <span>{{ bin.size }}</span>
+                        <span>{{ bin.mbp }}</span>
+                        <span>{{ bin.gc*100 }}%</span>
+                        <span>{{ bin.contamination*100 }}%</span>
+                        <span>{{ bin.completeness*100 }}%</span>
+                    </div>
+                </div>
+            </popover>
+        </div>
+    </div>
+</div>
 </template>
 
 <script>
+import Popover from '../components/Popover'
+
 export default {
     data() {
         return {
@@ -32,10 +53,14 @@ export default {
         }
     },
 
+    components: {
+        Popover
+    },
+
     methods: {
-        select(bin) {
+        select(bin, index) {
             this.loading = true
-            if (this.selectedIds.indexOf(bin.id) > -1) {
+            if (this.binsSelected[index]) {
                 this.$store.commit('REMOVE_REFINE_BIN', bin)
                 this.loading = false
             } else {
@@ -49,23 +74,28 @@ export default {
     computed: {
         selectedIds() {
             return this.$store.state.refineBins.map(bin => bin.id)
+        },
+        binsSelected() {
+            return this.$store.state.bins.map(b => this.selectedIds.includes(b.id))
         }
     }
 }
 </script>
 
 <style scoped>
-table {
-    margin: 0;
-    padding: 0;
-    width: 100%;
+.bin {
+    padding: .3rem .3rem;
+}
+.bin:hover {
+    background-color: #eee;
 }
 
-th {
-    border-top: 0;
+.bin-selected {
+    background-color: #eee;
 }
 
-td {
-    padding: .5rem;
+.desc {
+    font-weight: 500;
+    text-align: right;
 }
 </style>
