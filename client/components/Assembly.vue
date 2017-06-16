@@ -79,6 +79,12 @@ export default {
 </script>
 
 <style scoped>
+.assembly {
+    border-left: 0;
+    border-right: 0;
+    border-color: #ddd;
+}
+
 .list-group-item {
     border-left: 0;
     border-right: 0;
