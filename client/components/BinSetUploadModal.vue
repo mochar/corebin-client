@@ -10,12 +10,13 @@
         <div class="card-block">
             <div class="form-group">
                 <input type="text" class="form-control form-control-sm" name="name"
-                        placeholder="Name">
+                        placeholder="Name" v-model="name">
             </div>
             
             <div class="form-group">
                 <label for="bins">Bins</label>
-                <input type="file" name="bins" class="form-control-file form-control-sm">
+                <input type="file" name="bins" @change="fileChanged" 
+                        class="form-control-file form-control-sm">
                 <small class="form-text text-muted">
                     <router-link to="/help">How should this file look like?</router-link>
                 </small>
@@ -42,7 +43,8 @@ import { mapActions } from 'vuex'
 export default {
     data() {
         return {
-            loading: false
+            loading: false,
+            name: ''
         }
     },
 
@@ -56,12 +58,22 @@ export default {
             const assembly = this.$store.state.assembly.id
             this.submitBinSetAction({ assembly, formData }).done(() => {
                 this.loading = false
+                this.name = ''
                 event.srcElement.reset()
                 this.hide()
             })
         },
         hide() {
             $(this.$el).modal('hide')
+        },
+        fileChanged(event) {
+            const file = event.srcElement.files[0]
+            if (file) { 
+                let name = file.name.split('.')[0]
+                this.name = name.charAt(0).toUpperCase() + name.slice(1)
+            } else {
+                this.name = ''
+            }
         }
     }
 }
