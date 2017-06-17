@@ -101,7 +101,8 @@ let chord = function(bins1, bins2, matrix) {
             endAngle -= (0.01 / 2)
         }
         let data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
-        return { startAngle, endAngle, data, index: i, _endAngle: endAngle }
+        let side = i < bins1.length ? 'right' : 'left'
+        return { startAngle, endAngle, data, index: i, side, _endAngle: endAngle }
     })
     
     // Create scales for each bin: value -> angle
@@ -184,7 +185,7 @@ export default {
             this.outerRadius = Math.min(this.width, this.height) * 0.5 - 40
             const outerRadiusLg = this.outerRadius * 1.01
             const outerRadiusSm = this.outerRadius * .98
-            this.innerRadius = this.outerRadius - 30
+            this.innerRadius = this.outerRadius - 10
             const innerRadiusLg = this.innerRadius * .99
             const innerRadiusSm = this.innerRadius * 1.02
             
@@ -224,23 +225,25 @@ export default {
         },
         updateGroups() {
             const group = this.svg.select('g.groups').selectAll('.group')
-                .data(this.chordData.groups, group => `${group.index}-${group.data}`)
-            group.exit()
-                .transition()
-                .attrTween('d', g => this.arcTween(g, group.startAngle))
-                .remove()
+                // .data(this.chordData.groups, group => `${group.index}-${group.data}`)
+                .data(this.chordData.groups, group => `${group.side}-${group.data}`)
+            group.transition()
+                .attrTween('d', this.arcTween())
+                .on('end', function(g) {
+                    this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
+                })
+            group.exit().remove()
             group.enter().append('path')
                 .classed('group', true)
                 .attr('stroke', '#000000')
                 .on('click', group => this.selectBin(group.data))
                 .on('mouseover', group => this.hoveredBin = this.binsMap.get(group.data))
                 .on('mouseout', () => this.hoveredBin = null)
-              .merge(group)
                 .attr('fill', group => this.binsMap.get(group.data).color)
                 .attr('d', this.arc)
-                // .transition()
-                // .duration(350)
-                // .attrTween('d', g => this.arcTween(g, g.endAngle))
+                .each(function(g) {
+                    this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
+                })
         },
         resize() {
             if (this.$route.path === '/compare') {
@@ -268,13 +271,16 @@ export default {
                 .ease(d3.easeLinear)
                 .attr('d', this.generateRibbon)
         },
-        arcTween(group, newAngle) {
-            // const interpolate = d3.interpolate(group.startAngle, newAngle)
-            group.endAngle = group.startAngle
-            const interpolate = d3.interpolate(group.endAngle, newAngle)
-            return t => {
-                group.endAngle = interpolate(t)
-                return this.arc(group)
+        arcTween() {
+            const arc = this.arc
+            return function(group) {
+                const interpolate = d3.interpolate(this.__pdata__, group)
+                return t => {
+                    const new_ = interpolate(t)
+                    group.startAngle = new_.startAngle
+                    group.endAngle = new_.endAngle
+                    return arc(group)
+                }
             }
         },
         toRad   ,
