@@ -105,9 +105,9 @@
                 <div></div>
             </div>
             
-            <div class="card" style="border-width: 0 0 1px 0">
+            <div class="" style="border-width: 0 0 1px 0">
                 <div class="card-header" style="background: #F4F4F4">
-                    <ul class="nav nav-tabs justify-content-center card-header-tabs">
+                    <ul class="nav justify-content-center card-header-tabs">
                         <li class="nav-item">
                             <a class="nav-link" href="#" 
                                 :class="{active: refinementTab === 'PlotTab'}"
@@ -155,6 +155,8 @@
                 </div>
                 <div></div>
             </div>
+
+            <compare-bar></compare-bar>
         </div>
 
         <div v-if="pageIsHelp" key="help">
@@ -194,6 +196,7 @@ import PlotTab from '../components/PlotTab'
 import RefineTab from '../components/RefineTab'
 import BinsTab from '../components/BinsTab'
 import HelpLinks from '../components/HelpLinks'
+import CompareBar from '../components/CompareBar'
 
 export default {
     data() {
@@ -211,7 +214,8 @@ export default {
         PlotTab,
         RefineTab,
         BinsTab,
-        HelpLinks
+        HelpLinks,
+        CompareBar
     },
 
     methods: {
@@ -359,6 +363,11 @@ export default {
 
 #logo-home {
     height: 1.5rem;
+}
+
+.nav-link.active {
+    color: #444;
+    font-weight: 500;
 }
 
 #bin-sets > .bin-set:first-child,

@@ -1,6 +1,6 @@
 <template>
 <div class="card-block">
-    <span class="fw-500" style="font-size: .8rem">PLOT PARAMETERS</span>
+    <!--<span class="fw-500" style="font-size: .8rem">PLOT PARAMETERS</span>-->
     <div>
         <div class="d-flex justify-content-between">
             <span>X-axis</span>
@@ -8,7 +8,8 @@
                 <input type="checkbox" class="form-check-input" v-model="xLog"> Log scale
             </label>
         </div>
-        <select class="custom-select btn btn-secondary btn-xs col-6" v-model="xData">
+        <select class="custom-select btn btn-secondary btn-xs col-6" v-model="xData"
+                style="background-color: rgba(255, 255, 255, 0.67) !important">
             <optgroup label="Sequence">
                 <option value="gc">GC%</option>
                 <option value="length">Length (bp)</option>
@@ -33,7 +34,8 @@
                 <input type="checkbox" class="form-check-input" v-model="yLog"> Log scale
             </label>
         </div>
-        <select class="custom-select btn btn-secondary btn-xs col-6" v-model="yData">
+        <select class="custom-select btn btn-secondary btn-xs col-6" v-model="yData"
+                style="background-color: rgba(255, 255, 255, 0.67) !important">
             <optgroup label="Sequence">
                 <option value="gc">GC%</option>
                 <option value="length">Length (bp)</option>
@@ -55,13 +57,15 @@
         <span>Color by</span>
         <div class="row align-items-center">
             <div class="col-6">
-                <select class="custom-select btn btn-secondary btn-xs" v-model="colorBy">
+                <select class="custom-select btn btn-secondary btn-xs" v-model="colorBy"
+                        style="background-color: rgba(255, 255, 255, 0.67) !important">
                     <option value="binSet">Bin set</option>
                     <option value="gc">GC%</option>
                 </select>
             </div>
             <div class="col-6" v-show="colorBy === 'binSet'">
-                <select class="custom-select btn btn-secondary btn-xs" v-model="colorBinSet">
+                <select class="custom-select btn btn-secondary btn-xs" v-model="colorBinSet"
+                        style="background-color: rgba(255, 255, 255, 0.67) !important">
                     <option v-for="bs in binSets" :value="bs.id">{{ bs.name }}</option>
                 </select>
             </div>
@@ -69,7 +73,7 @@
     </div>
 
     <div style="margin-top: .75rem">
-        <span class="fw-500" style="font-size: .8rem; margin-top: 2rem">SELECTION</span>
+        <!--<span class="fw-500" style="font-size: .8rem; margin-top: 2rem">SELECTION</span>-->
         <div class="form-check">
             <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="expand">
@@ -85,7 +89,8 @@
         </span>
         <div class="row align-items-center">
             <div class="col-6">
-                <button class="btn btn-secondary btn-sm w-100" @click="showExportModal">
+                <button class="btn btn-secondary btn-sm w-100" @click="showExportModal"
+                        style="background-color: rgba(255, 255, 255, 0.67) !important">
                     As PNG
                 </button>
             </div>

@@ -91,7 +91,7 @@ export default {
 }
 
 .bin-selected {
-    background-color: #eee;
+    background-color: #ddd;
 }
 
 .desc {

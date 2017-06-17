@@ -36,6 +36,11 @@ const state = {
     yLog: false,
     expand: false,
 
+    // Compare
+    binSetLeft: null,
+    binSetRight: null,
+    compareBy: 'count',
+
     // Sidebar
     showAssemblies: true,
     binSetsLoading: false,
@@ -163,6 +168,9 @@ const mutations = {
         state.assemblies.splice(index, 1)
     },
     SET_PLOT_VALUE(state, { key, value }) {
+        state[key] = value
+    },
+    SET_CHORD_VALUE(state, { key, value }) {
         state[key] = value
     },
     SET_SELECTED_CONTIGS(state, contigs) {
