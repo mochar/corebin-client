@@ -204,10 +204,17 @@ export default {
         updateRibbons() {
             const ribbon = this.svg.select('g.ribbons').selectAll('.ribbon')
                 .data(this.chordData.ribbons, ribbon => `${ribbon.source.data}_${ribbon.target.data}`)
+            ribbon.transition()
+                .attrTween('d', this.arcTweenRibbon())
+                .on('end', function(g) {
+                    this.__pdata__ = {
+                        source: {startAngle: g.source.startAngle, endAngle: g.source.endAngle},
+                        target: {startAngle: g.target.startAngle, endAngle: g.target.endAngle}
+                    }
+                })
             ribbon.exit().remove()
             ribbon.enter().append('path')
                 .classed('ribbon', true)
-              .merge(ribbon)
                 .attr('d', this.generateRibbon)
                 .style('fill', ribbon => {
                     const bin = this.activeBin && this.activeBin.id
@@ -221,6 +228,12 @@ export default {
                 })
                 .style('stroke', function() { 
                     return d3.rgb(d3.select(this).style('fill')).darker()
+                })
+                .each(function(g) {
+                    this.__pdata__ = {
+                        source: {startAngle: g.source.startAngle, endAngle: g.source.endAngle},
+                        target: {startAngle: g.target.startAngle, endAngle: g.target.endAngle}
+                    }
                 })
         },
         updateGroups() {
@@ -280,6 +293,20 @@ export default {
                     group.startAngle = new_.startAngle
                     group.endAngle = new_.endAngle
                     return arc(group)
+                }
+            }
+        },
+        arcTweenRibbon() {
+            const generateRibbon = this.generateRibbon
+            return function(ribbon) {
+                const interpolate = d3.interpolate(this.__pdata__, ribbon)
+                return t => {
+                    const new_ = interpolate(t)
+                    ribbon.source.startAngle = new_.source.startAngle
+                    ribbon.source.endAngle = new_.source.endAngle
+                    ribbon.target.startAngle = new_.target.startAngle
+                    ribbon.target.endAngle = new_.target.endAngle
+                    return generateRibbon(ribbon)
                 }
             }
         },
