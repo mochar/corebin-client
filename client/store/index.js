@@ -202,14 +202,12 @@ const actions = {
     },
     SELECT_ASSEMBLY_CAREFULLY({ commit, dispatch, state}, assembly) {
         commit('SHOW_ASSEMBLIES', false)
+        router.push({ path: 'overview' })
         const currentAssembly = state.assembly
-        if (currentAssembly && currentAssembly.id === assembly.id) {
-            if (state.binSets.length > 0) router.push({ path: 'overview' })
-        }
         if (!currentAssembly || currentAssembly.id !== assembly.id) {
             commit('BIN_SETS_LOADING', true)
             dispatch('SELECT_ASSEMBLY_AND_FIRST_BIN_SET', assembly).then(() => {
-                if (state.binSets.length > 0) router.push({ path: 'overview' })
+                router.push({ path: 'overview' })
             }).then(() => commit('BIN_SETS_LOADING', false))
         }
     },

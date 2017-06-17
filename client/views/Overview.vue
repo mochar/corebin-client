@@ -1,5 +1,6 @@
 <template>
-<div id="bins" v-if="binSet">
+<div id="bins">
+    <div v-if="binSet">
     <div class="card-header" id="bins-header">
         <div class="d-flex justify-content-end">
             <button 
@@ -103,6 +104,12 @@
             </tr>
         </tbody>
     </table>
+    </div>
+
+    <span class="text-muted empty-state-message" v-else>
+        <span class="fa fa-plus fa-3x" id="scale-icon"></span>
+        <span style="font-size: 90%">CLICK ON THE PLUS BUTTON TO ADD A NEW BIN-SET TO THIS ASSEMBLY</span>
+    </span>
 </div>
 </template>
 

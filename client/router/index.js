@@ -25,8 +25,8 @@ export default new Router({
 			component: Overview,
 			beforeEnter: (to, from, next) => {
 				const fromHasInstance = from.matched.length > 0
-				if (fromHasInstance && from.matched[0].instances.default.$store.state.binSet) next()
-				else next(fromHasInstance ? false : next('/home'))
+				if (fromHasInstance) next()
+				else next('/home')
 			}
 		},
 		{

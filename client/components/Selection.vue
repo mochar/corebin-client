@@ -2,7 +2,7 @@
 <div>
     <div id="assemblies">
         <transition name="slide-fade" mode="out-in">
-        <div v-if="showAssemblies && !pageIsRefine && !pageIsHelp" key="assemblies">
+        <div v-if="pageIsHome" key="assemblies">
             <strong class="selection-button" style="position: absolute; right: 0"
                     :class="{ 'selection-button-disabled': assemblyJob }"
                     data-toggle="tooltip" data-placement="bottom"
@@ -38,7 +38,7 @@
             </transition>
         </div>
         
-        <div v-if="!showAssemblies && !pageIsRefine && !pageIsHelp" key="bin-sets">
+        <div v-if="pageIsOverview" key="bin-sets">
             <div class="navigation" style="padding-bottom: .5rem">
                 <router-link tag="div" class="selection-button" to="/home" @click.native="$store.commit('SHOW_ASSEMBLIES', true)">
                     <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
@@ -107,7 +107,7 @@
             
             <div class="card" style="border-width: 0 0 1px 0">
                 <div class="card-header" style="background: #F4F4F4">
-                    <ul class="nav nav-tabs card-header-tabs">
+                    <ul class="nav nav-tabs justify-content-center card-header-tabs">
                         <li class="nav-item">
                             <a class="nav-link" href="#" 
                                 :class="{active: refinementTab === 'PlotTab'}"
@@ -137,6 +137,23 @@
                 <div id="tab-body">
                     <component :is="refinementTab"></component>
                 </div>
+            </div>
+        </div>
+
+        <div v-if="pageIsCompare" key="compare">
+            <div class="navigation" style="padding-bottom: .5rem">
+                <div class="selection-button" @click="$router.go(-1)">
+                    <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
+                </div>
+                <div>
+                    <strong class="selection-title text-muted text-center" style="padding-bottom: 0">
+                        Compare
+                    </strong>
+                    <strong class="selection-sub text-muted text-center">
+                        {{ assembly.name }}
+                    </strong>
+                </div>
+                <div></div>
             </div>
         </div>
 
@@ -218,11 +235,20 @@ export default {
             'showAssemblies',
             'binSetsLoading'
         ]),
+        pageIsHome() {
+            return this.$route.path === '/home'
+        },
         pageIsRefine() {
             return this.$route.path === '/refine'
         },
         pageIsHelp() {
             return this.$route.path === '/help'
+        },
+        pageIsOverview() {
+            return this.$route.path === '/overview'
+        },
+        pageIsCompare() {
+            return this.$route.path === '/compare'
         }
     },
 

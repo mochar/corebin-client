@@ -73,7 +73,7 @@
             @binSelected="selectBin"
             @refine="refineBin"
         ></chord>
-        <span id="message" v-show="otherBins.length === 0" class="text-muted">
+        <span v-show="otherBins.length === 0" class="text-muted empty-state-message">
             <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
             <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
         </span>
@@ -253,12 +253,10 @@ export default {
 .compare-btn, .compare-btn:hover, .compare-btn:focus {
     color: #333;
 }
-</style>
 
-<style scoped>
-#message {
+.empty-state-message {
     position: absolute;
-    top: 50%;
+    top: 40%;
     left: 15%;
     right: 0;
     bottom: 0;
