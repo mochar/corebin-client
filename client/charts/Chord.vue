@@ -25,7 +25,7 @@
             <text y="40">-# bp</text>
             <text y="40" x="150">: {{ activeBin.mbp.toFixed(3) }} Mb</text>
         </g>
-        <g :transform="`translate(10,${height/5})`">
+        <g :transform="`translate(10,${height/5})`" v-if="$store.state.assembly.genesSearched">
             <text class="info-head">Completeness</text>
             <text y="20">- contamination</text>
             <text y="20" x="150">: {{ activeBin.contamination.toFixed(3) }}%</text>
@@ -310,7 +310,8 @@ export default {
         },
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
-        'hoveredBin': 'updateRibbons'
+        'hoveredBin': 'updateRibbons',
+        'hoveredBin': console.log
     },
     
     mounted() {
