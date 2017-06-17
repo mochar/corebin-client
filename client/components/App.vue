@@ -1,5 +1,5 @@
 <template>
-<div class="container" id="app">
+<div class="container-fluid" id="app">
     <div class="alert-warning" id="message" v-if="message">
         <strong>
             {{ message }}
@@ -186,6 +186,7 @@ a:active, .btn-link:active {
 }
 
 #app {
+    width: 1185px;
 }
 
 .submit-button {
