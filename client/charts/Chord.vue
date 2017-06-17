@@ -216,6 +216,13 @@ export default {
             ribbon.enter().append('path')
                 .classed('ribbon', true)
                 .attr('d', this.generateRibbon)
+                .each(function(g) {
+                    this.__pdata__ = {
+                        source: {startAngle: g.source.startAngle, endAngle: g.source.endAngle},
+                        target: {startAngle: g.target.startAngle, endAngle: g.target.endAngle}
+                    }
+                })
+              .merge(ribbon)
                 .style('fill', ribbon => {
                     const bin = this.activeBin && this.activeBin.id
                     let color = '#bbb'
@@ -228,12 +235,6 @@ export default {
                 })
                 .style('stroke', function() { 
                     return d3.rgb(d3.select(this).style('fill')).darker()
-                })
-                .each(function(g) {
-                    this.__pdata__ = {
-                        source: {startAngle: g.source.startAngle, endAngle: g.source.endAngle},
-                        target: {startAngle: g.target.startAngle, endAngle: g.target.endAngle}
-                    }
                 })
         },
         updateGroups() {
@@ -343,8 +344,7 @@ export default {
         },
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
-        'hoveredBin': 'updateRibbons',
-        'hoveredBin': console.log
+        'hoveredBin': 'updateRibbons'
     },
     
     mounted() {
