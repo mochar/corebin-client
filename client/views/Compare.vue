@@ -50,19 +50,16 @@
         <div id="chord">
             <chord 
                 :plotData="plotData" 
-                :bins="bins"
-                :otherBins="otherBins"
                 :selected="selectedBin"
                 :selectedBinSet="selectedSet"
                 :unselectedBinSet="unselectedSet"
-                :connected="connectedBins"
                 :binsMap="binsMap"
                 :binSet="binSet"
                 :otherBinSet="otherBinSet"
                 @binSelected="selectBin"
                 @refine="refineBin"
             ></chord>
-            <span v-show="otherBins.length === 0" class="text-muted empty-state-message">
+            <span v-show="otherBins_.length === 0" class="text-muted empty-state-message">
                 <span class="fa fa-balance-scale fa-3x scale-icon"></span>
                 <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
             </span>
@@ -86,9 +83,9 @@ export default {
             otherBinSet: null,
             by: 'bp',
             loading: false,
-            plotData: { bins1: [], bins2: [], matrix: [] },
-            bins: [],
-            otherBins: [],
+            plotData_: null,
+            bins_: [],
+            otherBins_: [],
             selectedBin: null,
             selectedSet: null,
             unselectedSet: null
@@ -115,9 +112,9 @@ export default {
                 $.getJSON(`${ROOTURL}/a/${assemblyId}/bs/${this.binSet.id}/b`),
                 $.getJSON(`${ROOTURL}/a/${assemblyId}/bs/${this.otherBinSet.id}/b`)
             ).then((respMatrix, respBins, respOtherBins) => {
-                    this.bins = respBins[0].bins
-                    this.otherBins = respOtherBins[0].bins
-                    this.plotData = respMatrix[0]
+                    this.bins_ = respBins[0].bins
+                    this.otherBins_ = respOtherBins[0].bins
+                    this.plotData_ = respMatrix[0]
                     this.loading = false
                 }
             )
@@ -150,6 +147,13 @@ export default {
             } 
             this.$store.commit('SET_REFINE_BIN_SET', binSet)
             this.$router.push({ path: 'refine' })
+        },
+        findConnectedIndices(index) {
+            return this.plotData_.matrix[index]
+                .reduce(function(connected, cur, i) {
+                    if (cur > 0) connected.push(i)
+                    return connected
+                }, [])
         }
     },
     
@@ -160,26 +164,57 @@ export default {
             'refineBinSet'
         ]),
         binsMap() {
-            return d3Map([...this.bins, ...this.otherBins], bin => bin.id)
+            return d3Map([...this.bins_, ...this.otherBins_], bin => bin.id)
         },
-        connectedBins() {
+        selectedBinIndex() {
+            if (!this.selectedBin) return null
+            const all = [...this.plotData_.bins1, ...this.plotData_.bins2]
+            return all.indexOf(this.selectedBin.id)
+        },
+        connectedIndices() {
+            // Indices of the bins connected to selected bin
             if (!this.selectedBin) return []
-            const id = this.selectedBin.id
-            const all = [...this.plotData.bins1, ...this.plotData.bins2]
-            return this.plotData.matrix[all.indexOf(id)]
-                .reduce(function(connected, cur, i) {
-                    if (cur === 0) return connected
-                    const connectedBin = { percentage: 100, id: all[i] }
-                    connected.push(connectedBin)
-                    return connected
-                }, [])
-        }
+            return this.findConnectedIndices(this.selectedBinIndex)
+        },
+        subConnectedIndices() {
+            // Indices of the bins connected to the connected bins
+            if (!this.selectedBin) return []
+            let indices = this.connectedIndices
+                .map(index => this.findConnectedIndices(index))
+            indices = Array.prototype.concat(...indices) // flatten
+            return indices.filter(x => x !== this.selectedBinIndex)
+        },
+        allIndices() {
+            // All indices shown in subnetwork 
+            return [this.selectedBinIndex, ...this.connectedIndices, 
+                    ...this.subConnectedIndices]
+        },
+        plotData() {
+            if (!this.selectedBin) return this.plotData_
+            const all = [...this.plotData_.bins1, ...this.plotData_.bins2]
+            const matrix = this.plotData_.matrix.slice()
+                .filter((d, i) => this.allIndices.includes(i))
+                .map(x => x.filter((d, i) => this.allIndices.includes(i)))
+            const selectedBins = all.filter((d, i) => this.selectedBinIndex === i || 
+                                            this.subConnectedIndices.includes(i))
+            const unselectedBins = all.filter((d, i) => this.connectedIndices.includes(i))
+            return {
+                bins1: this.leftSelected ? selectedBins : unselectedBins,
+                bins2: this.leftSelected ? unselectedBins :selectedBins,
+                matrix
+            }
+        },
+        leftSelected() {
+            // True if the selected bin belongs to the left bin set. Otherwise false.
+            // This also means that the value is false when there is no bin selected.
+            return this.selectedBin && this.plotData_.bins1.includes(this.selectedBin.id)
+        },
     },
 
     watch: {
         assembly() {
-            this.plotData = { bins1: [], bins2: [], matrix: [] }
-            this.otherBins = []
+            this.plotData_ = null
+            this.otherBins_ = []
             this.selectedBin = null
             this.binSet = null
             this.otherBinSet = null

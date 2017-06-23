@@ -166,12 +166,9 @@ export default {
     
     props: [
         'plotData', 
-        'bins', 
-        'otherBins', 
         'selected',
         'selectedBinSet',
         'unselectedBinSet',
-        'connected',
         'binsMap',
         'binSet',
         'otherBinSet'
@@ -333,14 +330,6 @@ export default {
     },
 
     watch: {
-        connected() {
-            // const connectedIds = this.connected.map(b => b.id)
-            // this.svg.select('g.groups').selectAll('.group')
-            //     .filter(group => connectedIds.includes(group.data))
-            //     .transition()
-            //     .duration(1000)
-            //     .attrTween('d', g => this.arcTween(g, g.endAngle + .2))
-        },
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
         'hoveredBin': 'updateRibbons'

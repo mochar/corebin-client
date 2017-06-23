@@ -119,6 +119,7 @@ export default {
                     } 
                 })
                 // Then, unselect all contigs as these have now been moved
+                // TODO: Only unselect if bin-set is not selected
                 this.$store.commit('SET_SELECTED_CONTIGS', [])
                 // Then, filter out the contigs which have been moved to an unselected bin
                 const selectedBins = this.$store.state.refineBins.map(bin => bin.id)
