@@ -1,6 +1,6 @@
 <template>
 <popover>
-    <button slot="button" :disabled="adding" class="btn btn-link btn-sm btn-header">
+    <button slot="button" :disabled="loading" class="btn btn-link btn-sm btn-header">
         <span v-if="loading" class="fa fa-refresh fa-spin"></span>
         <span class="fa fa-plus" v-else></span>
         Add bin

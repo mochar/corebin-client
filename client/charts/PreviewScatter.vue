@@ -65,7 +65,15 @@ export default {
         }
     },
     
-    props: ['ratio'],
+    props: [
+        'ratio',
+        'xData',
+        'yData',
+        'xLog',
+        'yLog',
+        'colorBy',
+        'colorBinSet'
+    ],
 
     methods: {
         zoomed() {
@@ -122,12 +130,6 @@ export default {
             return this.$store.state.binSet.id
         },
         ...mapState([
-            'xData',
-            'yData',
-            'xLog',
-            'yLog',
-            'colorBy',
-            'colorBinSet',
             'contigs',
             'refineBinSet'
         ])

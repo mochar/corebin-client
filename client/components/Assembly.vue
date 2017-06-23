@@ -83,6 +83,7 @@ export default {
     border-left: 0;
     border-right: 0;
     border-color: #ddd;
+    padding: 0;
 }
 
 .list-group-item {

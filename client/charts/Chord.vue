@@ -179,7 +179,6 @@ export default {
     
     methods: {
         updatePlot() {
-            console.log('chord update')
             this.resize()
             
             this.outerRadius = Math.min(this.width, this.height) * 0.5 - 40
@@ -261,8 +260,8 @@ export default {
         },
         resize() {
             if (this.$route.path === '/compare') {
-                this.height = $(this.$el).parent().height()
-                this.width = $(this.$el).parent().width()
+                this.height = $('.app-right').height()
+                this.width = $('.app-right').width()
             }
         },
         selectBin(binId) {

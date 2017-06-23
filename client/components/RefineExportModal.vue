@@ -8,7 +8,16 @@
 
     <div class="row">
         <div class="col-9" id="preview">
-            <preview-scatter v-if="showPlot" :ratio="ratio"></preview-scatter>
+            <preview-scatter 
+                v-if="showPlot" 
+                :ratio="ratio"
+                :xData="xData"
+                :yData="yData"
+                :xLog="xLog"
+                :yLog="yLog"
+                :colorBy="colorBy"
+                :colorBinSet="colorBinSet">
+            </preview-scatter>
         </div>
         <div class="col-3 d-flex flex-column justify-content-between">
             <div>
@@ -176,6 +185,15 @@ export default {
             showPlot: false
         }
     },
+
+    props: [
+        'xData',
+        'yData',
+        'xLog',
+        'yLog',
+        'colorBy',
+        'colorBinSet'
+    ],
 
     components: {
         PreviewScatter

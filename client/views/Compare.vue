@@ -1,83 +1,75 @@
 <template>
-<div class="card" id="compare">
-    <div id="compare-form">
-        <form class="form-inline justify-content-center">
-            <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-link compare-btn dropdown-toggle" data-toggle="dropdown" 
-                            style="font-size: .9rem; border-right: 0">
-                        <strong>Bin-set left</strong>
-                        {{ otherBinSet ? otherBinSet.name : '' }}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a
-                            v-for="bs in binSets"
-                            class="dropdown-item"
-                            href="#"
-                            @click.prevent="otherBinSet = bs"
-                        >{{ bs.name }}
-                        </a>
-                    </div>
-                </div>
+<div class="row" id="compare">
+    <div class="col-3 app-left">
+        <div class="navigation" style="padding-bottom: .5rem">
+            <div class="sidebar-button" @click="$router.go(-1)">
+                <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
             </div>
-            <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-link compare-btn dropdown-toggle" data-toggle="dropdown" 
-                            style="font-size: .9rem; border-right: 0">
-                        <strong>Bin-set right</strong>
-                        {{ binSet ? binSet.name : '' }}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a
-                            v-for="bs in binSets"
-                            class="dropdown-item"
-                            href="#"
-                            @click.prevent="binSet = bs"
-                        >{{ bs.name }}
-                        </a>
-                    </div>
-                </div>
+            <div>
+                <strong class="sidebar-title text-muted text-center" style="padding-bottom: 0">
+                    COMPARE
+                </strong>
+                <strong class="sidebar-sub text-muted text-center">
+                    {{ assembly.name }}
+                </strong>
             </div>
-            <div class="form-group">
-                <div class="dropdown">
-                    <button class="btn btn-link compare-btn dropdown-toggle" data-toggle="dropdown"
-                            style="font-size: .9rem; border-right: 0">
-                        <strong>Similarity by</strong>
-                        {{ byName }}
-                    </button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" @click.prevent="by = 'count'">shared contigs</a>
-                        <a class="dropdown-item" href="#" @click.prevent="by = 'bp'">basepairs</a>
-                    </div>
-                </div>
+            <div></div>
+        </div>
+
+        <div class="card-block">
+            <div>
+                <span>Bin-set right</span>
+                <select class="custom-select btn btn-secondary btn-xs w-100" v-model="binSet"
+                        style="background-color: rgba(255, 255, 255, 0.67) !important">
+                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
+                </select>
             </div>
-            <button class="btn btn-outline-primary float-right" @click="plot" :disabled="loading" id="plot-btn">
+            <div style="margin-top: .75rem">
+                <span>Bin-set left</span>
+                <select class="custom-select btn btn-secondary btn-xs w-100" v-model="otherBinSet"
+                        style="background-color: rgba(255, 255, 255, 0.67) !important">
+                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
+                </select>
+            </div>
+            <div style="margin-top: .75rem">
+                <span>Similarity by</span>
+                <select class="custom-select btn btn-secondary btn-xs col-6" v-model="by"
+                        style="background-color: rgba(255, 255, 255, 0.67) !important">
+                    <option value="count">Shared contigs</option>
+                    <option value="bp">Basepairs</option>
+                </select>
+            </div>
+            <button style="margin-top: .75rem" class="btn btn-primary btn-xs" @click="plot"
+                    :disabled="loading">
                 <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
-                PLOT
+                Plot
             </button>
-        </form>
+        </div>
+    </div>
+    <div class="col-9 app-right">
+        <div id="chord">
+            <chord 
+                :plotData="plotData" 
+                :bins="bins"
+                :otherBins="otherBins"
+                :selected="selectedBin"
+                :selectedBinSet="selectedSet"
+                :unselectedBinSet="unselectedSet"
+                :connected="connectedBins"
+                :binsMap="binsMap"
+                :binSet="binSet"
+                :otherBinSet="otherBinSet"
+                @binSelected="selectBin"
+                @refine="refineBin"
+            ></chord>
+            <span v-show="otherBins.length === 0" class="text-muted empty-state-message">
+                <span class="fa fa-balance-scale fa-3x scale-icon"></span>
+                <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
+            </span>
+        </div>
     </div>
 
-    <div id="chord">
-        <chord 
-            :plotData="plotData" 
-            :bins="bins"
-            :otherBins="otherBins"
-            :selected="selectedBin"
-            :selectedBinSet="selectedSet"
-            :unselectedBinSet="unselectedSet"
-            :connected="connectedBins"
-            :binsMap="binsMap"
-            :binSet="binSet"
-            :otherBinSet="otherBinSet"
-            @binSelected="selectBin"
-            @refine="refineBin"
-        ></chord>
-        <span v-show="otherBins.length === 0" class="text-muted empty-state-message">
-            <span class="fa fa-balance-scale fa-3x" id="scale-icon"></span>
-            <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
-        </span>
-    </div>
+    <footer-section></footer-section>
 </div>
 </template>
 
@@ -85,32 +77,39 @@
 import { mapState } from 'vuex'
 import { map as d3Map } from 'd3'
 import Chord from '../charts/Chord'
+import FooterSection from 'components/FooterSection'
 
 export default {
     data() {
         return {
-            plotData: { bins1: [], bins2: [], matrix: [] },
             binSet: null,
             otherBinSet: null,
+            by: 'bp',
+            loading: false,
+            plotData: { bins1: [], bins2: [], matrix: [] },
             bins: [],
             otherBins: [],
-            by: 'count',
-            loading: false,
             selectedBin: null,
             selectedSet: null,
             unselectedSet: null
         }
     },
-    
+
     components: {
-        Chord
+        Chord,
+        FooterSection
     },
 
     methods: {
+        setBinSets() {
+            this.binSet = this.binSet ? this.binSet : this.binSets[0]
+            const otherBinSet = this.binSets[this.binSets.length === 1 ? 0 : 1]
+            this.otherBinSet = this.otherBinSet ? this.otherBinSet : otherBinSet
+        },
         plot() {
             this.loading = true
             const params = { binset1: this.binSet.id, binset2: this.otherBinSet.id, by: this.by }
-            const assemblyId = this.$store.state.assembly.id
+            const assemblyId = this.assembly.id
             $.when(
                 $.getJSON(`${ROOTURL}/a/${assemblyId}/matrix`, params),
                 $.getJSON(`${ROOTURL}/a/${assemblyId}/bs/${this.binSet.id}/b`),
@@ -122,11 +121,6 @@ export default {
                     this.loading = false
                 }
             )
-        },
-        setBinSets() {
-            this.binSet = this.binSet ? this.binSet : this.binSets[0]
-            const otherBinSet = this.binSets[this.binSets.length === 1 ? 0 : 1]
-            this.otherBinSet = this.otherBinSet ? this.otherBinSet : otherBinSet
         },
         selectBin(bin) {
             if (bin) {
@@ -158,16 +152,13 @@ export default {
             this.$router.push({ path: 'refine' })
         }
     },
-
+    
     computed: {
         ...mapState([
             'assembly',
             'binSets',
             'refineBinSet'
         ]),
-        byName() {
-            return this.by === 'count' ? 'shared contigs' : 'basepairs'
-        },
         binsMap() {
             return d3Map([...this.bins, ...this.otherBins], bin => bin.id)
         },
@@ -182,24 +173,16 @@ export default {
                     connected.push(connectedBin)
                     return connected
                 }, [])
-        },
-        maxSize() {
-            const bins = [this.selectedBin, ...this.connectedBins]
-            return Math.max(...bins.map(bin => this.binsMap.get(bin.id).size))
-        },
-        minSize() {
-            const bins = [this.selectedBin, ...this.connectedBins]
-            return Math.min(...bins.map(bin => this.binsMap.get(bin.id).size))
         }
     },
 
     watch: {
         assembly() {
             this.plotData = { bins1: [], bins2: [], matrix: [] }
-            this.binSet = null
-            this.otherBinSet = null
             this.otherBins = []
             this.selectedBin = null
+            this.binSet = null
+            this.otherBinSet = null
         },
         binSets() {
             this.setBinSets()
@@ -213,55 +196,11 @@ export default {
 </script>
 
 <style>
-#connected > div:not(:last-child) {
-    border-bottom: 0;
-}
-
 #compare {
-    min-height: 100vh;
-    max-height: 100vh;
-    border-right: 0;
-    display: flex;
-    align-items: stretch;
-}
-
-#scale-icon {
-    display: block;
-    padding-bottom: 1rem;
-}
-
-#compare-form {
-    padding: 1.25rem;
-    padding-bottom: 0;
+    background-color: white;
 }
 
 #chord {
-    /*padding: 0 .5rem;*/
-    flex: 1;
-    max-height: 100%;
-    min-height: 100%;
-}
-
-#plot-btn {
-    margin-left: .5rem;
-    font-weight: 500;
-    font-size: .9rem;
-    letter-spacing: .05rem;
-    border-top-width: 1px;
-}
-
-.compare-btn, .compare-btn:hover, .compare-btn:focus {
-    color: #333;
-}
-
-.empty-state-message {
-    position: absolute;
-    top: 40%;
-    left: 15%;
-    right: 0;
-    bottom: 0;
-    text-align: center;
-    height: 5rem;
-    width: 70%;
+    height: 100%;
 }
 </style>

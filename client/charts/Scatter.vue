@@ -1,5 +1,5 @@
 <template>
-<svg :width="width" :height="height">
+<svg :width="width" :height="height" style="display: block">
     <defs>
         <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0.0%" stop-color="#f00"></stop>
@@ -54,6 +54,16 @@ export default {
             zoomTransform: null
         }
     },
+
+    props: [
+        'xData',
+        'yData',
+        'xLog',
+        'yLog',
+        'colorBy',
+        'colorBinSet',
+        'expand'
+    ],
     
     methods: {
         updatePlot() {
@@ -108,8 +118,8 @@ export default {
             this.updateHull()
         },
         resize() {
-            this.height = $(this.$el).parent().height()
-            this.width = $(this.$el).parent().width()
+            this.height = $('.app-right').height()
+            this.width = $('.app-right').width()
         },
         zoomed() {
             this.svg.select('g.x')
@@ -206,16 +216,9 @@ export default {
             return this.selectedContigs.map(c => c.id)
         },
         ...mapState([
-            'xData',
-            'yData',
-            'xLog',
-            'yLog',
-            'colorBy',
-            'colorBinSet',
             'contigs',
             'refineBinSet',
-            'selectedContigs',
-            'expand'
+            'selectedContigs'
         ])
     },
 
@@ -227,20 +230,7 @@ export default {
         'colorBy': 'updatePlot',
         'colorBinSet': 'updatePlot',
         'xLog': 'updatePlot',
-        'yLog': 'updatePlot',
-        refineBinSet() {
-            this.$store.commit('SET_PLOT_VALUE', { key: 'xData', value: 'gc' })
-            this.$store.commit('SET_PLOT_VALUE', { key: 'yData', value: 'length' })
-            this.$store.commit('SET_PLOT_VALUE', { key: 'xLog', value: false })
-            this.$store.commit('SET_PLOT_VALUE', { key: 'yLog', value: false })
-            const binSet = this.$store.state.binSet.id
-            this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value: binSet })
-        }
-    },
-
-    created() {
-        const binSet = this.$store.state.binSet.id
-        this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value: binSet })
+        'yLog': 'updatePlot'
     }
 }
 </script>

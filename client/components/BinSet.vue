@@ -113,6 +113,7 @@ export default {
     border-color: #bbb;
     border-color: #ddd;
     padding-top: .5rem !important;
+    padding: 0; 
 }
 
 .list-group-item-action,

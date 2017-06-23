@@ -12,14 +12,9 @@
 </template>
 
 <script>
-import Bar from '../charts/Bar'
+import Bar from 'charts/Bar'
 
 export default {
-    data() {
-        return {
-        }
-    },
-
     components: {
         Bar
     },

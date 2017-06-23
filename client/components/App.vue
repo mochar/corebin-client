@@ -7,18 +7,22 @@
         </strong>
     </div>
         
-    <div class="row">
-        <div class="col-3" id="left">
-            <selection></selection>
-        </div>
-        <div class="col-9" id="right">
-            <!--<transition name="fade" mode="out-in">-->
-                <keep-alive>
-                    <router-view></router-view>
-                </keep-alive>
-            <!--</transition>-->
-        </div>
+    <div id="page">
+        <transition name="slide-fade" mode="out-in">
+            <keep-alive>
+                <router-view></router-view>
+            </keep-alive>
+        </transition>
     </div>
+    
+    <!--<div class="float-right" id="madeby">
+        <div>
+            <small><router-link to="/home"><img src="static/logo.svg" id="logo-home" /> Home</router-link></small> |
+            <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
+        </div>
+        <small class="text-muted">Developed by Mohammed Charrout</small> <br>
+        <small class="text-muted">Project-coordinator Lex Overmars</small>
+    </div>-->
 
     <assembly-upload-modal></assembly-upload-modal>
     <bin-set-upload-modal></bin-set-upload-modal>
@@ -26,32 +30,27 @@
     <demo-request-modal></demo-request-modal>
     <refine-modal></refine-modal>
     <assembly-modal></assembly-modal>
-    <refine-export-modal></refine-export-modal>
 </div>
 </template>
 
 <script>
 import 'bootstrap'
 import { mapActions } from 'vuex'
-import Selection from '../components/Selection'
 import AssemblyUploadModal from '../components/AssemblyUploadModal'
 import BinSetUploadModal from '../components/BinSetUploadModal'
 import OpenRefineModal from '../components/OpenRefineModal'
 import DemoRequestModal from '../components/DemoRequestModal'
 import RefineModal from '../components/RefineModal'
 import AssemblyModal from '../components/AssemblyModal'
-import RefineExportModal from '../components/RefineExportModal'
 
 export default {
     components: {
-        Selection,
         AssemblyUploadModal,
         BinSetUploadModal,
         OpenRefineModal,
         DemoRequestModal,
         RefineModal,
-        AssemblyModal,
-        RefineExportModal
+        AssemblyModal
     },
 
     methods: {
@@ -185,10 +184,6 @@ a:active, .btn-link:active {
     box-shadow: 0 0 0 0 !important;
 }
 
-#app {
-    width: 1185px;
-}
-
 .submit-button {
     padding: .25rem 1.5rem !important;
 }
@@ -223,29 +218,125 @@ a:active, .btn-link:active {
     opacity: 0;
 }
 
-#left {
+#app {
+    width: 1185px;
+    height: 100vh;
+}
+
+#page {
+    height: 100%;
+}
+#page > div {
+    height: 100%;
+    overflow-y: auto;
+    border-right: 0;
+}
+
+.app-left {
     padding-left: 0;
     padding-right: 0;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
-    height: 100vh;
+    height: 100%;
+    max-height: 100%;
     background-color: #F4F4F4;
     overflow-x: hidden;
 }
 
-#right {
+.app-right {
+    padding-left: 0;
+    padding-right: 0;
     border-right: 1px solid #ccc;
-    padding: 0;
+    border-left: 0;
+    height: 100%;
+    max-height: 100%;
     overflow-y: auto;
-    max-height: 100vh;
 }
 
-#right > div.card {
-    border-left: 0;
+.empty-state-message {
+    position: absolute;
+    top: 40%;
+    left: 15%;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    height: 5rem;
+    width: 70%;
+}
+
+.sidebar-title {
+    display: block;
+    font-size: 1.0rem;
+    padding: .5rem ;
+}
+
+.sidebar-sub {
+    display: block;
+    font-size: .9rem;
+    font-weight: 500;
+    opacity: .9;
+    margin: -.15rem;
+}
+
+.sidebar-button {
+    cursor: pointer;
+    font-size: 1.0rem;
+}
+.sidebar-button:hover > span.fa {
+    color: #333 !important;
+}
+.sidebar-button > span.fa {
+    padding: .5rem;
+    line-height: initial;
+}
+.sidebar-button-disabled {
+    cursor: not-allowed;
+    opacity: .5;
+}
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.name {
+    font-size: 1.3rem;
+    margin-left: .5rem;
+}
+
+.name::before {
+    color: #777;
+    font-size: small;
+}
+
+.name-block {
+    padding: .25rem 0;
+}
+
+.btn-sm {
+    padding: .25rem .5rem;
+}
+
+.scale-icon {
+    display: block;
+    padding-bottom: 1rem;
 }
 
 .dropdown-menu-sm {
     font-size: .9rem;
+}
+
+/* Animation */
+.slide-fade-enter-active {
+  transition: all .06s ease;
+}
+.slide-fade-leave-active {
+  transition: all .06s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
 

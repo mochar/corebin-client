@@ -11,7 +11,7 @@
 
         <button class="btn btn-link btn-sm" @click="continue_">Continue to refine page</button>
         
-        <button class="btn btn-primary btn-sm submit-button fw-500" @click="switch_" :disabled="loading">
+        <button class="btn btn-primary btn-sm submit-button" @click="switch_" :disabled="loading">
             Switch to {{ binSet && binSet.name }}
         </button> 
     </div>

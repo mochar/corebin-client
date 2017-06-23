@@ -27,26 +27,9 @@ const state = {
     binSetJobs: [],
     hmmerJobs: [],
     
-    // Plot
-    xData: 'gc',
-    yData: 'length',
-    colorBy: 'binSet',
-    colorBinSet: null,
-    xLog: false,
-    yLog: false,
-    expand: false,
-
-    // Compare
-    binSetLeft: null,
-    binSetRight: null,
-    compareBy: 'count',
-
-    // Sidebar
-    showAssemblies: true,
-    binSetsLoading: false,
-
     // Other
     message: '',
+    binSetsLoading: false,
     viewAssembly: null
 }
 
@@ -167,12 +150,6 @@ const mutations = {
         const index = state.assemblies.findIndex(a => a.id === assembly.id)
         state.assemblies.splice(index, 1)
     },
-    SET_PLOT_VALUE(state, { key, value }) {
-        state[key] = value
-    },
-    SET_CHORD_VALUE(state, { key, value }) {
-        state[key] = value
-    },
     SET_SELECTED_CONTIGS(state, contigs) {
         state.selectedContigs = contigs
     },
@@ -182,9 +159,6 @@ const mutations = {
     },
     SET_VIEW_ASSEMBLY(state, assembly) {
         state.viewAssembly = assembly
-    },
-    SHOW_ASSEMBLIES(state, show) {
-        state.showAssemblies = show
     },
     BIN_SETS_LOADING(state, loading) {
         state.binSetsLoading = loading
@@ -209,7 +183,6 @@ const actions = {
         })
     },
     SELECT_ASSEMBLY_CAREFULLY({ commit, dispatch, state}, assembly) {
-        commit('SHOW_ASSEMBLIES', false)
         router.push({ path: 'overview' })
         const currentAssembly = state.assembly
         if (!currentAssembly || currentAssembly.id !== assembly.id) {

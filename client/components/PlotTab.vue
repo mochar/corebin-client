@@ -1,6 +1,5 @@
 <template>
 <div class="card-block">
-    <!--<span class="fw-500" style="font-size: .8rem">PLOT PARAMETERS</span>-->
     <div>
         <div class="d-flex justify-content-between">
             <span>X-axis</span>
@@ -73,7 +72,6 @@
     </div>
 
     <div style="margin-top: .75rem">
-        <!--<span class="fw-500" style="font-size: .8rem; margin-top: 2rem">SELECTION</span>-->
         <div class="form-check">
             <label class="form-check-label">
                 <input class="form-check-input" type="checkbox" v-model="expand">
@@ -100,7 +98,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
+    props: [
+        'xData_',
+        'yData_',
+        'xLog_',
+        'yLog_',
+        'colorBy_',
+        'colorBinSet_',
+        'expand_'
+    ],
+
     methods: {
         showExportModal() {
             $('#refine-export-modal').modal('show')
@@ -108,39 +118,37 @@ export default {
     },
 
     computed: {
-        assembly() {
-            return this.$store.state.assembly
-        },
-        binSets() {
-            return this.$store.state.binSets
-        },
+        ...mapState([
+            'assembly',
+            'binSets',
+        ]),
         xData: {
-            get() { return this.$store.state.xData },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'xData', value }) }
+            get() { return this.xData_ },
+            set(value) { this.$emit('update:xData_', value) }
         },
         yData: {
-            get() { return this.$store.state.yData },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'yData', value }) }
+            get() { return this.yData_ },
+            set(value) { this.$emit('update:yData_', value) }
         },
         xLog: {
-            get() { return this.$store.state.xLog },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'xLog', value }) }
+            get() { return this.xLog_ },
+            set(value) { this.$emit('update:xLog_', value) }
         },
         yLog: {
-            get() { return this.$store.state.yLog },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'yLog', value }) }
+            get() { return this.yLog_ },
+            set(value) { this.$emit('update:yLog_', value) }
         },
         colorBy: {
-            get() { return this.$store.state.colorBy },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'colorBy', value }) }
+            get() { return this.colorBy_ },
+            set(value) { this.$emit('update:colorBy_', value) }
         },
         colorBinSet: {
-            get() { return this.$store.state.colorBinSet },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'colorBinSet', value }) }
+            get() { return this.colorBinSet_ },
+            set(value) { this.$emit('update:colorBinSet_', value) }
         },
         expand: {
-            get() { return this.$store.state.expand },
-            set(value) { this.$store.commit('SET_PLOT_VALUE', { key: 'expand', value }) }
+            get() { return this.expand_ },
+            set(value) { this.$emit('update:expand_', value) }
         },
     }
 }
