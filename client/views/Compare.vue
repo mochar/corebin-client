@@ -1,7 +1,7 @@
 <template>
 <div class="row" id="compare">
     <div class="col-3 app-left">
-        <div class="navigation" style="padding-bottom: .5rem">
+        <div class="navigation">
             <div class="sidebar-button" @click="$router.go(-1)">
                 <span class="fa fa-angle-left fa-lg text-muted" style="font-weight: bold"></span>
             </div>
@@ -16,40 +16,53 @@
             <div></div>
         </div>
 
-        <div class="card-block">
-            <div>
-                <span>Bin-set right</span>
-                <select class="custom-select btn btn-secondary btn-xs w-100" v-model="binSet"
-                        style="background-color: rgba(255, 255, 255, 0.67) !important">
-                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-                </select>
+        <div style="border-width: 0 0 1px 0">
+            <div class="card-header" style="background: #F4F4F4">
+                <ul class="nav justify-content-center card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" 
+                            :class="{active: tab === 'ComparePlotTab'}"
+                            @click.prevent="tab = 'ComparePlotTab'">
+                            <span class="fa fa-line-chart"></span>
+                            Plot
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" 
+                            :class="{active: tab === 'SelectionTab'}"
+                            @click.prevent="tab = 'SelectionTab'">
+                            <span class="fa fa-list"></span>
+                            Selection
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div style="margin-top: .75rem">
-                <span>Bin-set left</span>
-                <select class="custom-select btn btn-secondary btn-xs w-100" v-model="otherBinSet"
-                        style="background-color: rgba(255, 255, 255, 0.67) !important">
-                    <option v-for="bs in binSets" :value="bs">{{ bs.name }}</option>
-                </select>
+            <div class="tab-body">
+                <component 
+                    :is="tab"
+
+                    :selectedBin="selectedBin"
+                    :connectedBins="connectedBins"
+                    :subConnectedBins="subConnectedBins"
+                    :hoveredBin="hoveredBin"
+                    @binSelected="selectBin"
+                    @binHovered="b => hoveredBin = b"
+                    
+                    :binSet_.sync="binSet"
+                    :otherBinSet_.sync="otherBinSet"
+                    :by_.sync="by"
+                    :loading="loading"
+                    @plot="plot">
+                </component>
             </div>
-            <div style="margin-top: .75rem">
-                <span>Similarity by</span>
-                <select class="custom-select btn btn-secondary btn-xs col-6" v-model="by"
-                        style="background-color: rgba(255, 255, 255, 0.67) !important">
-                    <option value="count">Shared contigs</option>
-                    <option value="bp">Basepairs</option>
-                </select>
-            </div>
-            <button style="margin-top: .75rem" class="btn btn-primary btn-xs" @click="plot"
-                    :disabled="loading">
-                <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
-                Plot
-            </button>
         </div>
+
     </div>
     <div class="col-9 app-right">
         <div id="chord">
             <chord 
                 :plotData="plotData" 
+                :hoveredBin="hoveredBin"
                 :selected="selectedBin"
                 :selectedBinSet="selectedSet"
                 :unselectedBinSet="unselectedSet"
@@ -57,6 +70,7 @@
                 :binSet="binSet"
                 :otherBinSet="otherBinSet"
                 @binSelected="selectBin"
+                @binHovered="b => hoveredBin = b"
                 @refine="refineBin"
             ></chord>
             <span v-show="otherBins_.length === 0" class="text-muted empty-state-message">
@@ -73,8 +87,10 @@
 <script>
 import { mapState } from 'vuex'
 import { map as d3Map } from 'd3'
-import Chord from '../charts/Chord'
+import Chord from 'charts/Chord'
 import FooterSection from 'components/FooterSection'
+import ComparePlotTab from 'components/ComparePlotTab'
+import SelectionTab from 'components/SelectionTab'
 
 export default {
     data() {
@@ -86,15 +102,19 @@ export default {
             plotData_: null,
             bins_: [],
             otherBins_: [],
+            hoveredBin: null,
             selectedBin: null,
             selectedSet: null,
-            unselectedSet: null
+            unselectedSet: null,
+            tab: 'ComparePlotTab' 
         }
     },
 
     components: {
         Chord,
-        FooterSection
+        FooterSection,
+        ComparePlotTab,
+        SelectionTab
     },
 
     methods: {
@@ -112,6 +132,7 @@ export default {
                 $.getJSON(`${ROOTURL}/a/${assemblyId}/bs/${this.binSet.id}/b`),
                 $.getJSON(`${ROOTURL}/a/${assemblyId}/bs/${this.otherBinSet.id}/b`)
             ).then((respMatrix, respBins, respOtherBins) => {
+                    this.selectBin(null)
                     this.bins_ = respBins[0].bins
                     this.otherBins_ = respOtherBins[0].bins
                     this.plotData_ = respMatrix[0]
@@ -166,6 +187,9 @@ export default {
         binsMap() {
             return d3Map([...this.bins_, ...this.otherBins_], bin => bin.id)
         },
+        allBinIds() {
+            return [...this.plotData_.bins1, ...this.plotData_.bins2]
+        },
         selectedBinIndex() {
             if (!this.selectedBin) return null
             const all = [...this.plotData_.bins1, ...this.plotData_.bins2]
@@ -176,13 +200,22 @@ export default {
             if (!this.selectedBin) return []
             return this.findConnectedIndices(this.selectedBinIndex)
         },
+        connectedBins() {
+            return this.connectedIndices
+                .map(i => this.binsMap.get(this.allBinIds[i]))
+        },
         subConnectedIndices() {
             // Indices of the bins connected to the connected bins
             if (!this.selectedBin) return []
             let indices = this.connectedIndices
                 .map(index => this.findConnectedIndices(index))
             indices = Array.prototype.concat(...indices) // flatten
+            indices = [...new Set(indices)] // remove duplicates
             return indices.filter(x => x !== this.selectedBinIndex)
+        },
+        subConnectedBins() {
+            return this.subConnectedIndices
+                .map(i => this.binsMap.get(this.allBinIds[i]))
         },
         allIndices() {
             // All indices shown in subnetwork 
@@ -191,7 +224,7 @@ export default {
         },
         plotData() {
             if (!this.selectedBin) return this.plotData_
-            const all = [...this.plotData_.bins1, ...this.plotData_.bins2]
+            const all = this.allBinIds
             const matrix = this.plotData_.matrix.slice()
                 .filter((d, i) => this.allIndices.includes(i))
                 .map(x => x.filter((d, i) => this.allIndices.includes(i)))

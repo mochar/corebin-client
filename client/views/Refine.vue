@@ -45,7 +45,7 @@
                     </li>
                 </ul>
             </div>
-            <div id="tab-body">
+            <div class="tab-body">
                 <component 
                     :is="refinementTab"
                     
@@ -146,8 +146,8 @@ export default {
     max-height: 100vh;*/
 }
 
-#tab-body {
-    max-height: 80%;
+.tab-body {
+    max-height: 75vh;
     overflow-y: auto;
     display: block;
 }

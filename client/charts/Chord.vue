@@ -16,7 +16,7 @@
         </rect>
     </g>-->
 
-    <g :transform="`translate(${width/3},${height/3})`" id="info"  v-if="activeBin">
+    <g :transform="`translate(${width/3},${height/3})`" id="info"  v-if="false && activeBin">
         <text  x="10" y="30" id="info-title">Bin: {{ activeBin.name }} ({{ activeSet.name }})</text>
         <g :transform="`translate(10,${height/10})`">
             <text class="info-head">Size</text>
@@ -155,7 +155,6 @@ export default {
             nameArc: d3.arc().innerRadius(0).outerRadius(0),
             arc: d3.arc().innerRadius(0).outerRadius(0),
             ribbon: d3.ribbon(),
-            hoveredBin: null,
             chordData: {groups: [], ribbons: []},
             labelScale: d3.scaleBand(),
             outerRadius: null,
@@ -171,7 +170,8 @@ export default {
         'unselectedBinSet',
         'binsMap',
         'binSet',
-        'otherBinSet'
+        'otherBinSet',
+        'hoveredBin'
     ],
     
     methods: {
@@ -188,7 +188,6 @@ export default {
             this.arc.innerRadius(this.innerRadius).outerRadius(this.outerRadius)
             this.nameArc.innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
             this.chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
-
 
             this.updateGroups()
             this.updateRibbons()
@@ -232,6 +231,15 @@ export default {
                 .style('stroke', function() { 
                     return d3.rgb(d3.select(this).style('fill')).darker()
                 })
+            //   .transition()
+            //     .attr('transform', ribbon => {
+            //         const bin = this.activeBin && this.activeBin.id
+            //         let scale = bin ? .95 : 1
+            //         if (ribbon.target.data === bin || ribbon.source.data === bin) {
+            //             scale = 1
+            //         } 
+            //         return `scale(${scale})`
+            //     })
         },
         updateGroups() {
             const group = this.svg.select('g.groups').selectAll('.group')
@@ -247,8 +255,8 @@ export default {
                 .classed('group', true)
                 .attr('stroke', '#000000')
                 .on('click', group => this.selectBin(group.data))
-                .on('mouseover', group => this.hoveredBin = this.binsMap.get(group.data))
-                .on('mouseout', () => this.hoveredBin = null)
+                .on('mouseover', group => this.hoverBin(group.data))
+                .on('mouseout', () => this.hoverBin(null))
                 .attr('fill', group => this.binsMap.get(group.data).color)
                 .attr('d', this.arc)
                 .each(function(g) {
@@ -264,6 +272,10 @@ export default {
         selectBin(binId) {
             const selected = this.selected && this.selected.id === binId ? null : binId
             this.$emit('binSelected', selected ? this.binsMap.get(binId) : null)
+        },
+        hoverBin(binId) {
+            const hovered = this.hoveredBin && this.hoveredBin.id === binId ? null : binId
+            this.$emit('binHovered', hovered ? this.binsMap.get(binId) : null)
         },
         generateRibbon(ribbon) {
             ribbon.source.radius = ribbon.target.radius = this.innerRadius - 5
@@ -332,7 +344,21 @@ export default {
     watch: {
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
-        'hoveredBin': 'updateRibbons'
+        // 'hoveredBin': 'updateRibbons',
+        hoveredBin() {
+            this.updateRibbons()
+            const groups = this.svg.select('g.groups').selectAll('.group')
+                .attr('d', this.arc)
+            if (!this.hoveredBin) return
+            groups
+                .filter(d => d.data === this.hoveredBin.id)
+                .attr('d', d => {
+                    return d3.arc()({startAngle: d.startAngle, 
+                                     endAngle: d.endAngle, 
+                                     innerRadius: this.innerRadius*1.01,
+                                     outerRadius: this.outerRadius*1.01})
+                })
+        }
     },
     
     mounted() {
