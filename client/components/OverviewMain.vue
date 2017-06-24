@@ -76,7 +76,7 @@
             <button class="btn btn-secondary btn-table">
                 <span class="fa fa-wrench"></span> Refine
             </button>
-            <button class="btn btn-danger btn-table">
+            <button class="btn btn-danger btn-table" @click="deleteSelected" :disabled="removing">
                 <span class="fa fa-trash-o"></span> Delete
             </button>
         </div>
@@ -84,7 +84,7 @@
 
     <table class="table table-hover" id="bin-table">
         <tbody style="cursor: pointer">
-            <tr v-for="bin in sortedBins" @click="selectBin(bin.id)" :style="binStyle(bin.id)">
+            <tr v-for="bin in sortedBins" :key="bin.id" @click="selectBin(bin.id)" :style="binStyle(bin.id)">
                 <td class="align-middle">{{bin.name}}</td>
                 <bar-column :percentage="sizeToPercentage(bin.size)" :color="bin.color" :label="bin.size"></bar-column>
                 <bar-column :percentage="mbpToPercentage(bin.mbp)" :color="bin.color" :label="bin.mbp.toFixed(2)"></bar-column>
@@ -118,7 +118,8 @@ export default {
             sortBy: 'size',
             sortOrder: 'desc',
             showUnbinned: false,
-            selected: []
+            selected: [],
+            removing: false
         }
     },
 
@@ -182,6 +183,23 @@ export default {
             const assembly = this.$store.state.assembly.id
             const url = `${ROOTURL}/a/${assembly}/bs/${bin.binSetId}/b/${bin.id}/export`
             window.open(url)
+        },
+        deleteSelected() {
+            this.removing = true
+            const ids = this.selected
+            $.ajax({
+                url: `${ROOTURL}/a/${this.binSet.assembly}/bs/${this.binSet.id}/b`,
+                method: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify({ ids })
+            }).then(() => {
+                this.$store.commit('REMOVE_BINS', ids)
+                this.$store.commit('REMOVE_REFINE_BINS', ids)
+                this.selected = []
+                this.removing = false
+            }, () => {
+                this.removing = false
+            })
         }
     },
     

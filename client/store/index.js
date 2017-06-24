@@ -123,6 +123,10 @@ const mutations = {
         state.refineBins = state.refineBins.filter(b => b.id !== bin.id)
         state.contigs = state.contigs.filter(c => c.bin !== bin.id)
     },
+    REMOVE_REFINE_BINS(state, bins) {
+        state.refineBins = state.refineBins.filter(b => !bins.includes(b.id))
+        state.contigs = state.contigs.filter(c => !bins.includes(c.bin))
+    },
     SET_CONTIGS(state, contigs) {
         state.contigs = contigs
     },
@@ -141,6 +145,9 @@ const mutations = {
     },
     REMOVE_BIN(state, bin) {
         state.bins = state.bins.filter(b => b.id !== bin.id)
+    },
+    REMOVE_BINS(state, bins) {
+        state.bins = state.bins.filter(b => !bins.includes(b.id))
     },
     REMOVE_BIN_SET(state, binSet) {
         const index = state.binSets.findIndex(bs => bs.id === binSet.id)
