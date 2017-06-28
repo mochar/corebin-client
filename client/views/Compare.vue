@@ -32,7 +32,7 @@
                             :class="{active: tab === 'SelectionTab'}"
                             @click.prevent="tab = 'SelectionTab'">
                             <span class="fa fa-list"></span>
-                            Selection
+                            Bins
                         </a>
                     </li>
                 </ul>
@@ -42,9 +42,12 @@
                     :is="tab"
 
                     :selectedBin="selectedBin"
+                    :selectedSet="selectedSet"
+                    :unselectedSet="unselectedSet"
                     :connectedBins="connectedBins"
                     :subConnectedBins="subConnectedBins"
                     :hoveredBin="hoveredBin"
+                    :leftSelected="leftSelected"
                     @binSelected="selectBin"
                     @binHovered="b => hoveredBin = b"
                     
@@ -188,12 +191,12 @@ export default {
             return d3Map([...this.bins_, ...this.otherBins_], bin => bin.id)
         },
         allBinIds() {
+            if (!this.plotData_) return []
             return [...this.plotData_.bins1, ...this.plotData_.bins2]
         },
         selectedBinIndex() {
             if (!this.selectedBin) return null
-            const all = [...this.plotData_.bins1, ...this.plotData_.bins2]
-            return all.indexOf(this.selectedBin.id)
+            return this.allBinIds.indexOf(this.selectedBin.id)
         },
         connectedIndices() {
             // Indices of the bins connected to selected bin

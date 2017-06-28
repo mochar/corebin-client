@@ -45,6 +45,10 @@
         </transition>
     </g>
 
+    <g id="info"  v-if="activeBin">
+        <text :transform="`translate(${width/2},${height/2})`" id="info-title">Bin: {{ activeBin.name }} ({{ activeSet.name }})</text>
+    </g>
+
     <defs>
         <path 
             id="name-path" 
@@ -55,7 +59,7 @@
             :transform="'translate(' + width / 2 + ',' + height / 2 + ')'">
         </path>
         <filter x="0" y="0" width="1" height="1" id="solid">
-            <feFlood flood-color="black" flood-opacity=".2" />
+            <feFlood flood-color="black" flood-opacity=".4" />
             <feComposite in="SourceGraphic"/>
         </filter>
         <marker id="arrowhead" viewBox="-0 -5 10 10" refX="5" refY="0"
@@ -403,7 +407,8 @@ export default {
 #info-title {
     font-size: larger;
     text-decoration: underline;
-    font-weight: bold;
+    font-weight: 500;
+    text-anchor: middle;
 }
 
 .info-head {
