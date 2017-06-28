@@ -3,6 +3,7 @@
     <g :transform="`translate(${width/2},${height/2})`">
         <g class="groups"></g>
         <g class="ribbons"></g>
+        <line id="arrow" marker-end="url(#arrowhead)" v-show="hoveredBin"></line>
     </g>
 
     <!--<g fill="none" pointer-events="none">
@@ -57,9 +58,13 @@
             <feFlood flood-color="black" flood-opacity=".2" />
             <feComposite in="SourceGraphic"/>
         </filter>
+        <marker id="arrowhead" viewBox="-0 -5 10 10" refX="5" refY="0"
+            markerWidth="4" markerHeight="4" orient="auto">
+            <path d="M0,-5L10,0L0,5" fill="black" stroke="none"></path>
+        </marker>
     </defs>
 
-    <g>
+    <g v-if="!hoveredBin">
         <text id="name" font-size="30">
             <textPath xlink:href="#name-path"></textPath>
         </text>
@@ -344,20 +349,20 @@ export default {
     watch: {
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
-        // 'hoveredBin': 'updateRibbons',
         hoveredBin() {
             this.updateRibbons()
-            const groups = this.svg.select('g.groups').selectAll('.group')
-                .attr('d', this.arc)
             if (!this.hoveredBin) return
-            groups
-                .filter(d => d.data === this.hoveredBin.id)
-                .attr('d', d => {
-                    return d3.arc()({startAngle: d.startAngle, 
-                                     endAngle: d.endAngle, 
-                                     innerRadius: this.innerRadius*1.01,
-                                     outerRadius: this.outerRadius*1.01})
-                })
+            const group = this.chordData.groups.filter(d => d.data === this.hoveredBin.id)[0]
+            const arc = d3.arc().innerRadius(this.outerRadius + 5).outerRadius(this.outerRadius + 40)
+            const coord1 = arc.centroid(group)
+            arc.innerRadius(this.outerRadius + 5).outerRadius(this.outerRadius + 10)
+            const coord2 = arc.centroid(group)
+            this.svg.select('line#arrow')
+                .attr('fill', 'red')
+                .attr('x1', coord1[0])
+                .attr('y1', coord1[1])
+                .attr('x2', coord2[0])
+                .attr('y2', coord2[1])
         }
     },
     
@@ -370,12 +375,12 @@ export default {
 </script>
 
 <style>
+#arrow {
+    stroke-width: 3;
+    stroke: black;
+}
 .ribbons {
   fill-opacity: 0.67;
-}
-
-.groups > path {
-    cursor: pointer;
 }
 
 #info {
@@ -415,5 +420,9 @@ export default {
 <style scoped>
 svg {
     display: block;
+}
+
+.groups {
+    cursor: pointer;
 }
 </style>
