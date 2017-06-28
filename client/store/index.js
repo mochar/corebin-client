@@ -329,6 +329,18 @@ const actions = {
             const contigs = data.contigs
             commit('PUSH_REFINE_BIN', { bin, contigs })
         })
+    },
+    REFINE({ commit, state, dispatch }, { bin, binSet }) {
+        if (state.refineBinSet && state.refineBinSet.id !== binSet.id) {
+            commit('SET_POTENTIAL_REFINE_BIN', bin)
+            commit('SET_POTENTIAL_REFINE_SET', binSet)
+            $('#open-refine-modal').modal('show')
+        }
+        if (bin && !state.refineBins.map(b => b.id).includes(bin.id)) {
+            dispatch('PUSH_REFINE_BIN', bin)
+        } 
+        commit('SET_REFINE_BIN_SET', binSet)
+        router.push({ path: 'refine' })
     }
 }
 

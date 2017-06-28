@@ -87,11 +87,14 @@ export default {
             this.$emit('binHovered', bin)
         },
         refine(bin) {
-
-        }
+            this.$store.dispatch('REFINE', { bin, binSet: this.showSet })
+        },
     },
 
     computed: {
+        refineBinSet() {
+            return this.$store.state.refineBinSet
+        },
         subBins() {
             // Bad name: selectedBin + subConnectedBins
             return [this.selectedBin, ...this.subConnectedBins]

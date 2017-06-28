@@ -160,20 +160,7 @@ export default {
             }
         },
         refine(bin) {
-            if (this.refineBinSet && this.refineBinSet.id !== this.binSet.id) {
-                this.$store.commit('SET_POTENTIAL_REFINE_BIN', bin)
-                this.$store.commit('SET_POTENTIAL_REFINE_SET', this.binSet)
-                $('#open-refine-modal').modal('show')
-                return
-            }
-            if (bin && !this.binIsInRefine(bin.id)) {
-                this.$store.dispatch('PUSH_REFINE_BIN', bin)
-            } 
-            this.$store.commit('SET_REFINE_BIN_SET', this.binSet)
-            this.$router.push({ path: 'refine' })
-        },
-        binIsInRefine(binId) {
-            return this.$store.state.refineBins.map(b => b.id).includes(binId)
+            this.$store.dispatch('REFINE', { bin, binSet: this.binSet })
         },
         commitDeletion(bin) {
             this.$store.commit('REMOVE_BIN', bin)
