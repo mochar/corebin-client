@@ -3,7 +3,7 @@
     <g :transform="`translate(${width/2},${height/2})`">
         <g class="groups"></g>
         <g class="ribbons"></g>
-        <line id="arrow" marker-end="url(#arrowhead)" v-show="hoveredBin"></line>
+        <line id="arrow" marker-end="url(#arrowhead)" v-show="activeBin"></line>
     </g>
 
     <!--<g fill="none" pointer-events="none">
@@ -64,7 +64,7 @@
         </marker>
     </defs>
 
-    <g v-if="!hoveredBin">
+    <g v-if="!activeBin">
         <text id="name" font-size="30">
             <textPath xlink:href="#name-path"></textPath>
         </text>
@@ -324,6 +324,9 @@ export default {
                 }
             }
         },
+        arrowTween() {
+
+        },
         toRad   ,
         rgb: d3.rgb
     },
@@ -349,10 +352,10 @@ export default {
     watch: {
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
-        hoveredBin() {
-            this.updateRibbons()
-            if (!this.hoveredBin) return
-            const group = this.chordData.groups.filter(d => d.data === this.hoveredBin.id)[0]
+        'hoveredBin': 'updateRibbons',
+        activeBin() {
+            if (!this.activeBin) return
+            const group = this.chordData.groups.filter(d => d.data === this.activeBin.id)[0]
             const arc = d3.arc().innerRadius(this.outerRadius + 5).outerRadius(this.outerRadius + 40)
             const coord1 = arc.centroid(group)
             arc.innerRadius(this.outerRadius + 5).outerRadius(this.outerRadius + 10)
