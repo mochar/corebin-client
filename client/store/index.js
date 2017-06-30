@@ -350,10 +350,10 @@ const actions = {
 
 const getters = {
     withoutUnbinned(state) {
-        return state.bins.filter(bin => bin.name !== 'unbinned')
+        return state.bins.filter(bin => !bin.unbinned)
     },
     unbinned(state) {
-        return state.bins.filter(bin => bin.name === 'unbinned')[0]
+        return state.bins.filter(bin => bin.unbinned)[0]
     }
 }
 

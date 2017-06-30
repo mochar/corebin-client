@@ -204,7 +204,7 @@ export default {
         },
         bins() {
             const bins = this.$store.state.bins
-            return this.showUnbinned ? bins : bins.filter(bin => bin.name !== 'unbinned')
+            return this.showUnbinned ? bins : bins.filter(bin => !bin.unbinned)
         },
         maxSize() {
             return Math.max(...this.bins.map(bin => bin.size))
