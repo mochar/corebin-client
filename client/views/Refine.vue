@@ -172,5 +172,6 @@ export default {
     left: 3rem;
     top: .25rem;
     pointer-events: none;
+    font-size: small;
 }
 </style>
