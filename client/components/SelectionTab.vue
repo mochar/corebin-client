@@ -18,7 +18,7 @@
                     {{ showSet.name }}
                 </span>
             </button>
-            <button class="btn btn-primary btn-sm">
+            <button class="btn btn-primary btn-sm" @click="refine(showBins)">
                 <span class="fa fa-wrench"></span>
                 Refine bins
             </button>
@@ -34,7 +34,7 @@
             <span>{{ bin.name }}</span>
             <div>
                 <span class="text-muted">100%</span>
-                <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine(bin)">
+                <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine([bin])">
                     <span class="fa fa-wrench"></span>
                 </button>
                 <bin-info :bin="bin"></bin-info>
@@ -86,8 +86,8 @@ export default {
         hover(bin) {
             this.$emit('binHovered', bin)
         },
-        refine(bin) {
-            this.$store.dispatch('REFINE', { bins: [bin], binSet: this.showSet })
+        refine(bins) {
+            this.$store.dispatch('REFINE', { bins, binSet: this.showSet })
         },
     },
 
