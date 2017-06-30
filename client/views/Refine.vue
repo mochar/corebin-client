@@ -54,21 +54,27 @@
                     :colorBy_.sync="colorBy"
                     :colorBinSet_.sync="colorBinSet"
                     :xLog_.sync="xLog"
-                    :yLog_.sync="yLog"
-                    :expand_.sync="expand">
+                    :yLog_.sync="yLog">
                 </component>
             </div>
         </div>
     </div>
     <div class="col-9 app-right" style="background-color: white;">
+        <div id="refine-status">
+            <span class="text-muted" v-if="selectedContigs.length === 0">
+                [Click and drag to select region.]
+            </span>
+            <span class="text-muted" v-else>
+                [{{ selectedContigs.length }} selected. Right-click to deselect.]
+            </span>
+        </div>
         <scatter
             :xData="xData"
             :yData="yData"
             :xLog="xLog"
             :yLog="yLog"
             :colorBy="colorBy"
-            :colorBinSet="colorBinSet"
-            :expand="expand">
+            :colorBinSet="colorBinSet">
         </scatter>
     </div>
     <refine-export-modal
@@ -102,8 +108,7 @@ export default {
             colorBy: 'binSet',
             colorBinSet: null,
             xLog: false,
-            yLog: false,
-            expand: false
+            yLog: false
         }
     },
     
@@ -119,7 +124,8 @@ export default {
     computed: {
         ...mapState([
             'binSet',
-            'refineBinSet'
+            'refineBinSet',
+            'selectedContigs'
         ])
     },
 
@@ -159,5 +165,12 @@ export default {
 
 .nav-link:not(.active) {
     color: #636c72 !important;
+}
+
+#refine-status {
+    position: absolute;
+    left: 3rem;
+    top: .25rem;
+    pointer-events: none;
 }
 </style>

@@ -72,15 +72,6 @@
     </div>
 
     <div style="margin-top: .75rem">
-        <div class="form-check">
-            <label class="form-check-label">
-                <input class="form-check-input" type="checkbox" v-model="expand">
-                Expand selection
-            </label>
-        </div>
-    </div>
-
-    <div style="margin-top: .75rem">
         <span>
             <span class="fa fa-download"></span>
             <span class="fw-500" style="font-size: .8rem">EXPORT</span>
@@ -107,8 +98,7 @@ export default {
         'xLog_',
         'yLog_',
         'colorBy_',
-        'colorBinSet_',
-        'expand_'
+        'colorBinSet_'
     ],
 
     methods: {
@@ -145,11 +135,7 @@ export default {
         colorBinSet: {
             get() { return this.colorBinSet_ },
             set(value) { this.$emit('update:colorBinSet_', value) }
-        },
-        expand: {
-            get() { return this.expand_ },
-            set(value) { this.$emit('update:expand_', value) }
-        },
+        }
     }
 }
 </script>

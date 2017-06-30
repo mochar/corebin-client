@@ -17,14 +17,17 @@
                 class="color-legend">
             </rect>
         </g>
-        <g v-else v-for="(bin, i) in $store.state.refineBins" :transform="`translate(-20,${i*30+20})`">
+        <g v-for="(bin, i) in $store.state.refineBins" 
+            :key="bin.id"
+            :transform="`translate(-20,${i*30+20})`"
+            v-else>
             <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
             <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
         </g>
     </g>
     <g class="x axis" :transform="`translate(0,${height})`"></g>
     <g class="y axis" :transform="'translate(0,0)'"></g>
-    <polygon id="hull"></polygon>
+    <g id="hulls"></g>
     <g id="circles"></g>
 </svg>
 </template>
@@ -50,8 +53,8 @@ export default {
             width: 100,
             colorScale: null,
             sizeScale: null,
-            hull: null,
-            zoomTransform: null
+            zoomTransform: null,
+            selectionSets: []
         }
     },
 
@@ -61,8 +64,7 @@ export default {
         'xLog',
         'yLog',
         'colorBy',
-        'colorBinSet',
-        'expand'
+        'colorBinSet'
     ],
     
     methods: {
@@ -115,7 +117,8 @@ export default {
                 })
 
             this.lasso.items(circleEnter.merge(circle))
-            this.updateHull()
+
+            this.updateHulls()
         },
         resize() {
             this.height = $('.app-right').height()
@@ -128,27 +131,19 @@ export default {
                 .call(this.yAxis.scale(d3.event.transform.rescaleY(this.y)))
             this.svg.selectAll('circle.dot')
                 .attr('transform', d3.event.transform)
-            this.hull.attr('transform', d3.event.transform)
+            this.svg.select('g#hulls').selectAll('polygon')
+                .attr('transform', d3.event.transform)
             this.zoomTransform = d3.event.transform
         },
         lassoStarted() {
-            let items = this.lasso.items()
-                .classed('not_possible', true)
-            if (!this.expand) {
-                this.$store.commit('SET_SELECTED_CONTIGS', [])
-                this.updateHull()
-                items.classed('selected', false)
-            }
         },
         lassoDrawing() {
             this.lasso.possibleItems()
                 .classed('not_possible', false)
                 .classed('possible', true)
 
-            let notPossible = this.lasso.notPossibleItems()
-            if (this.expand) 
-                notPossible = notPossible.filter(c => this.selectedIds.includes(c.id))
-            notPossible
+            this.lasso.notPossibleItems()
+                .filter(c => this.selectedIds.includes(c.id))
                 .classed('not_possible', true)
                 .classed('possible', false)
         },
@@ -160,25 +155,38 @@ export default {
             this.lasso.selectedItems()
                 .classed('selected', true)
 
-            let selected = this.lasso.selectedItems().data()
-            selected = [...selected, ...this.selectedContigs]
-                .filter((elt, i, a) => i === a.findIndex(elt2 => elt.id === elt2.id))
-            this.$store.commit('SET_SELECTED_CONTIGS', selected)
-
-            this.updateHull()
+            const selected = this.lasso.selectedItems().data()
+                .filter(c => !this.selectedContigs.map(x => x.id).includes(c.id))
+            const all = [...this.selectedContigs, ...selected]
+            const startIndex = this.selectedContigs.length
+            this.$store.commit('SET_SELECTED_CONTIGS', all)
+            const endIndex = this.selectedContigs.length
+            if (startIndex < endIndex)
+                this.selectionSets.push([startIndex, endIndex])
+            this.updateHulls()
         },
-        updateHull() {
-            const dots = this.selectedContigs
-                .map(d => [this.x(d[this.xData]), this.y(d[this.yData])])
-            const hullPoints = d3.polygonHull(dots) || []
-            this.hull.transition().attr('points', hullPoints.join(' '))
+        updateHulls() {
+            const hull = this.svg.select('g#hulls').selectAll('polygon.hull')
+                .data(this.selectionSets)
+            hull.exit().remove()
+            hull.enter().append('polygon')
+                .classed('hull', true)
+              .merge(hull)
+                .attr('transform', this.zoomTransform)
+              .transition()
+                .attr('points', d => {
+                    const dots = this.selectedContigs.slice(d[0], d[1])
+                        .map(d => [this.x(d[this.xData]), this.y(d[this.yData])])
+                    if (dots.length > 2)
+                        return d3.polygonHull(dots).join(' ')
+                    return dots.map(x => x.join(',')).join(' ')
+                })
         }
     },
 
     mounted() {
         this.resize()
         this.svg = d3.select(this.$el)
-        this.hull = this.svg.select('polygon#hull')
 
         this.colorScale = d3.scaleLinear()
             .domain([0.3, 0.7])
@@ -203,6 +211,15 @@ export default {
 
         this.svg.call(this.lasso)
         this.svg.call(this.zoom)
+        this.svg.on('contextmenu', () => {
+            d3.event.preventDefault()
+            this.selectionSets = []
+            this.updateHulls()
+            this.lasso.items()
+                .classed('not_possible', true)
+                .classed('possible selected', false)
+            this.$store.commit('SET_SELECTED_CONTIGS', [])
+        })
 
         this.updatePlot()
         window.onresize = this.updatePlot
@@ -291,11 +308,12 @@ export default {
     stroke-width: .5;
 }
 
-polygon#hull {
+polygon.hull {
     fill: #ccc;
     stroke: #ccc;
     opacity: .5;
     stroke-width: 12px;
     stroke-linejoin: round;
+    fill-rule: nonzero;
 }
 </style>
