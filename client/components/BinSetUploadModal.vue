@@ -23,7 +23,7 @@
             </div>
         </div>
         
-        <button class="btn btn-link btn-sm" @click="hide">Cancel</button>
+        <button class="btn btn-link btn-sm" @click.prevent="hide">Cancel</button>
         
         <button type="submit" class="btn btn-primary pull-right btn-sm submit-button" :disabled="loading">
             <span class="fa fa-refresh fa-spin" v-show="loading"></span>
