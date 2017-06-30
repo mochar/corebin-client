@@ -160,7 +160,8 @@ export default {
             }
         },
         refine(bin) {
-            this.$store.dispatch('REFINE', { bin, binSet: this.binSet })
+            const bins = bin ? [bin] : []
+            this.$store.dispatch('REFINE', { bins, binSet: this.binSet })
         },
         commitDeletion(bin) {
             this.$store.commit('REMOVE_BIN', bin)

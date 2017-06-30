@@ -19,7 +19,7 @@ const state = {
     refineBins: [],
     contigs: [],
     selectedContigs: [],
-    potentialRefineBin: null,
+    potentialRefineBins: null,
     potentialRefineSet: null,
 
     // Jobs
@@ -115,8 +115,8 @@ const mutations = {
         })
         state.contigs = contigs
     },
-    PUSH_REFINE_BIN(state, { bin, contigs }) {
-        state.refineBins.push(bin)
+    PUSH_REFINE_BINS(state, { bins, contigs }) {
+        state.refineBins = [...state.refineBins, ...bins]
         state.contigs.push(...contigs)
     },
     REMOVE_REFINE_BIN(state, bin) {
@@ -130,8 +130,8 @@ const mutations = {
     SET_CONTIGS(state, contigs) {
         state.contigs = contigs
     },
-    SET_POTENTIAL_REFINE_BIN(state, bin) {
-        state.potentialRefineBin = bin
+    SET_POTENTIAL_REFINE_BINS(state, bins) {
+        state.potentialRefineBins = bins
     },
     SET_POTENTIAL_REFINE_SET(state, binSet) {
         state.potentialRefineSet = binSet
@@ -313,11 +313,11 @@ const actions = {
             commit('RENAME_BIN_SET', name)
         })
     },
-    PUSH_REFINE_BIN({ commit, state }, bin) {
+    PUSH_REFINE_BINS({ commit, state }, bins) {
         commit('SET_MESSAGE', 'Fetching data...')
         const payload = {
             fields: 'id,length,gc,name',
-            bins: bin.id,
+            bins: bins.map(b => b.id).join(','),
             coverages: true,
             pca: state.assembly.hasFourmerfreqs,
             colors: true,
@@ -325,20 +325,24 @@ const actions = {
         }
         return $.getJSON(`${ROOTURL}/a/${state.assembly.id}/c`, payload).then(data => {
             commit('SET_MESSAGE', '')
-            data.contigs.forEach(c => c.bin = bin.id)
-            const contigs = data.contigs
-            commit('PUSH_REFINE_BIN', { bin, contigs })
+            commit('PUSH_REFINE_BINS', { bins, contigs: data.contigs })
         })
     },
-    REFINE({ commit, state, dispatch }, { bin, binSet }) {
+    REFINE({ commit, state, dispatch }, { bins, binSet }) {
+        // Confirmation pop-up when other binSet is being refined
         if (state.refineBinSet && state.refineBinSet.id !== binSet.id) {
-            commit('SET_POTENTIAL_REFINE_BIN', bin)
+            commit('SET_POTENTIAL_REFINE_BINS', bins)
             commit('SET_POTENTIAL_REFINE_SET', binSet)
             $('#open-refine-modal').modal('show')
+            return
         }
-        if (bin && !state.refineBins.map(b => b.id).includes(bin.id)) {
-            dispatch('PUSH_REFINE_BIN', bin)
-        } 
+
+        // Filter out bins which are already being refined
+        const refining = state.refineBins.map(b => b.id)
+        bins = bins.filter(b => !refining.includes(b.id))
+        if (bins.length > 0)
+            dispatch('PUSH_REFINE_BINS', bins)
+
         commit('SET_REFINE_BIN_SET', binSet)
         router.push({ path: 'refine' })
     }

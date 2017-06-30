@@ -87,7 +87,7 @@ export default {
             this.$emit('binHovered', bin)
         },
         refine(bin) {
-            this.$store.dispatch('REFINE', { bin, binSet: this.showSet })
+            this.$store.dispatch('REFINE', { bins: [bin], binSet: this.showSet })
         },
     },
 

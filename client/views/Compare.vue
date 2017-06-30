@@ -155,22 +155,8 @@ export default {
             }
         },
         refineBin() {
-            const bin = this.selectedBin
             const binSet = this.selectedSet
-            if (this.refineBinSet && this.refineBinSet.id !== binSet.id) {
-                this.$store.commit('SET_POTENTIAL_REFINE_BIN', bin)
-                this.$store.commit('SET_POTENTIAL_REFINE_SET', binSet)
-                $('#open-refine-modal').modal('show')
-                return
-            }
-            const binInRefine = this.$store.state.refineBins.map(b => b.id).includes(bin.id)
-            if (bin && !binInRefine) {
-                this.$store.dispatch('SELECT_BIN_SET', binSet).then(() => {
-                    this.$store.dispatch('PUSH_REFINE_BIN', bin)
-                })
-            } 
-            this.$store.commit('SET_REFINE_BIN_SET', binSet)
-            this.$router.push({ path: 'refine' })
+            this.$store.dispatch('REFINE', { bins: [this.selectBin], binSet })
         },
         findConnectedIndices(index) {
             return this.plotData_.matrix[index]

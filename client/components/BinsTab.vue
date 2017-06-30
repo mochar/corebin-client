@@ -43,7 +43,7 @@ export default {
                 this.$store.commit('REMOVE_REFINE_BIN', bin)
                 this.loading = false
             } else {
-                this.$store.dispatch('PUSH_REFINE_BIN', bin).then(() => {
+                this.$store.dispatch('PUSH_REFINE_BINS', [bin]).then(() => {
                     this.loading = false
                 })
             }
