@@ -73,7 +73,7 @@
             <button class="btn btn-secondary btn-table">
                 <span class="fa fa-sitemap"></span> Merge
             </button>
-            <button class="btn btn-secondary btn-table">
+            <button class="btn btn-secondary btn-table" @click="refine(selected)">
                 <span class="fa fa-wrench"></span> Refine
             </button>
             <button class="btn btn-danger btn-table" @click="deleteSelected" :disabled="removing">
@@ -84,7 +84,7 @@
 
     <table class="table table-hover" id="bin-table">
         <tbody style="cursor: pointer">
-            <tr v-for="bin in sortedBins" :key="bin.id" @click="selectBin(bin.id)" :style="binStyle(bin.id)">
+            <tr v-for="bin in sortedBins" :key="bin.id" @click="selectBin(bin)" :style="binStyle(bin.id)">
                 <td class="align-middle">{{bin.name}}</td>
                 <bar-column :percentage="sizeToPercentage(bin.size)" :color="bin.color" :label="bin.size"></bar-column>
                 <bar-column :percentage="mbpToPercentage(bin.mbp)" :color="bin.color" :label="bin.mbp.toFixed(2)"></bar-column>
@@ -96,7 +96,7 @@
                     <button class="btn btn-secondary btn-sm btn-bin" @click.stop="exportFasta(bin)">
                         <span class="fa fa-download"></span>
                     </button>
-                    <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine(bin)">
+                    <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine([bin])">
                         <span class="fa fa-wrench"></span>
                     </button>
                 </td>
@@ -140,15 +140,15 @@ export default {
         proportionToPercentage(size) {
             return size !== null ? size * 100 : null
         },
-        selectBin(binId) {
-            const index = this.selected.indexOf(binId)
+        selectBin(bin) {
+            const index = this.selectedIds.indexOf(bin.id)
             if (index > -1)
                 this.selected.splice(index, 1)
             else
-                this.selected.push(binId)
+                this.selected.push(bin)
         },
         binStyle(binId) {
-            const color = this.selected.indexOf(binId) > -1 ? 'rgba(0,0,0,.075)' : 'white'
+            const color = this.selectedIds.indexOf(binId) > -1 ? 'rgba(0,0,0,.075)' : 'white'
             return { 'background-color': color }
         },
         sort(by) {
@@ -159,9 +159,10 @@ export default {
                 this.sortOrder ='desc'
             }
         },
-        refine(bin) {
-            const bins = bin ? [bin] : []
+        refine(bins) {
+            bins = bins ? bins : []
             this.$store.dispatch('REFINE', { bins, binSet: this.binSet })
+            this.selected = []
         },
         commitDeletion(bin) {
             this.$store.commit('REMOVE_BIN', bin)
@@ -174,7 +175,7 @@ export default {
         },
         deleteSelected() {
             this.removing = true
-            const ids = this.selected
+            const ids = this.selectedIds
             $.ajax({
                 url: `${ROOTURL}/a/${this.binSet.assembly}/bs/${this.binSet.id}/b`,
                 method: 'DELETE',
@@ -194,6 +195,9 @@ export default {
     computed: {
         refineBinSet() {
             return this.$store.state.refineBinSet
+        },
+        selectedIds() {
+            return this.selected.map(b => b.id)
         },
         binSet() {
             return this.$store.state.binSet
