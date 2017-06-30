@@ -107,13 +107,12 @@ export default {
 
 <style>
 .bin-set {
-    margin-bottom: 0;
-    border-left: 0;
-    border-right: 0;
-    border-color: #bbb;
-    border-color: #ddd;
+    border-color: #ccc;
     padding-top: .5rem !important;
     padding: 0; 
+    margin: .1rem .3rem;
+    width: initial;
+    box-shadow: 1px 2px 2px 1px #eee;
 }
 
 .list-group-item-action,

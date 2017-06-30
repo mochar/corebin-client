@@ -103,7 +103,7 @@ export default {
 }
 
 #bin-sets > .bin-set:not(:first-child) {
-    border-top: 0;
+    /*border-top: 0;*/
 }
 
 #compare-link {

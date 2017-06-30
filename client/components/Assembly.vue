@@ -80,15 +80,15 @@ export default {
 
 <style scoped>
 .assembly {
-    border-left: 0;
-    border-right: 0;
     border-color: #ddd;
+    border-color: #ccc;
     padding: 0;
+    margin: .1rem .3rem;
+    width: initial;
+    box-shadow: 1px 2px 2px 1px #eee;
 }
 
 .list-group-item {
-    border-left: 0;
-    border-right: 0;
     display: block;
 }
 
