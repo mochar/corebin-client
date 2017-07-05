@@ -83,7 +83,6 @@ const mutations = {
     },
     APPEND_BIN_SETS(state, binSet) {
         state.binSets.push(binSet)
-        if (state.binSets.length === 1) state.binSet = binSet
     },
     APPEND_BIN(state, bin) {
         state.bins.push(bin)
@@ -285,15 +284,18 @@ const actions = {
             url: state.assemblyJob.location
         }).done(() => commit('SET_ASSEMBLY_JOB', null))
     },
-    CHECK_BIN_SET_JOBS({ commit, state }) {
+    CHECK_BIN_SET_JOBS({ commit, state, dispatch }) {
         const jobs = state.binSetJobs
         jobs.forEach(job => {
             $.getJSON(job.location, (data, textStatus, jqXHR) => {
-                if (jqXHR.status == 201) {
-                    commit('REMOVE_BIN_SET_JOB', job)
-                    const location = jqXHR.getResponseHeader('Location')
-                    $.getJSON(location, binSet => commit('APPEND_BIN_SETS', binSet))
-                } 
+                if (jqXHR.status != 201) return
+                commit('REMOVE_BIN_SET_JOB', job)
+                const location = jqXHR.getResponseHeader('Location')
+                $.getJSON(location, binSet => {
+                    commit('APPEND_BIN_SETS', binSet)
+                    if (state.binSets.length === 1)
+                        dispatch('SELECT_BIN_SET', binSet)
+                })
             })
         })
     },
