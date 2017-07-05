@@ -1,5 +1,5 @@
 <template>
-<div class="card">
+<div class="card job">
     <div class="name-block">
         <span class="name">{{ job.meta.name }}</span>
     </div>
@@ -27,8 +27,12 @@ export default {
 }
 </script>
 
-<style scoped>
-.card {
-    border-width: 1px 0;
+<style>
+.job {
+    border-color: #ccc;
+    padding: 0;
+    margin: .1rem .3rem;
+    width: initial;
+    box-shadow: 1px 2px 2px 1px #eee;
 }
 </style>
