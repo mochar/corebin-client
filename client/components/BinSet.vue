@@ -1,6 +1,7 @@
 <template>
 <router-link to="/overview" @click.native="select" tag="a" 
     :class="{ 'selected-bin-set': selectedClass }"
+    :style="style"
     class="list-group-item list-group-item-action flex-column align-items-start bin-set">
 
     <div class="name-div w-100 d-flex justify-content-between align-items-baseline">
@@ -100,6 +101,13 @@ export default {
         },
         selectedClass() {
             return this.isSelected && this.$route.path === '/overview'
+        },
+        style() {
+            return { 
+                // 'border-left': `4px solid ${this.binSet.color}`,
+                'border-left': `3px solid ${this.isSelected ? '#d9534f' : '#555'}`,
+                'margin-left': this.isSelected ? '.5rem' : '.3rem'
+            }
         }
     }
 }
