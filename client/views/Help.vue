@@ -12,13 +12,13 @@
             </div>
             <div></div>
         </div>
-        <ul class="list-group">
-            <li class="list-group-item">Introduction</li>
-            <li class="list-group-item">User interface</li>
-            <li class="list-group-item">Uploading your data</li>
-            <li class="list-group-item">Metagenomic binning</li>
-            <li class="list-group-item">Demo data-set</li>
-            <li class="list-group-item">Demo data files</li>
+        <ul class="list-unstyled" id="help-nav">
+            <li>Introduction</li>
+            <li>User interface</li>
+            <li>Uploading your data</li>
+            <li>Metagenomic binning</li>
+            <li>Demo data-set</li>
+            <li>Demo data files</li>
         </ul>
     </div>
     <div class="col-9 app-right">
@@ -240,17 +240,19 @@ export default {
 #help-main {
     border-left: 0;
 }
+
+#help-nav {
+    padding: 1rem;
+    padding-top: 0;
+}
+#help-nav > li {
+    cursor: pointer;
+    padding: .3rem .2rem;
+}
+#help-nav > li:hover {
+    background: #ddd;
+}
 </style>
 
 <style scoped>
-.list-group-item {
-    border-left: 0px;
-    border-right: 0px;
-    background: transparent;
-    cursor: pointer;
-    padding: .5rem 1rem;
-}
-.list-group-item:hover {
-    background: #ddd;
-}
 </style>

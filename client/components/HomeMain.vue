@@ -1,7 +1,7 @@
 <template>
 <div class="card card-block" id="home-main">
     <h2>
-        <img src="logo.svg" style="height: 5rem" /> CoReBIN
+        <img src="logo.svg" style="height: 5rem"> CoReBIN
         <small class="text-muted">Comparison and Refinement of metagenomic bins</small>
     </h2>
 
@@ -9,36 +9,47 @@
         CoReBIN is a user-friendly web-based tool to compare the results of different binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.
     </p>
 
-    <h4>Getting started</h4>
-    <p>
-        <ol>
-        <li><b>Upload your metagenomic assembly (fasta format)</b>: click the <span class="fa fa-plus"></span> icon at the top in the left side-bar. Name your assembly and select your fasta-file. In order to assess completeness and contamination of your bins later on, tick the "Search contigs for single-copy marker genes"-box (this will increase processing time). It is beneficial to also upload a table with (differential-) coverage information on your assembly.</li>
-        <li>Next you can <b>upload your metagenomic binning results</b> by clicking the "Analyze"-buttom in the left side-bar and subsequently clicking the <span class="fa fa-plus"></span> icon. Here you have to provide a file in which the contig ID if followed by the bin number (e.g. contig </t> binID).</li>
-        <li>Now, <b>inspect your bins</b> by clicking the "Overview"-button. Click on the <span class="fa fa-wrench"></span> icon to <b>refine individual bins</b>.</li>
-        </ol>
-    </p>
+    <div class="card-group">
+        <div class="card text-center">
+            <div class="card-block">
+                <h4 class="card-title">
+                    <span class="fa fa-upload fa-fw"></span>
+                    Upload
+                </h4>
+                <p class="card-text">Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken. </p>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-block">
+                <h4 class="card-title">
+                    <span class="fa fa-balance-scale fa-fw"></span>
+                    Compare
+                </h4>
+                <p class="card-text">Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken. </p>
+            </div>
+        </div>
+        <div class="card text-center">
+            <div class="card-block">
+                <h4 class="card-title">
+                    <span class="fa fa-wrench fa-fw"></span>
+                    Refine
+                </h4>
+                <p class="card-text">Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken. </p>
+            </div>
+        </div>
+    </div>
 
-    <h4>Which data do I need?</h4>
-    <p>
-        <ul>
-            <li>Metagenomic assembly (fasta format; <a href="#help">see details</a>)</li>
-            <li>Coverage table (<a href="#help">see details</a>) <i>not required</i></li>
-            <li>One or more binning results (<a href="#help">see details</a>)</li>
-        </ul>
-        First want to try CoReBIN with demo-data? A simulated data-set is provided <a href="#help">here</a>.
-    </p>
+    <div style="margin-top: 2rem">
+        <h4>Demo data-set</h4>
+        <p>
+        A simulated dataset of short sequences consisting of three different samples, each containing 10.000.000  paired-end 100 nt reads, was created using the supplied error model for Illumina GA IIx with TrueSeq SBS Kit v5-GA using GemSim (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22336055" target="_blank">McElroy, Luciani & Thomas, 2012</a>). Reads were derived from a set of 10 reference genomes and chosen with probability proportional to the species abundance and genome size (see table below).
+        </p>
+        <p>
+        Subsequently, the simulated reads were co-assembled using MEGAHIT (<a href="http://www.ncbi.nlm.nih.gov/pubmed/25609793" target="_blank">Li et al, 2015</a>). Coverage for the three different samples was determined using bowtie2 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22388286" target="_blank">Langmead & Salzberg, 2012</a>). The assembly and differential coverage table were then used as input for two different binning programs (default parameters): MaxBin 2.0 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/26515820" target="_blank">Wu, Simmons and Singer, 2015</a>) and MetaBAT (<a href="https://peerj.com/articles/1165/" target="_blank">Kang et al, 2015</a>).
+        </p>
 
-    <h4>Metagenomic binning</h4>
-    <p>
-    Here are some suggestions of recently published metagenomic binning programs and methods:
-        <ul>
-        <li><a href="https://github.com/BinPro/CONCOCT">CONCOCT</a>: Alneberg, Johannes, et al. "Binning metagenomic contigs by coverage and composition." <i>Nature methods</i> 11.11 (2014): 1144-1146.</li>
-        <li><a href="https://bitbucket.org/berkeleylab/metabat">MetaBAT</a>: Kang, Dongwan D., et al. "MetaBAT, an efficient tool for accurately reconstructing single genomes from complex microbial communities." <i>PeerJ</i> 3 (2015): e1165.</i>
-        <li><a href="http://ecogenomics.github.io/GroopM/">GroopM</a>: Imelfort, Michael, et al. "GroopM: an automated tool for the recovery of population genomes from related metagenomes." <i>PeerJ</i> 2 (2014): e603.</li>
-        <li><a href="https://sourceforge.net/projects/maxbin/">MaxBin 2.0</a>: Wu, Yu-Wei, Blake A. Simmons, and Steven W. Singer. "MaxBin 2.0: an automated binning algorithm to recover genomes from multiple metagenomic datasets." <i>Bioinformatics</i> (2015): btv638.</li>
-        <li><a href="http://claczny.github.io/VizBin/">VizBin</a>: Laczny, Cedric C., et al. "VizBin-an application for reference-independent visualization and human-augmented binning of metagenomic data." <i>Microbiome</i> 3.1 (2015): 1.</li>
-        </ul>
-    </p>
+        <p><router-link to="/help">Read more in the help page.</router-link></p> 
+    </div>
 </div>
 </template>
 
@@ -51,5 +62,12 @@
 #home-main {
     border: 0;
     height: 100%;
+    overflow-y: hidden;
+}
+</style>
+
+<style scoped>
+.fa {
+    margin-bottom: 1rem;
 }
 </style>
