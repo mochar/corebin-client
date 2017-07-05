@@ -6,47 +6,8 @@
         <line id="arrow" marker-end="url(#arrowhead)" v-show="activeBin"></line>
     </g>
 
-    <!--<g fill="none" pointer-events="none">
-        <rect x="0" y="0" :height="height" :width="width/2" 
-            @mouseover="sideHovered(otherBinSet.id)"
-            @mouseout="sideHovered(null)">
-        </rect>
-        <rect :x="width/2" y="0" :height="height" :width="width/2" 
-            @mouseover="sideHovered(binSet.id)"
-            @mouseout="sideHovered(null)">
-        </rect>
-    </g>-->
-
-    <g :transform="`translate(${width/3},${height/3})`" id="info"  v-if="false && activeBin">
-        <text  x="10" y="30" id="info-title">Bin: {{ activeBin.name }} ({{ activeSet.name }})</text>
-        <g :transform="`translate(10,${height/10})`">
-            <text class="info-head">Size</text>
-            <text y="20">-# contigs</text>
-            <text y="20" x="150">: {{ activeBin.size }}</text>
-            <text y="40">-# bp</text>
-            <text y="40" x="150">: {{ activeBin.mbp.toFixed(3) }} Mb</text>
-        </g>
-        <g :transform="`translate(10,${height/5})`" v-if="$store.state.assembly.genesSearched">
-            <text class="info-head">Completeness</text>
-            <text y="20">- contamination</text>
-            <text y="20" x="150">: {{ activeBin.contamination.toFixed(3) }}%</text>
-            <text y="40">- completeness</text>
-            <text y="40" x="150">: {{ activeBin.completeness.toFixed(3) }}%</text>
-        </g>
-        <transition name="fade" mode="out-in">
-            <g id="transition-g" v-if="showChordActions">
-                <g :transform="`translate(10,${height/3.25})`">
-                    <text class="info-head">Refine</text>
-                    <text y="20" class="info-link" @click="$emit('refine')">
-                        - Open refinement plot
-                    </text>
-                </g>
-            </g>
-        </transition>
-    </g>
-
     <g id="info"  v-if="activeBin">
-        <text :transform="`translate(${width/2},${height/2})`" id="info-title">Bin: {{ activeBin.name }} ({{ activeSet.name }})</text>
+        <text :transform="`translate(${width/2},${height/2})`" id="info-title">{{ activeBin.name }} ({{ activeSet.name }})</text>
     </g>
 
     <defs>
@@ -68,7 +29,7 @@
         </marker>
     </defs>
 
-    <g v-if="!activeBin">
+    <g v-show="!activeBin && false">
         <text id="name" font-size="30">
             <textPath xlink:href="#name-path"></textPath>
         </text>
@@ -229,7 +190,7 @@ export default {
               .merge(ribbon)
                 .style('fill', ribbon => {
                     const bin = this.activeBin && this.activeBin.id
-                    let color = '#bbb'
+                    let color = '#cfcfcf'
                     if (ribbon.target.data === bin) {
                         color = this.binsMap.get(ribbon.source.data).color
                     } else if(ribbon.source.data === bin) {
@@ -240,37 +201,36 @@ export default {
                 .style('stroke', function() { 
                     return d3.rgb(d3.select(this).style('fill')).darker()
                 })
-            //   .transition()
-            //     .attr('transform', ribbon => {
-            //         const bin = this.activeBin && this.activeBin.id
-            //         let scale = bin ? .95 : 1
-            //         if (ribbon.target.data === bin || ribbon.source.data === bin) {
-            //             scale = 1
-            //         } 
-            //         return `scale(${scale})`
-            //     })
         },
         updateGroups() {
             const group = this.svg.select('g.groups').selectAll('.group')
-                // .data(this.chordData.groups, group => `${group.index}-${group.data}`)
                 .data(this.chordData.groups, group => `${group.side}-${group.data}`)
-            group.transition()
+            group.select('path').transition()
                 .attrTween('d', this.arcTween())
                 .on('end', function(g) {
                     this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
                 })
             group.exit().remove()
-            group.enter().append('path')
-                .classed('group', true)
+            const groupEnter = group.enter().append('g').classed('group', true)
+            groupEnter.append('path')
                 .attr('stroke', '#000000')
+                .attr('id', d => `arc-${d.side}-${d.data}`)
                 .on('click', group => this.selectBin(group.data))
-                .on('mouseover', group => this.hoverBin(group.data))
-                .on('mouseout', () => this.hoverBin(null))
+                // .on('mouseover', group => this.hoverBin(group.data))
+                // .on('mouseout', () => this.hoverBin(null))
                 .attr('fill', group => this.binsMap.get(group.data).color)
                 .attr('d', this.arc)
                 .each(function(g) {
                     this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
                 })
+            groupEnter.append('text')
+                .attr('dx', 5)
+                .attr('dy', -5)
+              .append('textPath')
+                .attr('xlink:href', d => `#arc-${d.side}-${d.data}`)
+            groupEnter.merge(group)
+              .select('text').select('textPath')
+                .text(d => d.endAngle - d.startAngle < toRad(5) ? '' : this.binsMap.get(d.data).name)
         },
         resize() {
             if (this.$route.path === '/compare') {
@@ -347,9 +307,6 @@ export default {
         activeSet() {
             if (!this.activeBin) return null
             return this.binSet.id == this.activeBin.binSetId ? this.binSet : this.otherBinSet
-        },
-        showChordActions() {
-            return this.selected && (!this.hoveredBin || this.hoveredBin.id == this.selected.id)
         }
     },
 
@@ -360,9 +317,9 @@ export default {
         activeBin() {
             if (!this.activeBin) return
             const group = this.chordData.groups.filter(d => d.data === this.activeBin.id)[0]
-            const arc = d3.arc().innerRadius(this.outerRadius + 5).outerRadius(this.outerRadius + 40)
+            const arc = d3.arc().innerRadius(this.outerRadius + 20).outerRadius(this.outerRadius + 60)
             const coord1 = arc.centroid(group)
-            arc.innerRadius(this.outerRadius + 5).outerRadius(this.outerRadius + 10)
+            arc.innerRadius(this.outerRadius + 20).outerRadius(this.outerRadius + 30)
             const coord2 = arc.centroid(group)
             this.svg.select('line#arrow')
                 .attr('fill', 'red')
@@ -406,8 +363,6 @@ export default {
 
 #info-title {
     font-size: larger;
-    text-decoration: underline;
-    font-weight: 500;
     text-anchor: middle;
 }
 

@@ -76,6 +76,10 @@
                 @binHovered="b => hoveredBin = b"
                 @refine="refineBin"
             ></chord>
+            <div v-show="otherBins_.length > 0">
+                <h5 class="fw-500" style="position: absolute; right: .5rem; top: .5rem">{{ showBinSet }}</h5>
+                <h5 class="fw-500" style="position: absolute; left: .5rem; top: .5rem">{{ showOtherBinSet }}</h5>
+            </div>
             <span v-show="otherBins_.length === 0" class="text-muted empty-state-message">
                 <span class="fa fa-balance-scale fa-3x scale-icon"></span>
                 <span style="font-size: 90%">SELECT THE BIN SETS TO COMPARE AND CLICK ON THE PLOT BUTTON</span>
@@ -109,7 +113,9 @@ export default {
             selectedBin: null,
             selectedSet: null,
             unselectedSet: null,
-            tab: 'ComparePlotTab' 
+            tab: 'ComparePlotTab',
+            showBinSet: '',
+            showOtherBinSet: ''
         }
     },
 
@@ -139,6 +145,8 @@ export default {
                     this.bins_ = respBins[0].bins
                     this.otherBins_ = respOtherBins[0].bins
                     this.plotData_ = respMatrix[0]
+                    this.showBinSet = this.binSet.name
+                    this.showOtherBinSet = this.otherBinSet.name
                     this.loading = false
                 }
             )
@@ -259,5 +267,6 @@ export default {
 
 #chord {
     height: 100%;
+    overflow: hidden;
 }
 </style>

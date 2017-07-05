@@ -10,7 +10,7 @@
                     REFINEMENT
                 </strong>
                 <strong class="sidebar-sub text-muted text-center">
-                    {{ binSet.name }}
+                    {{ refineBinSet.name }}
                 </strong>
             </div>
             <div></div>
@@ -59,7 +59,7 @@
             </div>
         </div>
     </div>
-    <div class="col-9 app-right" style="background-color: white;">
+    <div class="col-9 app-right" style="background-color: white; overflow: hidden">
         <div id="refine-status">
             <span class="text-muted" v-if="selectedContigs.length === 0">
                 [Click and drag to select region.]

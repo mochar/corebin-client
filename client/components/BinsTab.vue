@@ -1,6 +1,7 @@
 <template>
 <div style="padding: 1rem .5rem">
     <div v-for="(bin, index) in $store.state.bins" 
+         :key="bin.id"
          @click="!loading && select(bin, index)"
          :class="{ 'bin-selected': binsSelected[index] }" 
          class="bin d-flex justify-content-between align-items-center"
