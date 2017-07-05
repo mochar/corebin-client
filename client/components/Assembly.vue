@@ -3,9 +3,9 @@
     class="assembly list-group-item list-group-item-action flex-column align-items-start">
     <div class="name-block d-flex justify-content-between align-self-center w-100">
         <span class="name">{{ assembly.name }}</span>
-        <button class="btn btn-secondary btn-sm btn-bin" @click.prevent.stop="showModal">
+        <!--<button class="btn btn-secondary btn-sm btn-bin" @click.prevent.stop="showModal">
             <span class="fa fa-cog"></span>
-        </button>
+        </button>-->
     </div>
 
     <div class="w-100">
@@ -57,7 +57,8 @@ export default {
 
     methods: {
         select() {
-            this.$store.dispatch('SELECT_ASSEMBLY_CAREFULLY', this.assembly)
+            // this.$store.dispatch('SELECT_ASSEMBLY_CAREFULLY', this.assembly)
+            this.showModal()
         },
         showModal() {
             this.$store.commit('SET_VIEW_ASSEMBLY', this.assembly)
