@@ -19,7 +19,9 @@
         </g>
         <g v-for="(bin, i) in $store.state.refineBins" 
             :key="bin.id"
+            :style="{ cursor: 'pointer' }"
             :transform="`translate(-20,${i*30+20})`"
+            @click="selectBinContigs(bin.id)"
             v-else>
             <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
             <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
@@ -155,15 +157,21 @@ export default {
             this.lasso.selectedItems()
                 .classed('selected', true)
 
-            const selected = this.lasso.selectedItems().data()
-                .filter(c => !this.selectedContigs.map(x => x.id).includes(c.id))
+            const [startIndex, endIndex] = this.selectContigs(this.lasso.selectedItems().data())
+            if (startIndex < endIndex)
+                this.selectionSets.push([startIndex, endIndex])
+            this.updateHulls()
+        },
+        selectContigs(contigs) {
+            const selected = contigs.filter(c => !this.selectedIds.includes(c.id))
             const all = [...this.selectedContigs, ...selected]
             const startIndex = this.selectedContigs.length
             this.$store.commit('SET_SELECTED_CONTIGS', all)
             const endIndex = this.selectedContigs.length
-            if (startIndex < endIndex)
-                this.selectionSets.push([startIndex, endIndex])
-            this.updateHulls()
+            this.lasso.items()
+                .filter(c => this.selectedIds.includes(c.id))
+                .classed('selected', true)
+            return [startIndex, endIndex]
         },
         updateHulls() {
             const hull = this.svg.select('g#hulls').selectAll('polygon.hull')
@@ -181,6 +189,9 @@ export default {
                         return d3.polygonHull(dots).join(' ')
                     return dots.map(x => x.join(',')).join(' ')
                 })
+        },
+        selectBinContigs(binId) {
+            this.selectContigs(this.contigs.filter(c => c.bin === binId))
         }
     },
 
