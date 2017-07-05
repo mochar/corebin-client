@@ -337,14 +337,20 @@ const actions = {
             return
         }
 
-        // Filter out bins which are already being refined
-        const refining = state.refineBins.map(b => b.id)
-        bins = bins.filter(b => !refining.includes(b.id))
-        if (bins.length > 0)
-            dispatch('PUSH_REFINE_BINS', bins)
+        // Set bin-set to the chosen refine bin-set if this is not the case
+        const p = state.binSet.id === binSet.id ? 
+            Promise.resolve() : dispatch('SELECT_BIN_SET', binSet)
 
-        commit('SET_REFINE_BIN_SET', binSet)
-        router.push({ path: 'refine' })
+        // Filter out bins which are already being refined
+        p.then(() => {
+            const refining = state.refineBins.map(b => b.id)
+            bins = bins.filter(b => !refining.includes(b.id))
+            if (bins.length > 0)
+                dispatch('PUSH_REFINE_BINS', bins)
+
+            commit('SET_REFINE_BIN_SET', binSet)
+            router.push({ path: 'refine' })
+        })
     }
 }
 
