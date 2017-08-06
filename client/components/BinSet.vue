@@ -27,25 +27,39 @@
         </div>
     </div>
 
-    <div class="bin-set-bar text-muted d-flex justify-content-around">
+    <div class="bin-set-bar text-muted d-flex justify-content-between">
         <div>
             <span class="fa fa-list fa-fw"></span>
             {{ binSet.bins.length }}
         </div>
 
-        <rename-popover 
-            btn-classes="action-btn text-primary-hover"
-            text="Rename"
-            @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
-            :url="`a/${binSet.assembly}/bs/${binSet.id}`">
-        </rename-popover>
-
-        <delete-popover 
-            btn-classes="action-btn text-danger-hover"
-            text="Remove"
-            @done="commitDeletion"
-            :url="`a/${binSet.assembly}/bs/${binSet.id}`">
-        </delete-popover>
+        <div>
+            <popover>
+                <button 
+                    slot="button" 
+                    class="btn btn-secondary btn-sm action-btn text-primary-hover"
+                    style="border-left: 0; border-right: 0">
+                    <span class="fa fa-download"></span>
+                </button>
+                <div slot="body">
+                    <button class="btn btn-secondary btn-sm" @click="download">
+                        Download bins
+                    </button>
+                </div>
+            </popover>
+            <rename-popover 
+                btn-classes="action-btn text-primary-hover"
+                text=""
+                @done="name => { $store.commit('RENAME_BIN_SET', { binSet, name }) }"
+                :url="`a/${binSet.assembly}/bs/${binSet.id}`">
+            </rename-popover>
+            <delete-popover 
+                btn-classes="action-btn text-danger-hover"
+                text=""
+                @done="commitDeletion"
+                :url="`a/${binSet.assembly}/bs/${binSet.id}`">
+            </delete-popover>
+        </div>
     </div>
 </router-link>
 </template>
@@ -89,6 +103,10 @@ export default {
                 }
             }
             this.$store.commit('REMOVE_BIN_SET', this.binSet)
+        },
+        download() {
+            const url = `${ROOTURL}/a/${this.binSet.assembly}/bs/${this.binSet.id}/export`
+            window.open(url)
         }
     },
 
@@ -133,7 +151,7 @@ export default {
 .bin-set-bar {
     /*background: #eee;*/
     width: 100%;
-    padding: .15rem 0;
+    padding: .15rem .5rem;
     /*border-top: 1px solid #ddd;*/
 }
 
