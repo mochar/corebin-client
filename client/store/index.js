@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import moment from 'moment'
 import router from '../router'
+import distanceInWords from 'date-fns/distance_in_words'
 
 Vue.use(Vuex)
 
@@ -45,13 +45,13 @@ const mutations = {
     },
     SET_ASSEMBLIES(state, assemblies) {
         assemblies.forEach(a => {
-            a.submitDate = moment(a.submitDate).fromNow()
+            a.submitDate = distanceInWords(a.submitDate, new Date())
             a.plotData = null
         })
         state.assemblies = assemblies
     },
     APPEND_ASSEMBLIES(state, assembly) {
-        assembly.submitDate = moment(assembly.submitDate).fromNow()
+        assembly.submitDate = distanceInWords(assembly.submitDate, new Date())
         assembly.plotData = null
         state.assemblies.push(assembly)
     },

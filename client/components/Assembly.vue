@@ -19,7 +19,7 @@
     </div>
 
     <div class="d-flex justify-content-between align-items-center assembly-footer">
-        <small class="text-muted">Added {{ assembly.submitDate }}</small>
+        <small class="text-muted">Added {{ assembly.submitDate }} ago</small>
 
         <div class="btn-group float-right" data-toggle="buttons">
             <label class="btn btn-secondary btn-sm btn-bin" @click.stop="" :class="{ active: !plotLength }"

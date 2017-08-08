@@ -67,7 +67,7 @@
     "font-awesome": "^4.6.3",
     "d3": "latest",
     "d3-lasso": "latest",
-    "moment": "latest",
+    "date-fns": "latest",
     "webui-popover": "latest",
     "vue-color": "latest"
   }
