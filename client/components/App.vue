@@ -8,11 +8,11 @@
     </div>
         
     <div id="page">
-        <transition name="slide-fade" mode="out-in">
+         <transition name="slide-fade" mode="out-in"> 
             <keep-alive>
                 <router-view></router-view>
             </keep-alive>
-        </transition>
+         </transition> 
     </div>
     
     <!--<div class="float-right" id="madeby">
@@ -82,10 +82,10 @@ export default {
 }
 </script>
 
+<style src="font-awesome/css/font-awesome.min.css"></style>
+<style src="bootstrap/dist/css/bootstrap.min.css"></style>
+<style src="webui-popover/dist/jquery.webui-popover.min.css"></style>
 <style>
-@import "../../node_modules/webui-popover/dist/jquery.webui-popover.min.css";
-@import "../../node_modules/font-awesome/css/font-awesome.min.css";
-@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500,700');
 
 html {
