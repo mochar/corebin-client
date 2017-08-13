@@ -1,5 +1,5 @@
 <template>
-<div class="card-block">
+<div class="card-body">
     <div>
         <div class="d-flex justify-content-between">
             <span>X-axis</span>

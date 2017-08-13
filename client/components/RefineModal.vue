@@ -6,7 +6,7 @@
 
     <h5 class="modal-title">Refine</h5>
 
-    <div class="card-block d-flex flex-column justify-content-center">
+    <div class="card-body d-flex flex-column justify-content-center">
         <div class="d-flex align-items-center">
             <span>Move {{ selectedContigs.length }} contigs to bin </span>
             <select class="btn btn-secondary btn-xs m-2" v-model="toBin">

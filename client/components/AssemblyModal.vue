@@ -13,7 +13,7 @@
         <small class="text-muted">Added {{ assembly.submitDate }}</small>
     </div>
     
-    <div class="card-block">
+    <div class="card-body">
         <div class="row">
             <span class="col-9 desc">Bin-sets</span>
             <span class="col-3">{{ assembly.binSets }}</span>

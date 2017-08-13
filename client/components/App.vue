@@ -128,6 +128,31 @@ input[type="file"] {
             transition: initial;
 }
 
+/* Bootstrap alpha 6 -> beta fixes */
+.text-muted {
+    color: #636c72!important;
+}
+
+.btn-group-sm>.btn, .btn-sm {
+    line-height: initial;
+}
+
+.btn-secondary {
+    color: #292b2c;
+    background-color: #fff;
+    border-color: #ccc;
+}
+.btn-secondary:hover {
+    color: #292b2c;
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+.btn-primary {
+    background-color: #0275d8;
+}
+/* */
+
 .btn-primary { border-color: #01549b; }
 .btn-primary:hover, .btn-primary:active { background-color: #0275d8; }
 .btn-success { border-color: #419641; }
@@ -204,6 +229,10 @@ a:active, .btn-link:active {
 
 .show > .dropdown-menu {
     display: block;
+}
+
+.popover-body {
+    padding: 0;
 }
 /* end patch */
 

@@ -1,5 +1,5 @@
 <template>
-<div class="card-block">
+<div class="card-body">
     <span style="font-weight: 500">Selection of {{ contigs.length }} contigs</span>
 
     <bar id="bar-plot" :bars="bars"></bar>

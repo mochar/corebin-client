@@ -1,5 +1,5 @@
 <template>
-<div class="card card-block" id="home-main">
+<div class="card card-body" id="home-main">
     <h2>
         <img src="logo.svg" style="height: 5rem"> CoReBIN
         <small class="text-muted">Comparison and Refinement of metagenomic bins</small>
@@ -11,7 +11,7 @@
 
     <div class="card-group">
         <div class="card text-center">
-            <div class="card-block">
+            <div class="card-body">
                 <h4 class="card-title">
                     <span class="fa fa-upload fa-fw"></span>
                     Upload
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="card text-center">
-            <div class="card-block">
+            <div class="card-body">
                 <h4 class="card-title">
                     <span class="fa fa-balance-scale fa-fw"></span>
                     Compare
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="card text-center">
-            <div class="card-block">
+            <div class="card-body">
                 <h4 class="card-title">
                     <span class="fa fa-wrench fa-fw"></span>
                     Refine

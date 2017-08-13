@@ -6,7 +6,7 @@
 
     <h5 class="modal-title">Demo data-set</h5>
 
-    <div class="card-block">
+    <div class="card-body">
         <table style="border-spacing: 10px; border-collapse: separate;">
             <tr style="font-weight: bolder;">
                 <td>Organism</td>

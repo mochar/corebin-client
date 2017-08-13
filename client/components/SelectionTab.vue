@@ -1,5 +1,5 @@
 <template>
-<div class="card-block d-flex flex-column" style="padding-top: 0">
+<div class="card-body d-flex flex-column" style="padding-top: 0">
     <!--<div class="d-flex justify-content-around align-items-center w-100">
         <span class="mini-chord-btn" :class="{kek: showSet.id === otherBinSet_.id}"
             @click="showConnected=!showConnected">

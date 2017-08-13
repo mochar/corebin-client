@@ -1,5 +1,5 @@
 <template>
-<div class="card-block">
+<div class="card-body">
     <div>
         <span>Bin-set right</span>
         <select class="custom-select btn btn-secondary btn-xs w-100" v-model="binSetRight"

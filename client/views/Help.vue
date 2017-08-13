@@ -22,7 +22,7 @@
         </ul>
     </div>
     <div class="col-9 app-right">
-        <div id="help-main" class="card card-block">
+        <div id="help-main" class="card card-body">
             <h2>CoReBIN <small class="text-muted">Comparison and Refinement of metagenomic binning</small></h2>
             <hr>
 

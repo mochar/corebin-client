@@ -9,7 +9,7 @@
         <span class="fa fa-eye fa-lg fa-fw" v-if="isSelected"></span>
     </div>
 
-    <div class="card-block" style="padding: .15rem 1rem .5rem;">
+    <div class="card-body" style="padding: .15rem 1rem .5rem;">
         <div style="margin-top: .5rem" class="text-muted d-flex justify-content-between" 
             v-if="refineBinSet && refineBinSet.id == binSet.id">
             <div>

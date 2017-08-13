@@ -7,7 +7,7 @@
     <h5 class="modal-title">Bin-set upload</h5>
 
     <form name="bin-set-form" method="post" enctype="multipart/form-data" @submit.prevent="submitBinSet">
-        <div class="card-block">
+        <div class="card-body">
             <div class="form-group">
                 <input type="text" class="form-control form-control-sm" name="name"
                         placeholder="Name" v-model="name">

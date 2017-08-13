@@ -12,7 +12,7 @@
     </div>
 
     <form name="assembly-form" method="post" enctype="multipart/form-data" @submit.prevent="submitAssembly">
-        <div class="card-block">
+        <div class="card-body">
             <div class="form-group">
                 <input type="text" class="form-control form-control-sm" name="name" placeholder="Name">
             </div>

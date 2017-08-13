@@ -4,7 +4,7 @@
         <span class="name">{{ job.meta.name }}</span>
     </div>
 
-    <div class="card-block" style="padding: .15rem 1rem;">
+    <div class="card-body" style="padding: .15rem 1rem;">
         <div class="progress">
             <div class="progress-bar progress-bar-striped progress-bar-animated"
                  style="width: 100%">

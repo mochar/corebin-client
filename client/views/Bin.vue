@@ -3,11 +3,11 @@
 	<div class="card" v-if="bin" style="border-left: 0">
 		<div class="row">
 			<div class="col-7" id="bin-info">
-				<div class="card-block" style="padding-top: 0">
+				<div class="card-body" style="padding-top: 0">
 				    <span class="name" id="bin-name" style="margin-left: 0">{{ bin.name }}</span>
 			    </div>
 
-			    <div class="card-block">
+			    <div class="card-body">
 					<router-link class="btn btn-primary" tag="button" to="/refine">
 				    	<span class="fa fa-cog"></span> Refine
 					</router-link>
@@ -15,7 +15,7 @@
 			</div>
 
 			<div class="col-5" id="contig-plots">
-				<div class="card-block">
+				<div class="card-body">
 			        <h6>GC%</h6>
 			        <histogram :plotData="gcData" :color="bin.color"></histogram>
 
@@ -26,7 +26,7 @@
 		</div>
 	</div>	
 
-	<router-link class="card-block" to="/overview">
+	<router-link class="card-body" to="/overview">
 		<strong style="font-size: 90%">BACK TO OVERVIEW</strong>
 	</router-link>
 </div>
