@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import 'bootstrap'
+import 'bootstrap/js/dist/tooltip'
+import 'bootstrap/js/dist/modal'
 import { mapActions } from 'vuex'
 import AssemblyUploadModal from '../components/AssemblyUploadModal'
 import BinSetUploadModal from '../components/BinSetUploadModal'
