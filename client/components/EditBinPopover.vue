@@ -16,7 +16,7 @@
         </div>
         <hr style="margin: .5rem 0"/>
         <div class="colorpick-div d-flex justify-content-center">
-            <compact v-if="showColors" v-model="colors" @change-color="onColorChange"></compact>
+            <compact v-if="showColors" v-model="colors" @input="onColorChange"></compact>
             <button v-else class="btn btn-outline-danger border-0 btn-sm" :disabled="loading"
                     @click="delete_" style="font-weight: 500">
                 Remove bin

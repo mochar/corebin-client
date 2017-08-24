@@ -17,7 +17,7 @@
         <hr style="margin: .5rem 0"/>
         <div class="d-flex justify-content-center">
             <div v-if="showColors" class="d-flex justify-content-center flex-column">
-                <compact v-model="colors" @change-color="onColorChange"></compact>
+                <compact v-model="colors" @input="onColorChange"></compact>
                 <button class="btn btn-link btn-sm" @click="showColors = false">
                     Randomize color
                 </button>
