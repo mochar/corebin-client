@@ -4,6 +4,15 @@
     :style="style"
     class="list-group-item list-group-item-action flex-column align-items-start bin-set">
 
+    <div class="bin-colors">
+        <div 
+            v-for="bin in binSet.colors" 
+            style="display: inline-block"
+            :key="bin.id" 
+            :style="{'width': `${bin.percentage*100}%`, 'background-color': bin.color}">
+        </div>
+    </div>
+
     <div class="name-div w-100 d-flex justify-content-between align-items-baseline">
         <span class="name">{{ binSet.name }}</span>
         <span class="fa fa-eye fa-lg fa-fw" v-if="isSelected"></span>
@@ -134,9 +143,8 @@ export default {
 <style>
 .bin-set {
     border-color: #ccc;
-    padding-top: .5rem !important;
     padding: 0; 
-    margin: .1rem .3rem;
+    margin: .2rem .3rem;
     width: initial;
     box-shadow: 1px 2px 2px 1px #eee;
     transition: all .05s ease-in;
@@ -167,5 +175,13 @@ export default {
 .action-btn {
     border: 0;
     color: #444;
+}
+
+.bin-colors {
+    height: 4px; 
+    width: 100%;
+    display: flex;
+    margin-bottom: .5rem;
+    opacity: .7;
 }
 </style>
