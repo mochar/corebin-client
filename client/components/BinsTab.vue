@@ -65,9 +65,12 @@ export default {
 <style>
 .bin {
     padding: .3rem .3rem;
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    margin-bottom: 3px
 }
 .bin:hover {
-    background-color: #eee;
+    background-color: #ddd;
 }
 
 .bin-selected {

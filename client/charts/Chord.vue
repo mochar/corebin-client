@@ -289,7 +289,6 @@ export default {
             }
         },
         arrowTween() {
-
         },
         toRad   ,
         rgb: d3.rgb

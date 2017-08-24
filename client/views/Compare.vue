@@ -48,6 +48,8 @@
                     :subConnectedBins="subConnectedBins"
                     :hoveredBin="hoveredBin"
                     :leftSelected="leftSelected"
+                    :bins_="bins_"
+                    :otherBins_="otherBins_"
                     @binSelected="selectBin"
                     @binHovered="b => hoveredBin = b"
                     
@@ -148,6 +150,7 @@ export default {
                     this.showBinSet = this.binSet.name
                     this.showOtherBinSet = this.otherBinSet.name
                     this.loading = false
+                    this.tab = 'SelectionTab'
                 }
             )
         },
