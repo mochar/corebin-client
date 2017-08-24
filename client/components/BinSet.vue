@@ -36,11 +36,10 @@
         </div>
     </div>
 
-    <div class="bin-set-bar text-muted d-flex justify-content-between">
-        <div>
-            <span class="fa fa-list fa-fw"></span>
-            {{ binSet.bins.length }}
-        </div>
+    <div class="bin-set-bar text-muted d-flex justify-content-between align-items-baseline">
+        <small class="text-muted" style="padding-left: 0rem">
+            Added {{ binSet.submitDate }} ago
+        </small>
 
         <div>
             <popover>

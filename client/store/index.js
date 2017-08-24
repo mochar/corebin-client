@@ -56,6 +56,9 @@ const mutations = {
         state.assemblies.push(assembly)
     },
     SET_BIN_SETS(state, binSets) {
+        binSets.forEach(bs => {
+            bs.submitDate = distanceInWords(bs.submitDate, new Date())
+        })
         state.binSets = binSets
         if (binSets.length) state.binSet = binSets[0]
     },
@@ -82,6 +85,7 @@ const mutations = {
         state.binSetJobs = state.binSetJobs.filter(j => j !== job)
     },
     APPEND_BIN_SETS(state, binSet) {
+        binSet.submitDate = distanceInWords(binSet.submitDate, new Date())
         state.binSets.push(binSet)
     },
     APPEND_BIN(state, bin) {
