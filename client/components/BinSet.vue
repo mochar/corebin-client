@@ -122,8 +122,8 @@ export default {
         },
         style() {
             return { 
-                // 'border-left': `4px solid ${this.binSet.color}`,
-                'border-left': `3px solid ${this.isSelected ? '#d9534f' : '#555'}`,
+                // 'border-left': `3px solid ${this.isSelected ? '#d9534f' : '#555'}`,
+                'margin-right': this.isSelected ? '.3rem' : '.5rem',
                 'margin-left': this.isSelected ? '.5rem' : '.3rem'
             }
         }
@@ -139,6 +139,7 @@ export default {
     margin: .1rem .3rem;
     width: initial;
     box-shadow: 1px 2px 2px 1px #eee;
+    transition: all .05s ease-in;
 }
 
 .list-group-item-action,
