@@ -28,6 +28,18 @@
         </div>
     </nav>
 
+    <div>
+        <p v-if="step === 1">
+            Upload your assembly contigs and the binning results.
+        </p>
+        <p v-if="step === 2">
+            Compare different sets of bins in a chord diagram.
+        </p>
+        <p v-if="step === 3">
+            Examine the differences further in the refine plot, and refine the bins to your liking.
+        </p>
+    </div>
+
     <transition-group :name="name" tag="div" class="card-body" id="guide-div">
         <div v-if="step === 1" key="1" class="guide-item">
             <div class="d-flex align-items-center flex-column">
@@ -62,7 +74,7 @@
         </div>
         <div class="guide-item" v-if="step === 2" key="2">
             <div class="d-flex justify-content-center">
-                <img src="chord2.png" style="max-height: 240px; border-bottom: 1px dashed #aaa">
+                <img src="chord.png" style="max-height: 300">
             </div>
         </div>
         <div v-if="step === 3" key="3" class="guide-item">
