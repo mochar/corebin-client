@@ -9,49 +9,109 @@
         CoReBIN is a user-friendly web-based tool to compare the results of different binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.
     </p>
 
-    <div class="card-group">
-        <div class="card text-center">
-            <div class="card-body">
-                <h4 class="card-title">
-                    <span class="fa fa-upload fa-fw"></span>
-                    Upload
-                </h4>
-                <p class="card-text">Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken. </p>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-body">
-                <h4 class="card-title">
-                    <span class="fa fa-balance-scale fa-fw"></span>
-                    Compare
-                </h4>
-                <p class="card-text">Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken. </p>
-            </div>
-        </div>
-        <div class="card text-center">
-            <div class="card-body">
-                <h4 class="card-title">
-                    <span class="fa fa-wrench fa-fw"></span>
-                    Refine
-                </h4>
-                <p class="card-text">Lorem Ipsum is slechts een proeftekst uit het drukkerij- en zetterijwezen. Lorem Ipsum is de standaard proeftekst in deze bedrijfstak sinds de 16e eeuw, toen een onbekende drukker een zethaak met letters nam en ze door elkaar husselde om een font-catalogus te maken. </p>
-            </div>
-        </div>
-    </div>
+    <nav class="nav justify-content-center">
+        <a class="nav-link" href="#" @click.prevent="step = 1" :class="{ active: step === 1 }">
+            <span class="fa fa-upload fa-fw"></span>
+            1. Upload
+        </a>
+        <a class="nav-link" href="#" @click.prevent="step = 2" :class="{ active: step === 2 }">
+            <span class="fa fa-balance-scale fa-fw"></span>
+            2. Compare
+        </a>
+        <a class="nav-link" href="#" @click.prevent="step = 3" :class="{ active: step === 3 }">
+            <span class="fa fa-wrench fa-fw"></span>
+            3. Refine
+        </a>
+    </nav>
 
-    <div style="margin-top: 2rem">
-        <h4>Demo data-set</h4>
-        <p>
-        A simulated dataset of short sequences consisting of three different samples, each containing 10.000.000  paired-end 100 nt reads, was created using the supplied error model for Illumina GA IIx with TrueSeq SBS Kit v5-GA using GemSim (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22336055" target="_blank">McElroy, Luciani & Thomas, 2012</a>). Reads were derived from a set of 10 reference genomes and chosen with probability proportional to the species abundance and genome size (see table below).
-        </p>
-        <p>
-        Subsequently, the simulated reads were co-assembled using MEGAHIT (<a href="http://www.ncbi.nlm.nih.gov/pubmed/25609793" target="_blank">Li et al, 2015</a>). Coverage for the three different samples was determined using bowtie2 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/22388286" target="_blank">Langmead & Salzberg, 2012</a>). The assembly and differential coverage table were then used as input for two different binning programs (default parameters): MaxBin 2.0 (<a href="http://www.ncbi.nlm.nih.gov/pubmed/26515820" target="_blank">Wu, Simmons and Singer, 2015</a>) and MetaBAT (<a href="https://peerj.com/articles/1165/" target="_blank">Kang et al, 2015</a>).
-        </p>
+    <transition-group name="guide" tag="div" class="card-body" style="overflow-y: hidden; postion: relative">
+        <div v-if="step === 1" key="1" class="guide-item">
+            <div class="d-flex justify-content-center">
+                <assembly :assembly="assembly" style="width: 260px"></assembly>
+            </div>
+            <div class="d-flex justify-content-center">
+                <svg width="260" height="43">
+                    <defs>
+                        <marker id="arrowhead" viewBox="-0 -5 10 10" refX="5" refY="0"
+                            markerWidth="4" markerHeight="4" orient="auto">
+                            <path d="M0,-5L10,0L0,5" fill="#ccc" stroke="none"></path>
+                        </marker>
+                    </defs>
 
-        <p><router-link to="/help">Read more in the help page.</router-link></p> 
-    </div>
+                    <line x1="130" y1="0" x2="130" y2="20" stroke-width="3"
+                        stroke="#ccc"></line>
+                    <line x1="130" y1="20" x2="40" y2="20" stroke-width="3"
+                        stroke="#ccc"></line>
+                    <line x1="130" y1="20" x2="230" y2="20" stroke-width="3"
+                        stroke="#ccc"></line>
+                    <line x1="229" y1="20" x2="229" y2="38" stroke-width="3"
+                        stroke="#ccc" marker-end="url(#arrowhead)"></line>
+                    <line x1="41" y1="20" x2="41" y2="38" stroke-width="3"
+                        stroke="#ccc" marker-end="url(#arrowhead)"></line>
+                </svg>
+            </div>
+        </div>
+        <div class="d-flex guide-item" v-if="step === 1 || step === 2" key="1-2"
+            :class="step === 1 ? 'justify-content-center': 'justify-content-between'">
+            <bin-set-mock :bin-set="binSet1" style="width: 260px"></bin-set-mock>
+            <bin-set-mock :bin-set="binSet2" style="width: 260px; margin-bottom: .2rem"></bin-set-mock>
+        </div>
+        <div class="d-flex justify-content-center guide-item" v-if="step === 2" key="2">
+            <img src="chord2.png" style="max-height: 240px; border-bottom: 1px dashed #aaa">
+        </div>
+        <div v-if="step === 3" key="3" class="guide-item">
+            oh <b>HECK</b>! did me a good <span class="text-danger">frighten</span> fren
+        </div>
+    </transition-group>
 </div>
 </template>
+
+<script>
+import Assembly from 'components/Assembly'
+import BinSetMock from 'components/BinSetMock'
+
+export default {
+    data() {
+        return {
+            assembly: {
+                "hasFourmerfreqs": false,
+                "size": 2061,
+                "name": "Assembly",
+                "genesSearched": false,
+                "samples": [],
+                "submitDate": "3 days",
+                "binSets": 2,
+                "id": 1,
+                "plotData": {"length":{"bins":[1003.0,71630.92307692308,142258.84615384616,212886.76923076925,283514.6923076923,354142.6153846154,424770.5384615385,495398.46153846156,566026.3846153846,636654.3076923077,707282.2307692308,777910.1538461539,848538.076923077,919166.0],"hist":[1953,65,21,9,6,3,2,0,0,0,0,1,1]},"gc":{"bins":[0.0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0],"hist":[0,0,3,183,617,1093,162,3,0,0]}}
+            },
+            binSet1: {
+                "submitDate": "3 days",
+                "bins": [],
+                "name": "Bin-set 1",
+                "color": "#060168",
+                "assembly": 1,
+                "colors":[{"percentage":0.4881125667151868,"color":"#268e09"},{"percentage":0.14750121300339641,"color":"#637a06"},{"percentage":0.0849102377486657,"color":"#ba2110"},{"percentage":0.07763221737020863,"color":"#049663"},{"percentage":0.061620572537603106,"color":"#1c0101"},{"percentage":0.042212518195050945,"color":"#078467"},{"percentage":0.038816108685104316,"color":"#12007c"},{"percentage":0.033964095099466275,"color":"#098e66"},{"percentage":0.023289665211062592,"color":"#0d7093"},{"percentage":0.0019408054342552159,"color":"#939393"}],
+                "id": 1
+            },
+            binSet2: {
+                "submitDate": "3 days",
+                "bins": [],
+                "name": "Bin-set 2",
+                "color": "#c47011",
+                "assembly": 1,
+                "colors":[{"percentage":0.5924308588064047,"color":"#939393"},{"percentage":0.17758369723435224,"color":"#090a66"},{"percentage":0.059194565744784086,"color":"#c005c6"},{"percentage":0.033964095099466275,"color":"#1b027f"},{"percentage":0.030082484230955848,"color":"#013a84"},{"percentage":0.026200873362445413,"color":"#1b0c8c"},{"percentage":0.021348859776807377,"color":"#b52d03"},{"percentage":0.019408054342552158,"color":"#4b0f96"},{"percentage":0.017467248908296942,"color":"#04126d"},{"percentage":0.012130033964095099,"color":"#0d9940"},{"percentage":0.010189228529839884,"color":"#15088e"}],
+                "id": 2
+            },
+            step: 1
+        }
+    },
+
+    components: {
+        Assembly,
+        BinSetMock
+    }
+}
+</script>
 
 <style>
 #lead {
@@ -64,10 +124,31 @@
     height: 100%;
     overflow-y: hidden;
 }
+
+/* .guide-enter-active, .guide-leave-active {
+  transition: all 1s;
+} */
+.guide-item {
+  transition: all .5s;
+  display: inline-block;
+}
+.guide-enter {
+  opacity: 0;
+  /* transform: translateY(30px); */
+  transform: translateY(150px);
+}
+.guide-leave-to {
+  opacity: 0;
+  /* transform: translateY(-30px); */
+  transform: translateY(-150px);
+}
+.guide-leave-active {
+  position: absolute;
+}
 </style>
 
 <style scoped>
-.fa {
-    margin-bottom: 1rem;
+.btn-outline-secondary {
+    color: #333 !important;
 }
 </style>
