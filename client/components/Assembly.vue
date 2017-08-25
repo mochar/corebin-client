@@ -49,7 +49,13 @@ export default {
         }
     },
 
-    props: ['assembly'],
+    props: {
+        assembly: Object,
+        mock: {
+            type: Boolean,
+            default: false
+        }
+    },
 
     components: {
         Histogram
@@ -58,6 +64,7 @@ export default {
     methods: {
         select() {
             // this.$store.dispatch('SELECT_ASSEMBLY_CAREFULLY', this.assembly)
+            if (this.mock) return
             this.showModal()
         },
         showModal() {

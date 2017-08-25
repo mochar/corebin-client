@@ -43,7 +43,7 @@
     <transition-group :name="name" tag="div" class="card-body" id="guide-div">
         <div v-if="step === 1" key="1" class="guide-item">
             <div class="d-flex align-items-center flex-column">
-                <assembly :assembly="assembly" style="width: 260px"></assembly>
+                <assembly :assembly="assembly" :mock="true" style="width: 260px"></assembly>
                 <svg width="260" height="43">
                     <defs>
                         <marker id="arrowhead" viewBox="-0 -5 10 10" refX="5" refY="0"
@@ -74,7 +74,7 @@
         </div>
         <div class="guide-item" v-if="step === 2" key="2">
             <div class="d-flex justify-content-center">
-                <img src="chord.png" style="max-height: 300">
+                <img src="chord.png" style="position: absolute">
             </div>
         </div>
         <div v-if="step === 3" key="3" class="guide-item">
