@@ -1,10 +1,13 @@
 <template>
 <div class="card-body d-flex flex-column">
-    <div style="margin-bottom: .5rem">
-        <select class="custom-select btn btn-secondary btn-xs w-100" v-model="showSet"
+    <div class="row" style="margin-bottom: .5rem">
+        <select class="custom-select btn btn-secondary btn-xs col-10" v-model="showSet"
                 style="background-color: rgba(255, 255, 255, 0.67) !important">
             <option v-for="bs in [binSet_, otherBinSet_]" :key="bs.id" :value="bs">{{ bs.name }}</option>
         </select>
+        <button class="btn btn-secondary btn-bin btn-xs col-2" title="Refine bins" @click="refine(showBins)">
+            <span class="fa fa-wrench"></span>
+        </button>
     </div>
     <div v-for="bin in showBins" 
         :key="bin.id"
