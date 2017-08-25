@@ -25,13 +25,13 @@
             <label class="btn btn-secondary btn-sm btn-bin" @click.stop="" :class="{ active: !plotLength }"
                 v-show="plotType === 'length'">
                 <small>
-                    <input type="radio" value="gc" v-model="plotType"> GC%
+                    <input type="radio" value="gc" v-model="plotType"> Length
                 </small>
             </label>
             <label class="btn btn-secondary btn-sm btn-bin" @click.stop="" :class="{ active: plotLength }"
                 v-show="plotType === 'gc'">
                 <small>
-                    <input type="radio" value="length" v-model="plotType"> Length
+                    <input type="radio" value="length" v-model="plotType"> GC%
                 </small>
             </label>
         </div>
