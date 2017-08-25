@@ -9,27 +9,29 @@
         CoReBIN is a user-friendly web-based tool to compare the results of different binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.
     </p>
 
-    <nav class="nav justify-content-center">
-        <a class="nav-link" href="#" @click.prevent="step = 1" :class="{ active: step === 1 }">
-            <span class="fa fa-upload fa-fw"></span>
-            1. Upload
-        </a>
-        <a class="nav-link" href="#" @click.prevent="step = 2" :class="{ active: step === 2 }">
-            <span class="fa fa-balance-scale fa-fw"></span>
-            2. Compare
-        </a>
-        <a class="nav-link" href="#" @click.prevent="step = 3" :class="{ active: step === 3 }">
-            <span class="fa fa-wrench fa-fw"></span>
-            3. Refine
-        </a>
+    <nav class="d-flex align-items-baseline justify-content-between">
+        <span class="fw-500" style="font-size: 1.1rem">How it works</span>
+
+        <div class="nav">
+            <a class="nav-link" href="#" @click.prevent="toStep(1)" :class="{ active: step === 1 }">
+                <span class="fa fa-upload fa-fw"></span>
+                1. Upload
+            </a>
+            <a class="nav-link" href="#" @click.prevent="toStep(2)" :class="{ active: step === 2 }">
+                <span class="fa fa-balance-scale fa-fw"></span>
+                2. Compare
+            </a>
+            <a class="nav-link" href="#" @click.prevent="toStep(3)" :class="{ active: step === 3 }">
+                <span class="fa fa-wrench fa-fw"></span>
+                3. Refine
+            </a>
+        </div>
     </nav>
 
-    <transition-group name="guide" tag="div" class="card-body" style="overflow-y: hidden; postion: relative">
+    <transition-group :name="name" tag="div" class="card-body" id="guide-div">
         <div v-if="step === 1" key="1" class="guide-item">
-            <div class="d-flex justify-content-center">
+            <div class="d-flex align-items-center flex-column">
                 <assembly :assembly="assembly" style="width: 260px"></assembly>
-            </div>
-            <div class="d-flex justify-content-center">
                 <svg width="260" height="43">
                     <defs>
                         <marker id="arrowhead" viewBox="-0 -5 10 10" refX="5" refY="0"
@@ -51,16 +53,22 @@
                 </svg>
             </div>
         </div>
-        <div class="d-flex guide-item" v-if="step === 1 || step === 2" key="1-2"
-            :class="step === 1 ? 'justify-content-center': 'justify-content-between'">
-            <bin-set-mock :bin-set="binSet1" style="width: 260px"></bin-set-mock>
-            <bin-set-mock :bin-set="binSet2" style="width: 260px; margin-bottom: .2rem"></bin-set-mock>
+        <div v-if="step === 1 || step === 2" key="1-2" class="guide-item">
+            <div class="d-flex justify-content-center" style="position: relative"
+                 :id="step === 1 ? 'bin-sets-1': 'bin-sets-2'">
+                <bin-set-mock :bin-set="binSet1" ></bin-set-mock>
+                <bin-set-mock :bin-set="binSet2" style="margin-bottom: .2rem"></bin-set-mock>
+            </div>
         </div>
-        <div class="d-flex justify-content-center guide-item" v-if="step === 2" key="2">
-            <img src="chord2.png" style="max-height: 240px; border-bottom: 1px dashed #aaa">
+        <div class="guide-item" v-if="step === 2" key="2">
+            <div class="d-flex justify-content-center">
+                <img src="chord2.png" style="max-height: 240px; border-bottom: 1px dashed #aaa">
+            </div>
         </div>
         <div v-if="step === 3" key="3" class="guide-item">
-            oh <b>HECK</b>! did me a good <span class="text-danger">frighten</span> fren
+            <span class="d-flex justify-content-center">
+                oh <b>HECK</b>! did me a good <span class="text-danger">frighten</span> fren
+            </span>
         </div>
     </transition-group>
 </div>
@@ -102,13 +110,21 @@ export default {
                 "colors":[{"percentage":0.5924308588064047,"color":"#939393"},{"percentage":0.17758369723435224,"color":"#090a66"},{"percentage":0.059194565744784086,"color":"#c005c6"},{"percentage":0.033964095099466275,"color":"#1b027f"},{"percentage":0.030082484230955848,"color":"#013a84"},{"percentage":0.026200873362445413,"color":"#1b0c8c"},{"percentage":0.021348859776807377,"color":"#b52d03"},{"percentage":0.019408054342552158,"color":"#4b0f96"},{"percentage":0.017467248908296942,"color":"#04126d"},{"percentage":0.012130033964095099,"color":"#0d9940"},{"percentage":0.010189228529839884,"color":"#15088e"}],
                 "id": 2
             },
-            step: 1
+            step: 1,
+            name: 'guide'
         }
     },
 
     components: {
         Assembly,
         BinSetMock
+    },
+
+    methods: {
+        toStep(num) {
+            this.name = this.step < num ? 'guide' : 'guide-reverse'
+            this.step = num
+        }
     }
 }
 </script>
@@ -125,24 +141,44 @@ export default {
     overflow-y: hidden;
 }
 
-/* .guide-enter-active, .guide-leave-active {
-  transition: all 1s;
-} */
+#guide-div {
+    overflow: hidden;
+    position: relative;
+}
+
+#bin-sets-2 > div:first-child {
+    transform: translateX(-150px);
+}
+#bin-sets-2 > div:last-child {
+    transform: translateX(150px);
+}
+
 .guide-item {
-  transition: all .5s;
+  transition: all .2s;
   display: inline-block;
+  width: 100%;
 }
 .guide-enter {
   opacity: 0;
-  /* transform: translateY(30px); */
   transform: translateY(150px);
 }
 .guide-leave-to {
   opacity: 0;
-  /* transform: translateY(-30px); */
   transform: translateY(-150px);
 }
 .guide-leave-active {
+  position: absolute;
+}
+
+.guide-reverse-enter {
+  opacity: 0;
+  transform: translateY(-150px);
+}
+.guide-reverse-leave-to {
+  opacity: 0;
+  transform: translateY(150px);
+}
+.guide-reverse-leave-active {
   position: absolute;
 }
 </style>
@@ -150,5 +186,10 @@ export default {
 <style scoped>
 .btn-outline-secondary {
     color: #333 !important;
+}
+
+.bin-set {
+    width: 260px;
+    transition: all 300ms ease-out;
 }
 </style>
