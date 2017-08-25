@@ -79,7 +79,7 @@
         </div>
         <div v-if="step === 3" key="3" class="guide-item">
             <span class="d-flex justify-content-center">
-                oh <b>HECK</b>! did me a good <span class="text-danger">frighten</span> fren
+                <img src="refine.png" style="position: absolute; border: 1px solid rgba(0,0,0,.2)">
             </span>
         </div>
     </transition-group>
