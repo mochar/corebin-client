@@ -131,8 +131,8 @@ export default {
         style() {
             return { 
                 // 'border-left': `3px solid ${this.isSelected ? '#d9534f' : '#555'}`,
-                'margin-right': this.isSelected ? '.3rem' : '.5rem',
-                'margin-left': this.isSelected ? '.5rem' : '.3rem'
+                // 'margin-right': this.isSelected ? '.3rem' : '.5rem',
+                // 'margin-left': this.isSelected ? '.5rem' : '.3rem'
             }
         }
     }
