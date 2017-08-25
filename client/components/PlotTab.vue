@@ -19,7 +19,7 @@
                 <option value="pc_3">PC 3</option>
             </optgroup>
             <optgroup label="Coverage" v-if="assembly.samples.length > 0">
-                <option v-for="sample in assembly.samples" :value="sample">
+                <option v-for="sample in assembly.samples" :value="sample" :key="sample">
                     {{ sample }}
                 </option>
             </optgroup>
@@ -45,7 +45,7 @@
                 <option value="pc_3">PC 3</option>
             </optgroup>
             <optgroup label="Coverage" v-if="assembly.samples.length > 0">
-                <option v-for="sample in assembly.samples" :value="sample">
+                <option v-for="sample in assembly.samples" :value="sample" :key="sample">
                     {{ sample }}
                 </option>
             </optgroup>
@@ -65,7 +65,9 @@
             <div class="col-6" v-show="colorBy === 'binSet'">
                 <select class="custom-select btn btn-secondary btn-xs" v-model="colorBinSet"
                         style="background-color: rgba(255, 255, 255, 0.67) !important">
-                    <option v-for="bs in binSets" :value="bs.id">{{ bs.name }}</option>
+                    <option v-for="bs in binSets" :value="bs.id" :key="bs.id">
+                        {{ bs.name }}
+                    </option>
                 </select>
             </div>
         </div>
