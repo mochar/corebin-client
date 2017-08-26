@@ -53,7 +53,11 @@
     </div>
     
     <div style="margin-top: .75rem">
-        <span>Color by</span>
+        <div class="d-flex align-items-baseline justify-content-between">
+            <span>Color by</span>
+                <span class="fa fa-question-circle" title="Color the contigs by the bins of a bin-set or by their GC percentage.">
+                </span>
+        </div>
         <div class="row align-items-center">
             <div class="col-6">
                 <select class="custom-select btn btn-secondary btn-xs" v-model="colorBy"
@@ -73,19 +77,12 @@
         </div>
     </div>
 
-    <div style="margin-top: .75rem">
-        <span>
+    <div style="margin-top: 1rem">
+        <button class="btn btn-secondary btn-sm btn-bin" @click="showExportModal"
+                style="border: 1px dotted #bbb">
             <span class="fa fa-download"></span>
-            <span class="fw-500" style="font-size: .8rem">EXPORT</span>
-        </span>
-        <div class="row align-items-center">
-            <div class="col-6">
-                <button class="btn btn-secondary btn-sm w-100" @click="showExportModal"
-                        style="background-color: rgba(255, 255, 255, 0.67) !important">
-                    As PNG
-                </button>
-            </div>
-        </div>
+            Export
+        </button>
     </div>
 </div>
 </template>
