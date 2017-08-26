@@ -117,7 +117,7 @@ export default {
         return {
             sortBy: 'size',
             sortOrder: 'desc',
-            showUnbinned: false,
+            showUnbinned: true,
             selected: [],
             removing: false
         }
