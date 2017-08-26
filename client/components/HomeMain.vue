@@ -25,6 +25,10 @@
                 <span class="fa fa-wrench fa-fw"></span>
                 3. Refine
             </a>
+            <a class="nav-link" href="#" @click.prevent="toStep(4)" :class="{ active: step === 4 }">
+                <span class="fa fa-download fa-fw"></span>
+                4. Export
+            </a>
         </div>
     </nav>
 
@@ -37,6 +41,9 @@
         </p>
         <p v-if="step === 3">
             Examine the differences further in the refine plot, and refine the bins to your liking.
+        </p>
+        <p v-if="step === 4">
+            Download the bin-set (or individual bins) in fasta format for downstream analysis.
         </p>
     </div>
 
@@ -65,11 +72,12 @@
                 </svg>
             </div>
         </div>
-        <div v-if="step === 1 || step === 2" key="1-2" class="guide-item">
-            <div class="d-flex justify-content-center" style="position: relative"
-                 :id="step === 1 ? 'bin-sets-1': 'bin-sets-2'">
+        <!-- <div v-if="step === 1 || step === 2" key="1-2" class="guide-item"> -->
+        <div key="1-2" class="guide-item">
+            <div class="d-flex justify-content-center" style="position: relative" :id="`bin-sets-${step}`">
                 <bin-set-mock :bin-set="binSet1" ></bin-set-mock>
-                <bin-set-mock :bin-set="binSet2" style="margin-bottom: .2rem"></bin-set-mock>
+                <bin-set-mock v-if="step !== 3 && step !== 4" :bin-set="binSet2" 
+                    style="margin-bottom: .2rem"></bin-set-mock>
             </div>
         </div>
         <div class="guide-item" v-if="step === 2" key="2">
@@ -81,6 +89,12 @@
             <span class="d-flex justify-content-center">
                 <img src="refine.png" style="position: absolute; border: 1px solid rgba(0,0,0,.2)">
             </span>
+        </div>
+        <div v-if="step === 4" key="4" class="guide-item">
+            <div class="d-flex justify-content-center">
+                <span class="fa fa-hand-pointer-o fa-lg" 
+                    style="position: absolute; transform: translate(55px, 37px)"></span>
+            </div>
         </div>
     </transition-group>
 </div>
@@ -163,6 +177,9 @@ export default {
 }
 #bin-sets-2 > div:last-child {
     transform: translateX(150px);
+}
+#bin-sets-4 > div:last-child {
+    transform: translateY(50px) scale(1.1);
 }
 
 .guide-item {
