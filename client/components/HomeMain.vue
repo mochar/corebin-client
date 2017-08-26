@@ -204,4 +204,8 @@ export default {
     width: 260px;
     transition: all 300ms ease-out;
 }
+
+.nav-link.active {
+    border: 1px solid #999;
+}
 </style>
