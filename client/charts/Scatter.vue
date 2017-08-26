@@ -7,7 +7,7 @@
         </linearGradient>
     </defs>
     <g class="legend" :transform="`translate(${width},0)`">
-        <g v-if="colorBy === 'gc'" transform="translate(0, 20)">
+        <g v-show="colorBy === 'gc'" transform="translate(0, 20)">
             <text text-anchor="start" x="-30">GC</text>
             <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g>
             <rect 
@@ -22,7 +22,7 @@
             :style="{ cursor: 'pointer' }"
             :transform="`translate(-20,${i*30+20})`"
             @click="selectBinContigs(bin.id)"
-            v-else>
+            v-show="colorBy !== 'gc'">
             <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
             <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
         </g>
