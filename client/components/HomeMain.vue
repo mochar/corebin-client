@@ -94,6 +94,8 @@
             <div class="d-flex justify-content-center">
                 <span class="fa fa-hand-pointer-o fa-lg" 
                     style="position: absolute; transform: translate(55px, 37px)"></span>
+                <span class="fa fa-file-archive-o fa-5x"
+                    style="position: absolute; transform: translateY(80px); color: #aaa"></span>
             </div>
         </div>
     </transition-group>
