@@ -1,10 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '../views/Home'
-import Overview from '../views/Overview'
-import Compare from '../views/Compare'
-import Refine from '../views/Refine'
-import Bin from '../views/Bin'
+import Home from 'views/Home'
+import Overview from 'views/Overview'
+import Compare from 'views/Compare'
+import Refine from 'views/Refine'
 
 Vue.use(Router)
 
