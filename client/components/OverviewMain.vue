@@ -8,7 +8,7 @@
                 <span v-if="showUnbinned">Hide unbinned</span>
                 <span v-else>Show unbinned</span>
             </button>
-            <add-bin-popover></add-bin-popover>
+            <add-bin-popover style="margin-right: .5rem"></add-bin-popover>
             <button class="btn btn-sm btn-header" id="refine-button" @click="refine()">
                 <span class="fa fa-wrench"></span>
                 Refine bins
