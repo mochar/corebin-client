@@ -4,7 +4,6 @@ import Home from '../views/Home'
 import Overview from '../views/Overview'
 import Compare from '../views/Compare'
 import Refine from '../views/Refine'
-import Help from '../views/Help'
 import Bin from '../views/Bin'
 
 Vue.use(Router)
@@ -49,7 +48,7 @@ export default new Router({
 		},
 		{
 			path: '/help',
-			component: Help
+			component: () => import('views/Help')
 		},
 	]
 })
