@@ -7,24 +7,45 @@
         </linearGradient>
     </defs>
     <g class="legend" :transform="`translate(${width},0)`">
-        <g v-show="colorBy === 'gc'" transform="translate(0, 20)">
-            <text text-anchor="start" x="-30">GC</text>
-            <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g>
+        <g transform="translate(-25,20)">
+            <text text-anchor="start" x="-60">Length (kbp)</text>
+
+            <circle r="10" cx="0" cy="20" fill="#ccc" stroke="black" opacity=".6"></circle>
+            <text text-anchor="end" x="-15" y="25">200</text>
+
+            <circle r="8" cx="0" cy="40" fill="#ccc" stroke="black" opacity=".6"></circle>
+            <text text-anchor="end" x="-15" y="45">50</text>
+
+            <circle r="4" cx="0" cy="60" fill="#ccc" stroke="black" opacity=".6"></circle>
+            <text text-anchor="end" x="-15" y="65">10</text>
+        </g>
+        <g v-show="colorBy === 'gc'" transform="translate(-10, 120)">
+            <text text-anchor="start" x="-45">GC (%)</text>
             <rect 
                 :width="20" 
-                :height="120" 
-                :y="12" :x="-30" 
+                :height="50" 
+                :y="10" :x="-30" 
                 class="color-legend">
             </rect>
+            <line x1="-30" y1="10" x2="-30" y2="60" stroke="#333"></line>
+            <line x1="-30" y1="11" x2="-35" y2="11" stroke="#333"></line>
+            <text text-anchor="end" x="-40" y="15" font-size="12">.75</text>
+            <line x1="-30" y1="35" x2="-35" y2="35" stroke="#333"></line>
+            <text text-anchor="end" x="-40" y="39" font-size="12">.5</text>
+            <line x1="-30" y1="59" x2="-35" y2="59" stroke="#333"></line>
+            <text text-anchor="end" x="-40" y="63" font-size="12">.25</text>
+            <!-- <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g> -->
         </g>
-        <g v-for="(bin, i) in $store.state.refineBins" 
-            :key="bin.id"
-            :style="{ cursor: 'pointer' }"
-            :transform="`translate(-20,${i*30+20})`"
-            @click="selectBinContigs(bin.id)"
-            v-show="colorBy !== 'gc'">
-            <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
-            <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
+        <g transform="translate(-25, 120)" v-show="colorBy !== 'gc'">
+            <text text-anchor="start" x="-15">Bin</text>
+            <g v-for="(bin, i) in $store.state.refineBins" 
+                :key="bin.id"
+                :style="{ cursor: 'pointer' }"
+                :transform="`translate(0,${i*20+15})`"
+                @click="selectBinContigs(bin.id)">
+                <circle r="6" cx="0" cy="0" :fill="bin.color"></circle>
+                <text :x="-10" y="5" text-anchor="end">{{ bin.name }}</text>
+            </g>
         </g>
     </g>
     <g class="x axis" :transform="`translate(0,${height})`"></g>
@@ -200,7 +221,7 @@ export default {
         this.svg = d3.select(this.$el)
 
         this.colorScale = d3.scaleLinear()
-            .domain([0.3, 0.7])
+            .domain([0.25, 0.75])
             .range(['blue', 'red'])
 
         this.sizeScale = d3.scaleLog()
@@ -311,7 +332,6 @@ export default {
 .color-legend {
     fill: url(#gradient);
     opacity: .8;
-    /*stroke: #000;*/
 }
 
 .legend circle {
