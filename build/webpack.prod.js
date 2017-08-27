@@ -4,12 +4,12 @@ process.env.NODE_ENV = 'production'
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const ProgressPlugin = require('webpack/lib/ProgressPlugin')
-const OfflinePlugin = require('offline-plugin')
 const rm = require('rimraf')
 const base = require('./webpack.base')
 const pkg = require('../package')
 const _ = require('./utils')
 const config = require('./config')
+// var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 if (config.electron) {
   // remove files in dist folder in electron mode
@@ -26,7 +26,11 @@ base.output.filename = '[name].[chunkhash:8].js'
 // add webpack plugins
 base.plugins.push(
   new ProgressPlugin(),
-  new ExtractTextPlugin('styles.[contenthash:8].css'),
+  // new ExtractTextPlugin('styles.[contenthash:8].css'),
+  new ExtractTextPlugin({
+    filename: 'styles.[contenthash:8].css',
+    allChunks: true
+  }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': JSON.stringify('production'),
     'ROOTURL': JSON.stringify('')
@@ -47,18 +51,7 @@ base.plugins.push(
       return module.resource && /\.(js|css|es6)$/.test(module.resource) && module.resource.indexOf('node_modules') !== -1
     }
   }),
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'manifest'
-  }),
-  // progressive web app
-  // it uses the publicPath in webpack config
-  new OfflinePlugin({
-    relativePaths: false,
-    AppCache: false,
-    ServiceWorker: {
-      events: true
-    }
-  })
+  // new BundleAnalyzerPlugin({generateStatsFile: true})
 )
 
 // extract css in standalone css files
