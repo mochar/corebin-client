@@ -147,6 +147,8 @@ export default {
     methods: {
         updatePlot() {
             this.resize()
+
+            if (!this.plotData) return
             
             this.outerRadius = Math.min(this.width, this.height) * 0.5 - 40
             const outerRadiusLg = this.outerRadius * 1.01
