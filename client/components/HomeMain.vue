@@ -172,6 +172,7 @@ export default {
 #guide-div {
     overflow: hidden;
     position: relative;
+    pointer-events: none;
 }
 
 #bin-sets-2 > div:first-child {
