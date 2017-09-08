@@ -4,7 +4,8 @@
         <div class="d-flex justify-content-between">
             <span>X-axis</span>
             <label class="form-check-label">
-                <input type="checkbox" class="form-check-input" v-model="xLog"> Log scale
+                <input type="checkbox" class="form-check-input" v-model="xLog"
+                    :disabled="xIsPC"> Log scale
             </label>
         </div>
         <select class="custom-select btn btn-secondary btn-xs col-6" v-model="xData"
@@ -30,7 +31,8 @@
         <div class="d-flex justify-content-between">
             <span>Y-axis</span>
             <label class="form-check-label">
-                <input type="checkbox" class="form-check-input" v-model="yLog"> Log scale
+                <input type="checkbox" class="form-check-input" v-model="yLog"
+                    :disabled="yIsPC"> Log scale
             </label>
         </div>
         <select class="custom-select btn btn-secondary btn-xs col-6" v-model="yData"
@@ -103,6 +105,9 @@ export default {
     methods: {
         showExportModal() {
             $('#refine-export-modal').modal('show')
+        },
+        isPC(data) { 
+            return data.substring(0, 3) === 'pc_' 
         }
     },
 
@@ -111,13 +116,25 @@ export default {
             'assembly',
             'binSets',
         ]),
+        xIsPC() {
+            return this.isPC(this.xData)
+        },
+        yIsPC() {
+            return this.isPC(this.yData)
+        },
         xData: {
             get() { return this.xData_ },
-            set(value) { this.$emit('update:xData_', value) }
+            set(value) { 
+                if (this.isPC(value)) this.xLog = false
+                this.$emit('update:xData_', value)
+            }
         },
         yData: {
             get() { return this.yData_ },
-            set(value) { this.$emit('update:yData_', value) }
+            set(value) { 
+                if (this.isPC(value)) this.yLog = false
+                this.$emit('update:yData_', value) 
+            }
         },
         xLog: {
             get() { return this.xLog_ },
