@@ -3,6 +3,7 @@
     <g :transform="`translate(${width/2},${height/2})`">
         <g class="groups"></g>
         <g class="ribbons"></g>
+        <g class="distributions"></g>
         <line id="arrow" marker-end="url(#arrowhead)" v-show="activeBin"></line>
     </g>
 
@@ -72,7 +73,7 @@ let chord = function(bins1, bins2, matrix) {
         }
         let data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
         let side = i < bins1.length ? 'right' : 'left'
-        return { startAngle, endAngle, data, index: i, side, _endAngle: endAngle }
+        return { startAngle, endAngle, data, index: i, side }
     })
     
     // Create scales for each bin: value -> angle
@@ -112,8 +113,28 @@ let chord = function(bins1, bins2, matrix) {
         }, [])
         ribbons.push(...ribs)
     })
+
+    // Distributions
+    let distributions = matrix.map((bin, i) => {
+        let data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
+        let side = i < bins1.length ? 'right' : 'left'
+        let angleScale = d3.scaleLinear()
+            .domain([0, d3.sum(bin)])
+            .range([groups[i].startAngle, groups[i].endAngle])
+        const distribution = bin.reduce((d, size, j) => {
+            if (size > 0)
+                d.distribution.push({
+                    bin: j < bins1.length ? bins1[j] : bins2[j - bins1.length],
+                    size,
+                    startAngle: angleScale(d.sum),
+                    endAngle: angleScale(d.sum += size)
+                })
+            return d
+        }, {distribution: [], sum: 0}).distribution
+        return { data, side, distribution }
+    })
     
-    return {groups, ribbons}
+    return {groups, ribbons, distributions}
 }
 
 export default {
@@ -123,6 +144,7 @@ export default {
             height: 100,
             svg: null,
             nameArc: d3.arc().innerRadius(0).outerRadius(0),
+            distArc: d3.arc().innerRadius(0).outerRadius(0),
             arc: d3.arc().innerRadius(0).outerRadius(0),
             ribbon: d3.ribbon(),
             chordData: {groups: [], ribbons: []},
@@ -152,16 +174,15 @@ export default {
             
             this.outerRadius = Math.min(this.width, this.height) * 0.5 - 40
             const outerRadiusLg = this.outerRadius * 1.01
-            const outerRadiusSm = this.outerRadius * .98
             this.innerRadius = this.outerRadius - 10
-            const innerRadiusLg = this.innerRadius * .99
-            const innerRadiusSm = this.innerRadius * 1.02
             
             this.arc.innerRadius(this.innerRadius).outerRadius(this.outerRadius)
+            this.distArc.innerRadius(this.innerRadius - 10).outerRadius(this.outerRadius - 15)
             this.nameArc.innerRadius(outerRadiusLg).outerRadius(outerRadiusLg + 10)
             this.chordData = chord(this.plotData.bins1, this.plotData.bins2, this.plotData.matrix)
 
             this.updateGroups()
+            this.updateDistributions()
             this.updateRibbons()
             this.svg.select('#name > textPath').text(this.binSet && this.binSet.name)
             this.svg.select('#otherName > textPath').text(this.otherBinSet && this.otherBinSet.name)
@@ -208,7 +229,7 @@ export default {
             const group = this.svg.select('g.groups').selectAll('.group')
                 .data(this.chordData.groups, group => `${group.side}-${group.data}`)
             group.select('path').transition()
-                .attrTween('d', this.arcTween())
+                .attrTween('d', this.arcTween(this.arc))
                 .on('end', function(g) {
                     this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
                 })
@@ -216,10 +237,11 @@ export default {
             const groupEnter = group.enter().append('g').classed('group', true)
             groupEnter.append('path')
                 .attr('stroke', '#000000')
+                .attr('stroke-width', 1.5)
                 .attr('id', d => `arc-${d.side}-${d.data}`)
                 .on('click', group => this.selectBin(group.data))
-                // .on('mouseover', group => this.hoverBin(group.data))
-                // .on('mouseout', () => this.hoverBin(null))
+                .on('mouseover', group => this.hoverBin(group.data))
+                .on('mouseout', () => this.hoverBin(null))
                 .attr('fill', group => this.binsMap.get(group.data).color)
                 .attr('d', this.arc)
                 .each(function(g) {
@@ -233,6 +255,26 @@ export default {
             groupEnter.merge(group)
               .select('text').select('textPath')
                 .text(d => d.endAngle - d.startAngle < toRad(5) ? '' : this.binsMap.get(d.data).name)
+        },
+        updateDistributions() {
+            const dist = this.svg.select('g.distributions').selectAll('.distribution')
+                .data(this.chordData.distributions, dist => `${dist.side}-${dist.data}`)
+            dist.exit().remove()
+            const distEnter = dist.enter().append('g').classed('distribution', true)
+            const path = distEnter.merge(dist).selectAll('path').data(d => d.distribution)
+            path.exit().remove()
+            const pathEnter = path.enter().append('path')
+                .attr('stroke', '#000000')
+                .attr('fill', dist => this.binsMap.get(dist.bin).color)
+                .attr('d', this.distArc)
+                .each(function(g) {
+                    this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
+                })
+              .merge(path).transition()
+                .attrTween('d', this.arcTween(this.distArc))
+                .on('end', function(g) {
+                    this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
+                })
         },
         resize() {
             if (this.$route.path === '/compare') {
@@ -249,7 +291,7 @@ export default {
             this.$emit('binHovered', hovered ? this.binsMap.get(binId) : null)
         },
         generateRibbon(ribbon) {
-            ribbon.source.radius = ribbon.target.radius = this.innerRadius - 5
+            ribbon.source.radius = ribbon.target.radius = this.innerRadius - 15
             if (this.binsMap.get(ribbon.source.data).binSetId == this.hoverBinSet)
                 ribbon.target.radius = this.innerRadius - 15
             else if (this.binsMap.get(ribbon.target.data).binSetId == this.hoverBinSet)
@@ -264,8 +306,7 @@ export default {
                 .ease(d3.easeLinear)
                 .attr('d', this.generateRibbon)
         },
-        arcTween() {
-            const arc = this.arc
+        arcTween(arc) {
             return function(group) {
                 const interpolate = d3.interpolate(this.__pdata__, group)
                 return t => {
