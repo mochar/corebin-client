@@ -14,10 +14,10 @@
 
         <div class="d-flex flex-column p-1">
             <span>{{ bin.size }}</span>
-            <span>{{ bin.mbp }}</span>
-            <span>{{ bin.gc*100 }}%</span>
-            <span>{{ bin.contamination*100 }}%</span>
-            <span>{{ bin.completeness*100 }}%</span>
+            <span>{{ bin.mbp.toFixed(3) }}</span>
+            <span>{{ (bin.gc*100).toFixed(2) }}%</span>
+            <span>{{ (bin.contamination*100).toFixed(2) }}%</span>
+            <span>{{ (bin.completeness*100).toFixed(2) }}%</span>
         </div>
     </div>
 </popover>
