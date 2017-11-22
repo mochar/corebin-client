@@ -54,12 +54,12 @@ export default {
         }),
         submitBinSet(event) {
             this.loading = true
-            const formData = new FormData(event.srcElement)
+            const formData = new FormData(event.target)
             const assembly = this.$store.state.assembly.id
             this.submitBinSetAction({ assembly, formData }).done(() => {
                 this.loading = false
                 this.name = ''
-                event.srcElement.reset()
+                event.target.reset()
                 this.hide()
             })
         },
@@ -67,7 +67,7 @@ export default {
             $(this.$el).modal('hide')
         },
         fileChanged(event) {
-            const file = event.srcElement.files[0]
+            const file = event.target.files[0]
             if (file) { 
                 let name = file.name.split('.')[0]
                 this.name = name.charAt(0).toUpperCase() + name.slice(1)

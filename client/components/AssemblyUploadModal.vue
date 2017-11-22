@@ -96,10 +96,10 @@ export default {
         }),
         submitAssembly(event) {
             this.loading = true
-            const formData = new FormData(event.srcElement)
+            const formData = new FormData(event.target)
             this.submitAssemblyAction({ formData }).then(() => {
                 this.loading = false
-                event.srcElement.reset()
+                event.target.reset()
                 this.hide()
             }, xhr => {
                 this.loading = false
