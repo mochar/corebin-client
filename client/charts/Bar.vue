@@ -1,5 +1,5 @@
 <template>
-<svg :width="width" :height="height">
+<svg :width="width + margin.left + margin.right" :height="height + margin.top + margin.bottom">
     <g :transform="`translate(5, 20)`">
         <g class="bar-axis-top"></g>
     </g>
@@ -16,7 +16,9 @@ export default {
             height: 100,
             width: 100,
             y: d3.scaleBand().padding(.025),
-            x: d3.scaleLinear()
+            x: d3.scaleLinear(),
+            barHeight: 40,
+            margin: {top: 0, right: 5, bottom: 0, left: 5}
         }
     },
 
@@ -26,7 +28,8 @@ export default {
         updatePlot() {
             this.resize()
             this.x
-                .domain([0, d3.max(this.bars.map(bar => bar.count))])
+                // .domain([0, d3.max(this.bars.map(bar => bar.count))])
+                .domain([0, 100])
                 .range([0, this.width - 10])
             this.y
                 .domain(this.bars.map(bar => bar.bin.id))
@@ -39,7 +42,7 @@ export default {
                 .classed('barsG', true)
             enterG.append('rect')
                 .classed('bg-bar', true)
-                .attr('fill', '#ddd')
+                .attr('fill', '#eee')
             enterG.append('rect')
                 .classed('count-bar', true)
                 .attr('fill', d => d.bin.color)
@@ -49,7 +52,7 @@ export default {
                 .attr('width', d => this.width - 10)
             mergedG.select('rect.count-bar')
               .transition().duration(250)
-                .attr('width', d => this.x(d.count))
+                .attr('width', d => this.x((d.count / d.bin.size) * 100))
             mergedG.selectAll('rect')
                 .attr('height', this.y.bandwidth())
                 .attr('y', d => this.y(d.bin.id))
@@ -62,9 +65,8 @@ export default {
                 .call(d3.axisTop(this.x))
         },
         resize() {
-            this.width = $(this.$el).parent().width()
-            // this.height = $(this.$el).parent().height()
-            this.height = this.width * 1
+            this.width = $(this.$el).parent().width() - this.margin.left - this.margin.right
+            this.height = this.barHeight * this.bars.length
         }
     },
 
