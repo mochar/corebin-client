@@ -12,7 +12,7 @@ const app = express()
 
 const port = config.port
 webpackConfig.entry.client = [
-  'webpack-hot-middleware/client?reload=true',
+  `webpack-hot-middleware/client?reload=true`,
   webpackConfig.entry.client
 ]
 

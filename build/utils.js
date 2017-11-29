@@ -53,7 +53,12 @@ _.loadersOptions = () => {
     options: {
       // css-loader relies on context
       context: process.cwd(),
+      // postcss plugins apply to .css files
+      postcss: config.postcss,
+      babel: config.babel,
       vue: {
+        // postcss plugins apply to css in .vue files
+        postcss: config.postcss,
         loaders: {
           css: generateLoader([]),
           sass: generateLoader(['sass-loader?indentedSyntax&sourceMap']),

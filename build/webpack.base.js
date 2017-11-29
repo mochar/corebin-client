@@ -13,11 +13,7 @@ module.exports = {
   output: {
     path: _.outputPath,
     filename: '[name].js',
-    publicPath: config.publicPath,
-    // Point sourcemap entries to original disk location
-    devtoolModuleFilenameTemplate: info => path.resolve(info.absoluteResourcePath),
-    // Add /* filename */ comments to generated require()s in the output.
-    pathinfo: true
+    publicPath: config.publicPath
   },
   performance: {
     hints: process.env.NODE_ENV === 'production' ? 'warning' : false
@@ -43,8 +39,14 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loaders: ['babel-loader'],
-        exclude: [/node_modules/]
+        //loaders: ['babel-loader'],
+        exclude: [/node_modules/],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['vue-app']
+          }
+        }
       },
       {
         test: /\.es6$/,
@@ -83,7 +85,7 @@ module.exports = {
       'window.jQuery': 'jquery',
       Popper: ['popper.js', 'default'],
       'd3': 'd3',
-      Util: 'exports-loader?Util!bootstrap/js/dist/util'
+      // Util: 'exports-loader?Util!bootstrap/js/dist/util'
     })
   ],
   target: _.target
