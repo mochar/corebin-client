@@ -94,6 +94,7 @@ export default {
     margin: .1rem .3rem;
     width: initial;
     box-shadow: 1px 2px 2px 1px #eee;
+    background-color: white;
 }
 
 .list-group-item {

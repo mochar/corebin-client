@@ -1,6 +1,6 @@
 <template>
-<div class="card-body d-flex flex-column">
-    <div class="row" style="margin-bottom: .5rem">
+<div class="d-flex flex-column">
+    <div class="row p-3">
         <select class="custom-select btn btn-secondary btn-xs col-10" v-model="showSet"
                 style="background-color: rgba(255, 255, 255, 0.67) !important">
             <option v-for="bs in [binSet_, otherBinSet_]" :key="bs.id" :value="bs">{{ bs.name }}</option>
@@ -9,22 +9,24 @@
             <span class="fa fa-wrench"></span>
         </button>
     </div>
-    <div v-for="bin in showBins" 
-        :key="bin.id"
-        @click="select(bin)"
-        @mouseover="hover(bin)"
-        @mouseout="hover(null)"
-        style="cursor: pointer;"
-        :class="{ 'bin-selected': selectedBin && bin.id === selectedBin.id }" 
-        :style="{ 'border-left': `3px solid ${bin.color}` }"
-        class="bin d-flex justify-content-between align-items-center">
-        <span>{{ bin.name }}</span>
-        <div>
-            <!-- <span class="text-muted">100%</span> -->
-            <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine([bin])">
-                <span class="fa fa-wrench"></span>
-            </button>
-            <bin-info :bin="bin"></bin-info>
+    <div class="pl-1 pr-1">
+        <div v-for="bin in showBins" 
+            :key="bin.id"
+            @click="select(bin)"
+            @mouseover="hover(bin)"
+            @mouseout="hover(null)"
+            style="cursor: pointer;"
+            :class="{ 'bin-selected': selectedBin && bin.id === selectedBin.id }" 
+            :style="{ 'border-left': `3px solid ${bin.color}` }"
+            class="bin d-flex justify-content-between align-items-center">
+            <span>{{ bin.name }}</span>
+            <div>
+                <!-- <span class="text-muted">100%</span> -->
+                <button class="btn btn-secondary btn-sm btn-bin" @click.stop="refine([bin])">
+                    <span class="fa fa-wrench"></span>
+                </button>
+                <bin-info :bin="bin"></bin-info>
+            </div>
         </div>
     </div>
 </div>

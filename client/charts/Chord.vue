@@ -221,9 +221,9 @@ export default {
                     } 
                     return color
                 })
-                .style('stroke', function() { 
-                    return d3.rgb(d3.select(this).style('fill')).darker()
-                })
+                // .style('stroke', function() { 
+                //     return d3.rgb(d3.select(this).style('fill')).darker()
+                // })
         },
         updateGroups() {
             const group = this.svg.select('g.groups').selectAll('.group')
@@ -237,12 +237,15 @@ export default {
             const groupEnter = group.enter().append('g').classed('group', true)
             groupEnter.append('path')
                 .attr('stroke', '#000000')
-                .attr('stroke-width', 1.5)
+                .attr('stroke-width', 1)
                 .attr('id', d => `arc-${d.side}-${d.data}`)
                 .on('click', group => this.selectBin(group.data))
                 .on('mouseover', group => this.hoverBin(group.data))
                 .on('mouseout', () => this.hoverBin(null))
                 .attr('fill', group => this.binsMap.get(group.data).color)
+                // .style('stroke', function() { 
+                //     return d3.rgb(d3.select(this).style('fill')).darker()
+                // })
                 .attr('d', this.arc)
                 .each(function(g) {
                     this.__pdata__ = {startAngle: g.startAngle, endAngle: g.endAngle}
@@ -264,7 +267,7 @@ export default {
             const path = distEnter.merge(dist).selectAll('path').data(d => d.distribution)
             path.exit().remove()
             const pathEnter = path.enter().append('path')
-                .attr('stroke', '#000000')
+                // .attr('stroke', '#000000')
                 .attr('fill', dist => this.binsMap.get(dist.bin).color)
                 .attr('d', this.distArc)
                 .each(function(g) {

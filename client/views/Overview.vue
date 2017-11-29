@@ -123,9 +123,4 @@ export default {
     opacity: .5;
     cursor: not-allowed;
 }
-
-.empty-message {
-    text-align: center;
-    display: block;
-}
 </style>

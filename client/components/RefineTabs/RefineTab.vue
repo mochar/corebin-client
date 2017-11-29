@@ -1,6 +1,9 @@
 <template>
-<div class="card-body">
-    <span style="font-weight: 500">Selection of {{ contigs.length }} contigs</span>
+<div class="p-3">
+    <span style="font-weight: 500">Selection of {{ contigs.length }} contigs</span><br>
+    <span class="text-muted">
+        Click and drag to select region.
+    </span>
 
     <bar id="bar-plot" :bars="bars"></bar>
 

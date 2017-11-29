@@ -8,21 +8,12 @@
     </div>
         
     <div id="page">
-         <transition name="slide-fade" mode="out-in"> 
+         <transition name="fade" mode="out-in"> 
             <keep-alive>
                 <router-view></router-view>
             </keep-alive>
          </transition> 
     </div>
-    
-    <!--<div class="float-right" id="madeby">
-        <div>
-            <small><router-link to="/home"><img src="static/logo.svg" id="logo-home" /> Home</router-link></small> |
-            <small><router-link to="/help">Stuck or need more info?</router-link></small> <br>
-        </div>
-        <small class="text-muted">Developed by Mohammed Charrout</small> <br>
-        <small class="text-muted">Project-coordinator Lex Overmars</small>
-    </div>-->
 
     <assembly-upload-modal></assembly-upload-modal>
     <bin-set-upload-modal></bin-set-upload-modal>
@@ -34,8 +25,7 @@
 </template>
 
 <script>
-import 'bootstrap/js/dist/tooltip'
-import 'bootstrap/js/dist/modal'
+import { tooltip, modal } from 'bootstrap'
 import { mapActions } from 'vuex'
 import AssemblyUploadModal from '../components/AssemblyUploadModal'
 import BinSetUploadModal from '../components/BinSetUploadModal'
@@ -101,6 +91,10 @@ body {
 
 body, button, input, optgroup, select, textarea {
     font-family: 'Roboto', sans-serif;
+}
+
+select {
+    text-align: left !important;
 }
 
 * {
@@ -172,21 +166,62 @@ input[type="file"] {
     top: 0px !important;
 }
 
+.btn-secondary:not([disabled]):not(.disabled).active, 
+.btn-secondary:not([disabled]):not(.disabled):active, 
+.show>.btn-secondary.dropdown-toggle {
+    color: initial;
+    background-color: initial;
+    border-color: initial;
+    -webkit-box-shadow: initial;
+    box-shadow: initial;
+}
+
+.btn-primary:not([disabled]):not(.disabled).active, 
+.btn-primary:not([disabled]):not(.disabled):active, 
+.show>.btn-primary.dropdown-toggle {
+    color: white;
+    background-color: #0275d8;
+    border-color:  #01549b;
+    -webkit-box-shadow: initial;
+    box-shadow: initial;
+}
+
 a:active, .btn-link:active {
     color: #333;
 }
+a:active, a:visited, a:focus {
+    outline : none !important;
+}
+
+.nav-link {
+    color: #333 !important;
+}
+.nav-link.active {
+    color: #444;
+    font-weight: 500;
+}
+.nav-link:not(.active) {
+    color: #636c72 !important;
+}
+
 
 .fw-500 {
     font-weight: 500;
     letter-spacing: .025rem;
 }
 
-.btn-sm {
-    padding: .5rem;
-}
-
 .btn-xs {
     padding: .3rem 1rem;
+}
+
+.btn-bin {
+    border: 0;
+    color: #333;
+    background: transparent;
+}
+.btn-bin:hover {
+    background-color: #eee;
+    color: black;
 }
 
 .rounded {
@@ -241,7 +276,7 @@ a:active, .btn-link:active {
 }
 
 .fade-enter-active, .fade-leave-active {
-    transition: opacity .2s ease;
+    transition: opacity .1s ease;
 }
 
 .fade-enter, .fade-leave-active {
@@ -355,6 +390,71 @@ a:active, .btn-link:active {
 
 .dropdown-menu-sm {
     font-size: .9rem;
+}
+
+.axis path {
+  display: none;
+}
+.axis line {
+  stroke-opacity: 0.3;
+  shape-rendering: crispEdges;
+}
+
+.card2 {
+    border: 1px solid #ccc;
+    /* padding: 1rem;  */
+    margin: .2rem .3rem;
+    width: initial;
+    box-shadow: 1px 2px 2px 1px #eee;
+    transition: all .05s ease-in;
+    background-color: #ffffffcc;
+}
+
+.bin {
+    padding: .3rem .3rem;
+    margin-bottom: 3px
+}
+.bin:hover {
+    background-color: #f3f3f3;
+}
+
+.bin-selected {
+    background-color: #f3f3f3;
+}
+
+.bin-set {
+    border-color: #ccc;
+    padding: 0; 
+    margin: .2rem .3rem;
+    width: initial;
+    box-shadow: 1px 2px 2px 1px #eee;
+    transition: all .05s ease-in;
+    background-color: white;
+}
+
+.bin-set-bar {
+    /*background: #eee;*/
+    width: 100%;
+    padding: .15rem .5rem;
+    /*border-top: 1px solid #ddd;*/
+}
+
+.action-btn {
+    border: 0;
+    color: #444;
+}
+
+.bin-colors {
+    height: 4px; 
+    width: 100%;
+    display: flex;
+    margin-bottom: .5rem;
+    opacity: .7;
+}
+
+svg {
+    font-family: sans-serif;
+    font-size: 10pt;
 }
 
 /* Animation */

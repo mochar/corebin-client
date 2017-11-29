@@ -16,87 +16,77 @@
             <div></div>
         </div>
         
-        <div style="border-width: 0 0 1px 0">
-            <div class="card-header" style="background: #F4F4F4">
-                <ul class="nav justify-content-center card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" 
-                            :class="{active: refinementTab === 'PlotTab'}"
-                            @click.prevent="refinementTab = 'PlotTab'">
-                            <span class="fa fa-line-chart"></span>
-                            Plot
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"
-                            :class="{active: refinementTab === 'RefineTab'}"
-                            @click.prevent="refinementTab = 'RefineTab'">
-                            <span class="fa fa-wrench"></span>
-                            Refine
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"
-                            :class="{active: refinementTab === 'BinsTab'}"
-                            @click.prevent="refinementTab = 'BinsTab'">
-                            <span class="fa fa-list"></span>
-                            Bins
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-body">
-                <component 
-                    :is="refinementTab"
-                    
-                    :xData_.sync="xData"
-                    :yData_.sync="yData"
-                    :colorBy_.sync="colorBy"
-                    :colorBinSet_.sync="colorBinSet"
-                    :xLog_.sync="xLog"
-                    :yLog_.sync="yLog">
-                </component>
-            </div>
+        <div class="card card2 mt-3">
+            <ul class="nav nav-pills nav-fill pl-2 pr-2 pt-1">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" 
+                        :class="{active: refinementTab === 'PlotTab'}"
+                        @click.prevent="refinementTab = 'PlotTab'">
+                        <span class="fa fa-fw fa-line-chart"></span>
+                        Plot
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"
+                        :class="{active: refinementTab === 'RefineTab'}"
+                        @click.prevent="refinementTab = 'RefineTab'">
+                        <span class="fa fa-fw fa-wrench"></span>
+                        Refine
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"
+                        :class="{active: refinementTab === 'BinsTab'}"
+                        @click.prevent="refinementTab = 'BinsTab'">
+                        <span class="fa fa-fw fa-list"></span>
+                        Bins
+                    </a>
+                </li>
+            </ul>
+
+            <component 
+                :is="refinementTab"
+                
+                :xData_.sync="xData"
+                :yData_.sync="yData"
+                :colorBy_.sync="colorBy"
+                :colorBinSet_.sync="colorBinSet"
+                :xLog_.sync="xLog"
+                :yLog_.sync="yLog"
+                :plot_.sync="plot"
+                :show-more_.sync="showMore"
+                :even-resolution_.sync="evenResolution">
+
+                <button class="btn btn-light btn-sm btn-bin float-right" @click="downloadPlot" slot="export-btn">
+                    <span class="fa fa-download"></span>
+                    Export
+                </button>
+            </component>
         </div>
     </div>
-    <div class="col-9 app-right" style="background-color: white; overflow: hidden">
-        <div id="refine-status">
-            <span class="text-muted" v-if="selectedContigs.length === 0">
-                [Click and drag to select region.]
-            </span>
-            <span class="text-muted" v-else>
-                [{{ selectedContigs.length }} selected. Right-click to deselect.]
-            </span>
-        </div>
+    <div class="col-9 app-right d-flex" style="background-color: #fff6; overflow: hidden">
         <scatter
+            id="scatter"
             :xData="xData"
             :yData="yData"
             :xLog="xLog"
             :yLog="yLog"
             :colorBy="colorBy"
-            :colorBinSet="colorBinSet">
+            :colorBinSet="colorBinSet"
+            :plot.sync="plot"
+            :evenResolution="evenResolution">
         </scatter>
     </div>
-    <refine-export-modal
-        :xData="xData"
-        :yData="yData"
-        :xLog="xLog"
-        :yLog="yLog"
-        :colorBy="colorBy"
-        :colorBinSet="colorBinSet">
-    </refine-export-modal>
-
     <footer-section></footer-section>
 </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Scatter from '../charts/Scatter'
-import PlotTab from '../components/PlotTab'
-import RefineTab from '../components/RefineTab'
-import BinsTab from '../components/BinsTab'
-import RefineExportModal from '../components/RefineExportModal'
+import Scatter from 'charts/Scatter'
+import PlotTab from 'components/RefineTabs/PlotTab'
+import RefineTab from 'components/RefineTabs/RefineTab'
+import BinsTab from 'components/RefineTabs/BinsTab'
 import FooterSection from 'components/FooterSection'
 
 export default {
@@ -108,7 +98,10 @@ export default {
             colorBy: 'binSet',
             colorBinSet: null,
             xLog: false,
-            yLog: false
+            yLog: false,
+            plot: false,
+            showMore: false,
+            evenResolution: false
         }
     },
     
@@ -117,15 +110,20 @@ export default {
         PlotTab,
         RefineTab,
         BinsTab,
-        RefineExportModal,
         FooterSection
+    },
+
+    methods: {
+        downloadPlot() {
+            const svgEl = $(this.$el).find('svg')[0]
+            this.$helpers.downloadSvg(svgEl, 'refine_plot')
+        }
     },
 
     computed: {
         ...mapState([
             'binSet',
-            'refineBinSet',
-            'selectedContigs'
+            'refineBinSet'
         ])
     },
 
@@ -158,20 +156,22 @@ export default {
     display: block;
 }
 
+#scatter {
+    box-shadow: rgb(236, 236, 236) 1px 2px 2px 1px, 
+                rgb(236, 236, 236) -1px -2px 2px 1px;
+    background-color: white;
+    display: block;
+    position: relative;
+    margin: auto;
+}
+</style>
+
+<style scoped>
 .nav-link.active {
-    color: #444;
-    font-weight: 500;
+    border-bottom: 2px solid #444;
 }
-
-.nav-link:not(.active) {
-    color: #636c72 !important;
-}
-
-#refine-status {
-    position: absolute;
-    left: 3rem;
-    top: .25rem;
-    pointer-events: none;
-    font-size: small;
+.nav-item .active {
+    font-weight: normal;
+    background-color: inherit;
 }
 </style>

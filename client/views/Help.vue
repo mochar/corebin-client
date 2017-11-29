@@ -12,26 +12,39 @@
             </div>
             <div></div>
         </div>
-        <ul class="list-unstyled" id="help-nav">
-            <li>Introduction</li>
-            <li>User interface</li>
-            <li>Uploading your data</li>
-            <li>Metagenomic binning</li>
-            <li>Demo data-set</li>
-            <li>Demo data files</li>
+        <ul class="nav nav-pills flex-column" id="help-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#h-introduction">Introduction</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#h-ui">User interface</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#h-uploading">Uploading your data</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#h-binning">Metagenomic binning</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#h-demo-set">Demo data-set</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#h-demo-files">Demo data files</a>
+            </li>
         </ul>
     </div>
     <div class="col-9 app-right">
-        <div id="help-main" class="card card-body">
+        <div id="help-main" class="card card-body" data-spy="scroll" data-target="#help-nav" data-offset="0"
+            style="border-left: 0">
             <h2>CoReBIN <small class="text-muted">Comparison and Refinement of metagenomic binning</small></h2>
             <hr>
 
-            <h3 id="help-intro">Introduction</h3>
+            <h3 id="h-introduction">Introduction</h3>
             <p>
                 CoReBIN is a user-friendly web-based tool to compare the results of different metagenomic binning methods and to aid manual refinement of the bins. The binning result of two different methods can be visually compared in a chord diagram. Individual bins can be inspected and refined using GC%, coverage and tetranucleotide frequencies.
             </p>
 
-            <h3 id="help-ui">User interface</h3>
+            <h3 id="h-ui">User interface</h3>
             <p>
             <img src="static/interface.png" style="margin:10px;">
             Within CoReBIN, four distinct views are available:
@@ -43,7 +56,7 @@
                 </ul>
             </p>
 
-            <h3>Uploading your data</h3>
+            <h3 id="h-uploading">Uploading your data</h3>
 
             <p>
             Users can upload their own data in the Home-panel. The following data is needed to analyse your metagenomic bins using CoReBIN:
@@ -237,22 +250,12 @@ export default {
 </script>
 
 <style>
-#help-main {
-    border-left: 0;
+.nav-link {
+    color: #333 !important;
 }
 
-#help-nav {
-    padding: 1rem;
-    padding-top: 0;
-}
-#help-nav > li {
-    cursor: pointer;
-    padding: .3rem .2rem;
-}
-#help-nav > li:hover {
+.nav-link.active {
     background: #ddd;
+    border: 0;
 }
-</style>
-
-<style scoped>
 </style>

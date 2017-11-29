@@ -1,5 +1,5 @@
 <template>
-<div style="padding: 1rem .5rem">
+<div class="pt-3">
     <div v-for="(bin, index) in $store.state.bins" 
          :key="bin.id"
          @click="!loading && select(bin, index)"
@@ -8,8 +8,8 @@
          :style="{ cursor: loading ? 'not-allowed' : 'pointer' }">
         <div>
             <span 
-                class="fa" 
-                :class="binsSelected[index] ? 'fa-square' : 'fa-square-o'"
+                class="fa fa-fw" 
+                :class="binsSelected[index] ? 'fa-circle' : 'fa-circle-o'"
                 :style="{ color: bin.color, opacity: loading ? .5 : 1 }">
             </span>
             <span>{{ bin.name }}</span>
@@ -63,17 +63,4 @@ export default {
 </script>
 
 <style>
-.bin {
-    padding: .3rem .3rem;
-    background-color: #f3f3f3;
-    border: 1px solid #ddd;
-    margin-bottom: 3px
-}
-.bin:hover {
-    background-color: #ddd;
-}
-
-.bin-selected {
-    background-color: #ddd;
-}
 </style>

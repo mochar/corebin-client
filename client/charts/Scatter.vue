@@ -19,7 +19,7 @@
             <circle r="4" cx="0" cy="60" fill="#ccc" stroke="black" opacity=".6"></circle>
             <text text-anchor="end" x="-15" y="65">10</text>
         </g>
-        <g v-show="colorBy === 'gc'" transform="translate(-10, 120)">
+        <g id="legend-gc" transform="translate(-10, 120)">
             <text text-anchor="start" x="-45">GC (%)</text>
             <rect 
                 :width="20" 
@@ -36,7 +36,7 @@
             <text text-anchor="end" x="-40" y="63" font-size="12">.25</text>
             <!-- <g class="axis" id="legend-axis" transform="translate(-30, 10)"></g> -->
         </g>
-        <g transform="translate(-25, 120)" v-show="colorBy !== 'gc'">
+        <g id="legend-bins" transform="translate(-25, 120)">
             <text text-anchor="start" x="-15">Bin</text>
             <g v-for="(bin, i) in $store.state.refineBins" 
                 :key="bin.id"
@@ -87,7 +87,9 @@ export default {
         'xLog',
         'yLog',
         'colorBy',
-        'colorBinSet'
+        'colorBinSet',
+        'plot',
+        'evenResolution'
     ],
     
     methods: {
@@ -114,6 +116,11 @@ export default {
             this.svg.select('g.x').call(this.xAxis)
             this.svg.select('g.y').call(this.yAxis)
             this.svg.select('g#legend-axis').call(this.legendAxis)
+
+            this.svg.select('g#legend-gc')
+                .attr('visibility', this.colorBy === 'gc' ? 'visible' : 'hidden')
+            this.svg.select('g#legend-bins')
+                .attr('visibility', this.colorBy !== 'gc' ? 'visible' : 'hidden')
 
             const circle = this.svg.selectAll('circle.dot')
                 .data(this.contigs, contig => contig.id)
@@ -144,8 +151,14 @@ export default {
             this.updateHulls()
         },
         resize() {
-            this.height = $('.app-right').height()
-            this.width = $('.app-right').width()
+            let height = $('.app-right').height()
+            let width = $('.app-right').width()
+            if (this.evenResolution) {
+                if (height > width) height = width
+                else width = height
+            }
+            this.height = height
+            this.width = width
         },
         zoomed() {
             this.svg.select('g.x')
@@ -274,26 +287,23 @@ export default {
     watch: {
         '$route': 'updatePlot',
         'contigs': 'updatePlot',
-        'xData': 'updatePlot',
-        'yData': 'updatePlot',
-        'colorBy': 'updatePlot',
-        'colorBinSet': 'updatePlot',
-        'xLog': 'updatePlot',
-        'yLog': 'updatePlot'
+        // 'xData': 'updatePlot',
+        // 'yData': 'updatePlot',
+        // 'colorBy': 'updatePlot',
+        // 'colorBinSet': 'updatePlot',
+        // 'xLog': 'updatePlot',
+        // 'yLog': 'updatePlot',
+        plot() {
+            if (this.plot) {
+                this.updatePlot()
+                this.$emit('update:plot', false)
+            }
+        }
     }
 }
 </script>
 
 <style>
-.axis path {
-  display: none;
-}
-
-.axis line {
-  stroke-opacity: 0.3;
-  shape-rendering: crispEdges;
-}
-
 .dot {
     stroke: black;
     stroke-width: .5;

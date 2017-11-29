@@ -213,16 +213,21 @@ export default {
 .guide-reverse-leave-active {
   position: absolute;
 }
+
+.bin-set {
+    /* border-color: #ccc;
+    padding: 0; 
+    margin: .2rem .3rem;
+    box-shadow: 1px 2px 2px 1px #eee;
+    background-color: white; */
+    width: 260px;
+    transition: all 300ms ease-out;
+}
 </style>
 
 <style scoped>
 .btn-outline-secondary {
     color: #333 !important;
-}
-
-.bin-set {
-    width: 260px;
-    transition: all 300ms ease-out;
 }
 
 .nav-link.active {

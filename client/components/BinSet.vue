@@ -141,12 +141,7 @@ export default {
 
 <style>
 .bin-set {
-    border-color: #ccc;
-    padding: 0; 
-    margin: .2rem .3rem;
     width: initial;
-    box-shadow: 1px 2px 2px 1px #eee;
-    transition: all .05s ease-in;
 }
 
 .list-group-item-action,
@@ -156,31 +151,11 @@ export default {
     background-color: white;
 }
 
-.bin-set-bar {
-    /*background: #eee;*/
-    width: 100%;
-    padding: .15rem .5rem;
-    /*border-top: 1px solid #ddd;*/
-}
-
 .name-div {
     padding-right: 1rem;
 }
 
 .bin-set-action:hover {
     color: #333;
-}
-
-.action-btn {
-    border: 0;
-    color: #444;
-}
-
-.bin-colors {
-    height: 4px; 
-    width: 100%;
-    display: flex;
-    margin-bottom: .5rem;
-    opacity: .7;
 }
 </style>

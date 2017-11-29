@@ -1,5 +1,5 @@
 <template>
-<div class="card-body">
+<div class="p-3">
     <div>
         <span>Bin-set right</span>
         <select class="custom-select btn btn-secondary btn-xs w-100" v-model="binSet"
@@ -22,7 +22,7 @@
             <option value="bp">Basepairs</option>
         </select>
     </div>
-    <button style="margin-top: .75rem" class="btn btn-primary btn-xs" 
+    <button style="margin-top: .75rem" class="btn btn-primary btn-sm" 
             @click="$emit('plot')" :disabled="loading">
         <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
         Plot

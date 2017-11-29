@@ -16,50 +16,47 @@
             <div></div>
         </div>
 
-        <div style="border-width: 0 0 1px 0">
-            <div class="card-header" style="background: #F4F4F4">
-                <ul class="nav justify-content-center card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" 
-                            :class="{active: tab === 'ComparePlotTab'}"
-                            @click.prevent="tab = 'ComparePlotTab'">
-                            <span class="fa fa-line-chart"></span>
-                            Plot
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" 
-                            :class="{active: tab === 'SelectionTab'}"
-                            @click.prevent="tab = 'SelectionTab'">
-                            <span class="fa fa-list"></span>
-                            Bins
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="tab-body">
-                <component 
-                    :is="tab"
+        <div class="card card2 mt-3">
+            <ul class="nav nav-pills nav-fill pl-2 pr-2 pt-1">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" 
+                        :class="{active: tab === 'PlotTab'}"
+                        @click.prevent="tab = 'PlotTab'">
+                        <span class="fa fa-line-chart"></span>
+                        Plot
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" 
+                        :class="{active: tab === 'SelectionTab'}"
+                        @click.prevent="tab = 'SelectionTab'">
+                        <span class="fa fa-list"></span>
+                        Bins
+                    </a>
+                </li>
+            </ul>
 
-                    :selectedBin="selectedBin"
-                    :selectedSet="selectedSet"
-                    :unselectedSet="unselectedSet"
-                    :connectedBins="connectedBins"
-                    :subConnectedBins="subConnectedBins"
-                    :hoveredBin="hoveredBin"
-                    :leftSelected="leftSelected"
-                    :bins_="bins_"
-                    :otherBins_="otherBins_"
-                    @binSelected="selectBin"
-                    @binHovered="b => hoveredBin = b"
-                    
-                    :binSet_.sync="binSet"
-                    :otherBinSet_.sync="otherBinSet"
-                    :by_.sync="by"
-                    :loading="loading"
-                    @plot="plot">
-                </component>
-            </div>
+            <component 
+                :is="tab"
+
+                :selectedBin="selectedBin"
+                :selectedSet="selectedSet"
+                :unselectedSet="unselectedSet"
+                :connectedBins="connectedBins"
+                :subConnectedBins="subConnectedBins"
+                :hoveredBin="hoveredBin"
+                :leftSelected="leftSelected"
+                :bins_="bins_"
+                :otherBins_="otherBins_"
+                @binSelected="selectBin"
+                @binHovered="b => hoveredBin = b"
+                
+                :binSet_.sync="binSet"
+                :otherBinSet_.sync="otherBinSet"
+                :by_.sync="by"
+                :loading="loading"
+                @plot="plot">
+            </component>
         </div>
 
     </div>
@@ -98,8 +95,8 @@ import { mapState } from 'vuex'
 import { map as d3Map } from 'd3'
 import Chord from 'charts/Chord'
 import FooterSection from 'components/FooterSection'
-import ComparePlotTab from 'components/ComparePlotTab'
-import SelectionTab from 'components/SelectionTab'
+import PlotTab from 'components/CompareTabs/PlotTab'
+import SelectionTab from 'components/CompareTabs/SelectionTab'
 
 export default {
     data() {
@@ -115,7 +112,7 @@ export default {
             selectedBin: null,
             selectedSet: null,
             unselectedSet: null,
-            tab: 'ComparePlotTab',
+            tab: 'PlotTab',
             showBinSet: '',
             showOtherBinSet: ''
         }
@@ -124,7 +121,7 @@ export default {
     components: {
         Chord,
         FooterSection,
-        ComparePlotTab,
+        PlotTab,
         SelectionTab
     },
 
@@ -271,5 +268,15 @@ export default {
 #chord {
     height: 100%;
     overflow: hidden;
+}
+</style>
+
+<style scoped>
+.nav-link.active {
+    border-bottom: 2px solid #444;
+}
+.nav-item .active {
+    font-weight: normal;
+    background-color: inherit;
 }
 </style>

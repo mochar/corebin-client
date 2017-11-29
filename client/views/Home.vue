@@ -100,4 +100,9 @@ export default {
     overflow-y: auto;
     height: 85%;
 }
+
+.empty-message {
+    text-align: center;
+    display: block;
+}
 </style>

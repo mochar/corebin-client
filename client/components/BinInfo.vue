@@ -1,8 +1,8 @@
 <template>
 <popover :options="{ placement: 'right', trigger: 'hover', delay: {hide:0} }">
-    <button slot="button" class="btn-link">
-        <span class="fa fa-info"></span>
-    </button>
+    <span slot="button" class="text-primary">
+        <span class="fa fa-fw fa-info"></span>
+    </span>
     <div slot="body" class="d-flex">
         <div class="d-flex flex-column p-1">
             <span class="desc"># contigs</span>

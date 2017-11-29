@@ -278,16 +278,6 @@ export default {
     padding: .25rem 1rem;
 }
 
-.btn-bin {
-    border: 0;
-    color: #333;
-    background: transparent;
-}
-.btn-bin:hover {
-    background-color: #eee;
-    color: black;
-}
-
 .btn-header {
     font-size: .8rem;
     padding-right: 1rem;
