@@ -91,7 +91,7 @@
                 <bar-column :percentage="proportionToPercentage(bin.gc)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.contamination)" :color="bin.color"></bar-column>
                 <bar-column :percentage="proportionToPercentage(bin.completeness)" :color="bin.color"></bar-column>
-                <td class="btn-group justify-content-center" style="width: 100%">
+                <td class="btn-group justify-content-center" style="width: 100% !important">
                     <edit-bin-popover :bin="bin" @deleted="commitDeletion(bin)"></edit-bin-popover>
                     <button class="btn btn-secondary btn-sm btn-bin" @click.stop="exportFasta(bin)">
                         <span class="fa fa-download"></span>
@@ -107,10 +107,10 @@
 </template>
 
 <script>
-import BarColumn from '../components/BarColumn'
-import SortHead from '../components/SortHead'
-import EditBinPopover from '../components/EditBinPopover'
-import AddBinPopover from '../components/AddBinPopover'
+import BarColumn from 'components/BarColumn'
+import SortHead from 'components/SortHead'
+import EditBinPopover from 'components/EditBinPopover'
+import AddBinPopover from 'components/AddBinPopover'
 
 export default {
     data() {
@@ -287,7 +287,8 @@ export default {
 
 <style scoped>
 td {
-    width: calc(100% / 7);
+    /* 1/7  */
+    width: 14.28571% !important; 
 }
 
 tr {
