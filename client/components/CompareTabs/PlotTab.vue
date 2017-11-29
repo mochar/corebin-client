@@ -22,11 +22,14 @@
             <option value="bp">Basepairs</option>
         </select>
     </div>
-    <button style="margin-top: .75rem" class="btn btn-primary btn-sm" 
-            @click="$emit('plot')" :disabled="loading">
-        <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
-        Plot
-    </button>
+
+    <div class="mt-3 d-flex justify-content-between align-items-center">
+        <button class="btn btn-primary btn-sm" @click="$emit('plot')" :disabled="loading">
+            <span v-show="loading" class="fa fa-refresh fa-spin fa-lg"></span>
+            Plot
+        </button>
+        <slot name="export-btn"></slot>
+    </div>
 </div>
 </template>
 

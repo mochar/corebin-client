@@ -56,6 +56,11 @@
                 :by_.sync="by"
                 :loading="loading"
                 @plot="plot">
+
+                <button class="btn btn-light btn-sm btn-bin float-right" @click="downloadPlot" slot="export-btn">
+                    <span class="fa fa-download"></span>
+                    Export
+                </button>
             </component>
         </div>
 
@@ -172,6 +177,10 @@ export default {
                     if (cur > 0) connected.push(i)
                     return connected
                 }, [])
+        },
+        downloadPlot() {
+            const svgEl = $(this.$el).find('svg')[0]
+            this.$helpers.downloadSvg(svgEl, 'refine_plot')
         }
     },
     
