@@ -59,6 +59,7 @@
     "d3-lasso": "latest",
     "date-fns": "latest",
     "webui-popover": "latest",
-    "vue-color": "latest"
+    "vue-color": "latest",
+    "rimraf": "2.6.2"
   }
 }

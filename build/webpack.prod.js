@@ -9,7 +9,6 @@ const base = require('./webpack.base')
 const pkg = require('../package')
 const _ = require('./utils')
 const config = require('./config')
-var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 if (config.electron) {
   // remove files in dist folder in electron mode
@@ -50,8 +49,7 @@ base.plugins.push(
     minChunks: module => {
       return module.resource && /\.(js|css|es6)$/.test(module.resource) && module.resource.indexOf('node_modules') !== -1
     }
-  }),
-  new BundleAnalyzerPlugin({generateStatsFile: true})
+  })
 )
 
 // extract css in standalone css files
