@@ -26,9 +26,10 @@
             </div>
 
             <div class="form-check">
-                <label class="form-check-label">
-                <input type="checkbox" name="fourmers" class="form-check-input">
-                    Calculate tetranucleotide frequencies
+                <label class="custom-control custom-checkbox align-items-center">
+                    <input type="checkbox" name="fourmers" class="custom-control-input">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">Calculate tetranucleotide frequencies</span>
                 </label>
             </div>
 
@@ -43,9 +44,12 @@
             <div class="form-group">
                 <label>Identify marker genes</label>
                 <div class="form-check" style="margin-bottom: 0">
-                    <label class="form-check-label">
-                        <input type="checkbox" name="hmmer" class="form-check-input">
+                    <label class="custom-control custom-checkbox align-items-center">
+                        <input type="checkbox" name="hmmer" class="custom-control-input">
+                        <span class="custom-control-indicator"></span>
+                        <span class="custom-control-description">
                             Search contigs for single-copy marker genes
+                        </span>
                     </label>
                 </div>
                 <small class="form-text text-muted">
