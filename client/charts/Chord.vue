@@ -358,7 +358,22 @@ export default {
     watch: {
         '$route': 'updatePlot',
         'plotData': 'updatePlot',
-        'hoveredBin': 'updateRibbons',
+        hoveredBin() {
+            const ribbon = this.svg.select('g.ribbons').selectAll('.ribbon')
+                .data(this.chordData.ribbons, ribbon => `${ribbon.source.data}_${ribbon.target.data}`)
+            ribbon.exit().remove()
+            ribbon.enter().merge(ribbon)
+                .style('fill', ribbon => {
+                    const bin = this.activeBin && this.activeBin.id
+                    let color = '#cfcfcf'
+                    if (ribbon.target.data === bin) {
+                        color = this.binsMap.get(ribbon.source.data).color
+                    } else if(ribbon.source.data === bin) {
+                        color = this.binsMap.get(ribbon.target.data).color
+                    } 
+                    return color
+                })
+        },
         activeBin() {
             if (!this.activeBin) return
             const group = this.chordData.groups.filter(d => d.data === this.activeBin.id)[0]
