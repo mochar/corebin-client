@@ -76,6 +76,7 @@
                 :binsMap="binsMap"
                 :binSet="binSet"
                 :otherBinSet="otherBinSet"
+                :allBinIds="allBinIds"
                 @binSelected="selectBin"
                 @binHovered="b => hoveredBin = b"
                 @refine="refineBin"

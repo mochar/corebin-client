@@ -7,10 +7,6 @@
         <line id="arrow" marker-end="url(#arrowhead)" v-show="activeBin"></line>
     </g>
 
-    <g id="info"  v-if="activeBin">
-        <text :transform="`translate(${width/2},${height/2})`" id="info-title">{{ activeBin.name }} ({{ activeSet.name }})</text>
-    </g>
-
     <defs>
         <path 
             id="name-path" 
@@ -116,16 +112,18 @@ let chord = function(bins1, bins2, matrix) {
 
     // Distributions
     let distributions = matrix.map((bin, i) => {
-        let data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
-        let side = i < bins1.length ? 'right' : 'left'
-        let angleScale = d3.scaleLinear()
-            .domain([0, d3.sum(bin)])
+        const data = i < bins1.length ? bins1[i] : bins2[i - bins1.length]
+        const side = i < bins1.length ? 'right' : 'left'
+        const sum = d3.sum(bin)
+        const angleScale = d3.scaleLinear()
+            .domain([0, sum])
             .range([groups[i].startAngle, groups[i].endAngle])
         const distribution = bin.reduce((d, size, j) => {
             if (size > 0)
                 d.distribution.push({
                     bin: j < bins1.length ? bins1[j] : bins2[j - bins1.length],
                     size,
+                    percentage: ((size / sum) * 100).toFixed(2),
                     startAngle: angleScale(d.sum),
                     endAngle: angleScale(d.sum += size)
                 })
@@ -163,7 +161,8 @@ export default {
         'binsMap',
         'binSet',
         'otherBinSet',
-        'hoveredBin'
+        'hoveredBin',
+        'allBinIds'
     ],
     
     methods: {
@@ -361,7 +360,6 @@ export default {
         hoveredBin() {
             const ribbon = this.svg.select('g.ribbons').selectAll('.ribbon')
                 .data(this.chordData.ribbons, ribbon => `${ribbon.source.data}_${ribbon.target.data}`)
-            ribbon.exit().remove()
             ribbon.enter().merge(ribbon)
                 .style('fill', ribbon => {
                     const bin = this.activeBin && this.activeBin.id
@@ -373,6 +371,27 @@ export default {
                     } 
                     return color
                 })
+
+            if (this.selected) {
+            } else if (this.hoveredBin) {
+                const index = this.allBinIds.indexOf(this.hoveredBin.id)
+                const distribution = this.chordData.distributions[index].distribution
+                const connectedIds = distribution.map(d => d.bin)
+                const group = this.svg.select('g.groups').selectAll('.group')
+                    .data(this.chordData.groups, group => `${group.side}-${group.data}`)
+                group.enter().merge(group)
+                    .filter(d => connectedIds.includes(d.data))
+                .select('text').select('textPath')
+                    .text(d => {
+                        const data = distribution[connectedIds.indexOf(d.data)].percentage
+                        const enoughArea = d.endAngle - d.startAngle > toRad(5)
+                        const name = `${this.binsMap.get(d.data).name} (${data}%)`
+                        return enoughArea ? name : ''
+                    })
+            } else {
+                // remove percentages
+                this.updateGroups()
+            }
         },
         activeBin() {
             if (!this.activeBin) return
@@ -405,38 +424,6 @@ export default {
 }
 .ribbons {
   fill-opacity: 0.67;
-}
-
-#info {
-    font-size: 1.2rem;
-}
-
-#info > text, #info g:not(#transition-g) {
-    fill: white;
-    text-shadow: 1px 1px 8px black;
-    /*filter: url(#solid);*/
-}
-
-#info {
-    filter: url(#solid);
-}
-
-#info-title {
-    font-size: larger;
-    text-anchor: middle;
-}
-
-.info-head {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-
-.info-link {
-    text-decoration: underline;
-    cursor: pointer;
-}
-.info-link:hover {
-    text-shadow: 0px 0px 8px black !important;
 }
 </style>
 
